@@ -1,0 +1,5 @@
+* text=auto eol=lf
+dist/** linguist-generated=true
+*.woff2 binary
+*.png binary
+*.webp binary

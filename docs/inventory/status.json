@@ -1,0 +1,1212 @@
+{
+	"bandwidth_by_ip.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"crash_reporter.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"csrf_error.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"diag_arp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_authentication.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_backup.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_backup_remote.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_backup_remote_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_command.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_confbak.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_defaults.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_dns.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_dump_states.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_dump_states_sources.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_edit.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"diag_gmirror.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_halt.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_limiter_info.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_ndp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_packet_capture.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_pf_info.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_pftop.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_ping.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_reboot.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_resetstate.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_routes.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_smart.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_sockets.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_states_summary.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_system_activity.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_tables.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_testport.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"diag_traceroute.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"easyrule.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_aliases.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_aliases_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_aliases_import.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_1to1.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_1to1_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_npt.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_npt_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_out.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_nat_out_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_rules.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_rules_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_schedule.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_schedule_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_shaper.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_shaper_queues.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_shaper_vinterface.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_shaper_wizards.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_virtual_ip.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"firewall_virtual_ip_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"getqueuestats.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"getserviceproviders.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"getstats.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"graph.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"help.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"ifstats.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"index.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_assign.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_bridge.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_bridge_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_gif.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_gif_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_gre.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_gre_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_groups.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_groups_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_lagg.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_lagg_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_nic_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_ppps.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_ppps_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_qinq.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_qinq_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_vlan.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_vlan_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_vxlan.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_vxlan_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_wireless.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"interfaces_wireless_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg_control.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg_mgr.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg_mgr_install.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"pkg_mgr_installed.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_filemanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_hasync.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_hostname.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_hostname_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_ip.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_ip_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_mac.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_mac_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_vouchers.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_vouchers_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_zones.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_captiveportal_zones_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_checkip.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_checkip_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcp_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcp_relay.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcp_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcpv6.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcpv6_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcpv6_relay.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dhcpv6_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dnsmasq.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dnsmasq_domainoverride_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dnsmasq_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dyndns.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_dyndns_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_igmpproxy.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_igmpproxy_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_ntpd.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_ntpd_acls.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_ntpd_gps.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_ntpd_pps.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_pppoe.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_pppoe_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_radvd.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_rfc2136.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_rfc2136_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_snmp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_unbound.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_unbound_acls.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_unbound_advanced.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_unbound_domainoverride_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_unbound_host_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_wol.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"services_wol_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"stats.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"status.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_captiveportal.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_captiveportal_expire.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_captiveportal_test.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_captiveportal_voucher_rolls.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_captiveportal_vouchers.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_carp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_dhcp_leases.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_dhcpv6_leases.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_filter_reload.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_gateway_groups.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_gateways.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_graph.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_graph_cpu.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_interfaces.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_ipsec.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_ipsec_leases.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_ipsec_sad.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_ipsec_spd.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_filter.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_filter_dynamic.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_filter_summary.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_packages.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_logs_vpn.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_ntpd.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_openvpn.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_queues.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_restapi.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_services.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_unbound.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_upnp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"status_wireless.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_admin.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_firewall.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_misc.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_network.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_notifications.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_advanced_sysctl.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_authservers.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_boot_environments.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_camanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_certmanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_certmanager_renew.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_crlmanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_gateway_groups.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_gateway_groups_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_gateways.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_gateways_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_groupmanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_groupmanager_addprivs.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_hasync.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_restapi.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_restapi_explorer.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_restapi_keys.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_routes.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_routes_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_update_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_user_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_usermanager.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_usermanager_addprivs.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_usermanager_passwordmg.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"system_usermanager_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"uploadconfig.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_keys.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_keys_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_mobile.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_phase1.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_phase2.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_ipsec_settings.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_l2tp.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_l2tp_users.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_l2tp_users_edit.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_openvpn_client.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_openvpn_csc.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"vpn_openvpn_server.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"wizard.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"xmlrpc.php": {
+		"state": "replaced-by-api",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/captive_portal_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/carp_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/disks.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/dyn_dns_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/gateways.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/gmirror_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/installed_packages.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/interface_statistics.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/interfaces.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/ipsec.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/log.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/ntp_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/openvpn.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/picture.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/rss.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/services_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/smart_status.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/system_information.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/thermal_sensors.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/traffic_graphs.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/wake_on_lan.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	},
+	"widgets/widgets/zfs_storage.widget.php": {
+		"state": "todo",
+		"route": null,
+		"prs": []
+	}
+}
