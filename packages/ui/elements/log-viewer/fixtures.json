@@ -1,0 +1,16 @@
+{
+	"title": "Log viewer",
+	"description": "Live tail and history of a log with the cursor protocol: filters, debounced search, pause with Space, an \"N new entries\" pill instead of jumping, infinite scroll, row details in the drawer.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Firewall log with summary", "width": "full", "surface": "page", "config": { "source": { "path": "/v1/logs/firewall" }, "summary": true, "ruleHref": "/gallery/app/security/rules?rule={rule_id}" } },
+		{ "name": "System log", "width": "full", "surface": "page", "config": { "source": { "path": "/v1/logs/system" }, "height": "24rem" } },
+		{ "name": "Blocked only, no live tail, five columns", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/logs/firewall" }, "live": false, "search": false, "filterValues": { "action": ["block"] }, "columns": ["action", "time", "src", "dst", "proto"], "height": "20rem" } },
+		{ "name": "System log, errors and warnings (narrow: stacked rows)", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/logs/system" }, "filterValues": { "severity": ["error", "warning"] }, "summary": true, "height": "22rem" } },
+		{ "name": "Small row cap (60 rows)", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/logs/firewall" }, "limit": 40, "maxRows": 60, "filters": false, "height": "18rem" } },
+		{ "name": "Loading", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/slow" }, "type": "system", "filters": false, "live": false } },
+		{ "name": "Empty", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" }, "type": "system", "filters": false, "live": false } },
+		{ "name": "Error", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" }, "type": "firewall", "filters": false } },
+		{ "name": "Minimal: no toolbar (try compact density)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/logs/firewall" }, "height": "16rem", "search": false, "filters": false } }
+	]
+}
