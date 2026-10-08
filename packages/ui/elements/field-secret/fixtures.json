@@ -1,0 +1,51 @@
+{
+	"title": "Secret field",
+	"description": "Password or key: hidden, with reveal and an optional generator.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "With generator",
+			"width": "md",
+			"config": {
+				"name": "psk",
+				"label": "Pre-shared key",
+				"generate": {
+					"length": 32,
+					"charset": "base64"
+				},
+				"required": true,
+				"help": "Use the same key on both ends."
+			}
+		},
+		{
+			"name": "Filled",
+			"width": "md",
+			"config": {
+				"name": "password",
+				"label": "Password",
+				"value": "correct-horse-battery",
+				"autocomplete": "current-password"
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "token",
+				"label": "API token",
+				"value": "abc",
+				"error": "The token is too short."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "key",
+				"label": "Device key",
+				"value": "secretvalue",
+				"disabled": true
+			}
+		}
+	]
+}

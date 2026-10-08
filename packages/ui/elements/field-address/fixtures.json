@@ -1,0 +1,79 @@
+{
+	"title": "Address field",
+	"description": "Firewall address: any, host, network, host name, alias or interface net; validates and suggests.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Alias",
+			"width": "md",
+			"config": {
+				"name": "source",
+				"label": "Source",
+				"value": "ADMIN_HOSTS",
+				"invert": true
+			}
+		},
+		{
+			"name": "Inverted",
+			"width": "md",
+			"config": {
+				"name": "dest",
+				"label": "Destination",
+				"value": "!RFC1918_ALL",
+				"invert": true
+			}
+		},
+		{
+			"name": "Network",
+			"width": "md",
+			"config": {
+				"name": "net",
+				"label": "Network",
+				"value": "10.30.0.0/24"
+			}
+		},
+		{
+			"name": "IPv6 host",
+			"width": "md",
+			"config": {
+				"name": "v6",
+				"label": "Server",
+				"value": "2001:db8::10"
+			}
+		},
+		{
+			"name": "Invalid",
+			"width": "md",
+			"config": {
+				"name": "relay",
+				"label": "Relay",
+				"value": "300.1.2.3",
+				"error": "Enter any, an address, a network in CIDR form, a host name or an alias."
+			}
+		},
+		{
+			"name": "Only hosts",
+			"width": "md",
+			"config": {
+				"name": "host",
+				"label": "Host",
+				"allow": [
+					"ip",
+					"fqdn"
+				],
+				"placeholder": "192.0.2.10 or host.example.org",
+				"help": "Aliases and networks are not accepted here."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "fixed",
+				"label": "Destination",
+				"value": "This Firewall",
+				"disabled": true
+			}
+		}
+	]
+}

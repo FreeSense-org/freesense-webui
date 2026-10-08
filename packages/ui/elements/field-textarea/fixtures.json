@@ -1,0 +1,50 @@
+{
+	"title": "Textarea field",
+	"description": "Multi-line text; code mode with monospace and a line count.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Plain with counter",
+			"width": "md",
+			"config": {
+				"name": "motd",
+				"label": "Login banner",
+				"maxLength": 200,
+				"value": "Authorised use only."
+			}
+		},
+		{
+			"name": "Code mode",
+			"width": "lg",
+			"config": {
+				"name": "cert",
+				"label": "Certificate",
+				"code": true,
+				"rows": 6,
+				"value": "-----BEGIN CERTIFICATE-----\nMIIBszCCAVmgAwIBAgIUQ0FNRVJBLUZSRUVTRU5TRS1ERU1PMAoGCCqGSM49BAMC\nMBkxFzAVBgNVBAMMDmZ3MDEuaG9tZS5hcnBhMB4XDTI2MTAwODAwMDAwMFoXDTI3\n-----END CERTIFICATE-----"
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "opts",
+				"label": "Custom options",
+				"code": true,
+				"rows": 3,
+				"value": "server:\n  bogus-option yes",
+				"error": "Line 2: unknown option bogus-option."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "notes",
+				"label": "Notes",
+				"value": "Managed by the backup node.",
+				"disabled": true
+			}
+		}
+	]
+}

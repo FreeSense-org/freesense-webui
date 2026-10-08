@@ -1,0 +1,43 @@
+/*
+ * _field-address.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Address and port: the "what did you type" badge and the "not" toggle. */
+@layer elements {
+	.fs-addr {
+		flex-wrap: nowrap;
+		.form-control { min-width: 0; }
+	}
+	.fs-addr-kind {
+		min-width: 4.5rem;
+		justify-content: center;
+		background: var(--fs-surface-raised);
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		font-weight: 600;
+		white-space: nowrap;
+		transition: color var(--fs-dur-fast);
+		&[hidden] { display: none; }
+		&[data-kind='invalid'] { color: var(--fs-status-crit); }
+		&[data-kind='alias'], &[data-kind='iface'], &[data-kind='network'], &[data-kind='ip'], &[data-kind='fqdn'], &[data-kind='port'], &[data-kind='range'], &[data-kind='list'] { color: var(--fs-text-default); }
+	}
+	.fs-addr .fs-addr-kind { border-left: 0; }
+	.fs-addr-not {
+		min-width: 3.25rem;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		&[aria-pressed='true'] {
+			--bs-btn-bg: color-mix(in srgb, var(--fs-action-block) 10%, var(--fs-surface-raised));
+			--bs-btn-hover-bg: color-mix(in srgb, var(--fs-action-block) 16%, var(--fs-surface-raised));
+			--bs-btn-border-color: color-mix(in srgb, var(--fs-action-block) 45%, var(--fs-border-default));
+			color: var(--fs-action-block);
+		}
+	}
+	@container (max-width: 22rem) {
+		.fs-addr-kind { min-width: 0; }
+	}
+}

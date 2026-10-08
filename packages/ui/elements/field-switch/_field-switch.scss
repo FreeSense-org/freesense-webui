@@ -1,0 +1,36 @@
+/*
+ * _field-switch.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-switch {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		min-height: var(--fs-control-h);
+		margin: 0;
+		padding-left: 0;
+		.form-check-input {
+			flex: none;
+			float: none;
+			width: 2.25em;
+			height: 1.25em;
+			margin: 0;
+			cursor: pointer;
+			&:focus { box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--fs-accent-fill) 22%, transparent); border-color: var(--fs-accent-fill); }
+			&.is-invalid { border-color: var(--fs-status-crit); }
+			&:disabled { cursor: default; }
+		}
+		.form-check-input:disabled ~ .fs-switch-text { opacity: 1; color: var(--fs-text-muted); }
+	}
+	.fs-switch-text {
+		color: var(--fs-text-default);
+		line-height: 1.4;
+		cursor: pointer;
+		overflow-wrap: anywhere;
+	}
+	.fs-switch-state { color: var(--fs-text-muted); font-size: 0.8125rem; }
+}

@@ -1,0 +1,64 @@
+{
+	"title": "Typeahead field",
+	"description": "Free text with suggestions from an API source or a static list.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "API source",
+			"width": "md",
+			"config": {
+				"name": "alias",
+				"label": "Alias",
+				"mono": true,
+				"source": {
+					"path": "/v1/firewall/aliases",
+					"value": "name",
+					"detail": "descr"
+				},
+				"help": "Type to search the aliases."
+			}
+		},
+		{
+			"name": "Static suggestions",
+			"width": "md",
+			"config": {
+				"name": "server",
+				"label": "Syslog server",
+				"suggestions": [
+					{
+						"value": "logs.home.arpa",
+						"detail": "Graylog"
+					},
+					{
+						"value": "192.168.1.20",
+						"detail": "nas"
+					}
+				]
+			}
+		},
+		{
+			"name": "Strict, error",
+			"width": "md",
+			"config": {
+				"name": "cert",
+				"label": "Certificate",
+				"strict": true,
+				"suggestions": [
+					"webConfigurator default",
+					"VPN server"
+				],
+				"error": "Choose one of the suggestions."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "ro",
+				"label": "Parent interface",
+				"value": "igc3",
+				"disabled": true
+			}
+		}
+	]
+}

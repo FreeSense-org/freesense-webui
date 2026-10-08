@@ -1,0 +1,64 @@
+{
+	"title": "File field",
+	"description": "Pick or drop a file; checked for type and size; upload with progress or read in the browser.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Upload",
+			"width": "md",
+			"config": {
+				"name": "cert",
+				"label": "Certificate",
+				"accept": ".pem,.crt",
+				"maxSize": 65536,
+				"upload": {
+					"path": "/v1/gallery/forms/upload"
+				},
+				"help": "Names containing fail are refused by the mock."
+			}
+		},
+		{
+			"name": "Read in the browser",
+			"width": "md",
+			"config": {
+				"name": "key",
+				"label": "Private key",
+				"accept": ".key,.pem,.txt",
+				"maxSize": 16384,
+				"read": "text"
+			}
+		},
+		{
+			"name": "With a file",
+			"width": "md",
+			"config": {
+				"name": "backup",
+				"label": "Configuration backup",
+				"value": {
+					"id": "upl-demo",
+					"name": "config-fw01-20261008.xml",
+					"size": 182344
+				}
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "img",
+				"label": "Logo",
+				"accept": "image/*",
+				"error": "logo.tiff is larger than 256 KB."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "fw",
+				"label": "Firmware image",
+				"disabled": true
+			}
+		}
+	]
+}

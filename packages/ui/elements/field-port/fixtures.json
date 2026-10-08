@@ -1,0 +1,67 @@
+{
+	"title": "Port field",
+	"description": "Port, range or port alias, with service suggestions.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Single port",
+			"width": "sm",
+			"config": {
+				"name": "port",
+				"label": "Port",
+				"value": "443"
+			}
+		},
+		{
+			"name": "Range",
+			"width": "sm",
+			"config": {
+				"name": "range",
+				"label": "Port range",
+				"value": "8000-8100"
+			}
+		},
+		{
+			"name": "Alias",
+			"width": "sm",
+			"config": {
+				"name": "alias",
+				"label": "Ports",
+				"value": "MAIL_PORTS"
+			}
+		},
+		{
+			"name": "Any (empty)",
+			"width": "sm",
+			"config": {
+				"name": "sport",
+				"label": "Source port",
+				"emptyValue": "any",
+				"value": "any",
+				"help": "Usually any."
+			}
+		},
+		{
+			"name": "Error",
+			"width": "sm",
+			"config": {
+				"name": "bad",
+				"label": "Port",
+				"value": "9000:8000",
+				"error": "The range start must be lower than the end."
+			}
+		},
+		{
+			"name": "Single only, disabled",
+			"width": "sm",
+			"config": {
+				"name": "listen",
+				"label": "Listen port",
+				"value": "51820",
+				"range": false,
+				"alias": false,
+				"disabled": true
+			}
+		}
+	]
+}
