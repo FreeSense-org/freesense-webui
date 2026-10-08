@@ -30,7 +30,7 @@ Every page declares:
 | `GROUP` | Optional section-menu group (`Routing`, `Addressing`, …) |
 | `PRIV` | Privilege id (kept from 1.x, e.g. `page-firewall-aliases`) |
 | `TITLE` | Page title (gettext) |
-| `ICON` | Font Awesome name for the section menu |
+| `ICON` | Font Awesome name for the mega dropdown and card menu |
 | `LAYOUT` | `section` (default) or `full` |
 
 ## Examples

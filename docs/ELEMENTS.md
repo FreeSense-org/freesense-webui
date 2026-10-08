@@ -20,7 +20,7 @@ spec, fixtures, gallery entry and tests exists in `packages/ui/elements/`.
 
 | Element | Purpose |
 |---|---|
-| `app-shell` | Top bar + section menu + content + status bar; layout `full` or `section` |
+| `app-shell` | Centered top bar with mega dropdowns + optional left card menu (multi-page features) + content; layout `full` or `menu` |
 | `area-menu` | Top-level areas in the top bar, with overflow on narrow screens |
 | `section-menu` | Left menu of an area's sub-pages; slides in/out; collapsible to a rail; drawer on phones |
 | `command-palette` | Ctrl+K: search pages, settings and actions |

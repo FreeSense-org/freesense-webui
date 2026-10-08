@@ -26,6 +26,21 @@ function ensureStylesheet(name) {
 	});
 }
 
+/* Skin choices come from the theme's theme.json (fixed enums, no CSS). */
+const skins = {};
+function loadSkin(name) {
+	if (skins[name]) return Promise.resolve(skins[name]);
+	const base = document.querySelector('meta[name="fs-themes"]')?.getAttribute('content') || '/themes';
+	return $.getJSON(`${base}/${encodeURIComponent(name)}/theme.json`).then((meta) => (skins[name] = meta.skin || {}), () => ({}));
+}
+function applySkin(skin) {
+	root.setAttribute('data-fs-skin-topbar', skin.topbar || 'surface');
+	root.setAttribute('data-fs-skin-section', skin.sectionMenu || 'surface');
+	root.setAttribute('data-fs-skin-cards', skin.cards || 'outlined');
+	root.setAttribute('data-fs-skin-tables', skin.tables || 'lines');
+	root.setAttribute('data-fs-skin-buttons', skin.buttons || 'rounded');
+}
+
 function apply(p) {
 	root.setAttribute('data-fs-theme', p.theme);
 	root.setAttribute('data-fs-mode', p.mode);
@@ -47,7 +62,10 @@ export const theme = {
 	/** Change any of theme/mode/accent/density. Returns a promise once applied. */
 	async set(changes) {
 		const next = { ...theme.get(), ...changes };
-		if (next.theme !== theme.get().theme) await ensureStylesheet(next.theme);
+		if (next.theme !== theme.get().theme) {
+			await ensureStylesheet(next.theme);
+			applySkin(await loadSkin(next.theme));
+		}
 		apply(next);
 		return next;
 	},

@@ -1,0 +1,777 @@
+{
+	"areas": [
+		{
+			"id": "dashboard",
+			"title": "Dashboard",
+			"icon": "gauge-high",
+			"href": "/gallery/app/"
+		},
+		{
+			"id": "network",
+			"title": "Network",
+			"icon": "network-wired",
+			"groups": [
+				{
+					"title": "Interfaces",
+					"icon": "ethernet",
+					"items": [
+						{
+							"title": "Interfaces",
+							"icon": "ethernet",
+							"href": "/gallery/app/network/interfaces"
+						},
+						{
+							"title": "Assignments",
+							"icon": "right-left",
+							"href": "/gallery/app/network/assignments",
+							"pages": [
+								{
+									"title": "Assignments",
+									"icon": "right-left",
+									"href": "/gallery/app/network/assignments"
+								},
+								{
+									"title": "VLANs",
+									"icon": "layer-group",
+									"href": "/gallery/app/network/vlans"
+								},
+								{
+									"title": "QinQ",
+									"icon": "layer-group",
+									"href": "/gallery/app/network/qinq"
+								},
+								{
+									"title": "Bridges",
+									"icon": "bridge",
+									"href": "/gallery/app/network/bridges"
+								},
+								{
+									"title": "LAGG",
+									"icon": "link",
+									"href": "/gallery/app/network/lagg"
+								},
+								{
+									"title": "GIF / GRE",
+									"icon": "road",
+									"href": "/gallery/app/network/tunnels"
+								},
+								{
+									"title": "Interface groups",
+									"icon": "object-group",
+									"href": "/gallery/app/network/groups"
+								}
+							]
+						},
+						{
+							"title": "Wireless",
+							"icon": "wifi",
+							"href": "/gallery/app/network/wireless"
+						}
+					]
+				},
+				{
+					"title": "Routing",
+					"icon": "route",
+					"items": [
+						{
+							"title": "Gateways",
+							"icon": "route",
+							"href": "/gallery/app/network/gateways",
+							"pages": [
+								{
+									"title": "Gateways",
+									"icon": "route",
+									"href": "/gallery/app/network/gateways"
+								},
+								{
+									"title": "Gateway groups",
+									"icon": "sitemap",
+									"href": "/gallery/app/network/gateway-groups"
+								},
+								{
+									"title": "Static routes",
+									"icon": "signs-post",
+									"href": "/gallery/app/network/routes"
+								}
+							]
+						}
+					]
+				},
+				{
+					"title": "Addressing",
+					"icon": "address-book",
+					"items": [
+						{
+							"title": "DHCP server",
+							"icon": "address-book",
+							"href": "/gallery/app/network/dhcp",
+							"pages": [
+								{
+									"title": "LAN",
+									"icon": "ethernet",
+									"href": "/gallery/app/network/dhcp"
+								},
+								{
+									"title": "GUEST",
+									"icon": "ethernet",
+									"href": "/gallery/app/network/dhcp-opt1"
+								},
+								{
+									"title": "IOT",
+									"icon": "ethernet",
+									"href": "/gallery/app/network/dhcp-opt2"
+								},
+								{
+									"title": "Relay",
+									"icon": "arrow-right-arrow-left",
+									"href": "/gallery/app/network/dhcp-relay"
+								},
+								{
+									"title": "Settings",
+									"icon": "gear",
+									"href": "/gallery/app/network/dhcp-settings"
+								}
+							]
+						},
+						{
+							"title": "DNS resolver",
+							"icon": "globe",
+							"href": "/gallery/app/network/dns-resolver",
+							"pages": [
+								{
+									"title": "General",
+									"icon": "gear",
+									"href": "/gallery/app/network/dns-resolver"
+								},
+								{
+									"title": "Host overrides",
+									"icon": "server",
+									"href": "/gallery/app/network/dns-hosts"
+								},
+								{
+									"title": "Domain overrides",
+									"icon": "sitemap",
+									"href": "/gallery/app/network/dns-domains"
+								},
+								{
+									"title": "Access lists",
+									"icon": "list-check",
+									"href": "/gallery/app/network/dns-acls"
+								},
+								{
+									"title": "Advanced",
+									"icon": "sliders",
+									"href": "/gallery/app/network/dns-advanced"
+								}
+							]
+						},
+						{
+							"title": "Dynamic DNS",
+							"icon": "arrows-rotate",
+							"href": "/gallery/app/network/ddns"
+						},
+						{
+							"title": "Router advertisements",
+							"icon": "tower-broadcast",
+							"href": "/gallery/app/network/radvd"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "security",
+			"title": "Security",
+			"icon": "shield-halved",
+			"groups": [
+				{
+					"title": "Firewall",
+					"icon": "shield-halved",
+					"items": [
+						{
+							"title": "Rules",
+							"icon": "list-check",
+							"href": "/gallery/app/security/rules"
+						},
+						{
+							"title": "NAT",
+							"icon": "shuffle",
+							"href": "/gallery/app/security/nat",
+							"pages": [
+								{
+									"title": "Port forward",
+									"icon": "arrow-right-to-bracket",
+									"href": "/gallery/app/security/nat"
+								},
+								{
+									"title": "Outbound",
+									"icon": "arrow-right-from-bracket",
+									"href": "/gallery/app/security/nat-outbound"
+								},
+								{
+									"title": "1:1",
+									"icon": "arrows-left-right",
+									"href": "/gallery/app/security/nat-1to1"
+								},
+								{
+									"title": "NPt",
+									"icon": "arrows-left-right-to-line",
+									"href": "/gallery/app/security/nat-npt"
+								}
+							]
+						},
+						{
+							"title": "Aliases",
+							"icon": "tags",
+							"href": "/gallery/app/security/aliases"
+						},
+						{
+							"title": "Schedules",
+							"icon": "calendar-days",
+							"href": "/gallery/app/security/schedules"
+						},
+						{
+							"title": "Virtual IPs",
+							"icon": "clone",
+							"href": "/gallery/app/security/virtual-ips"
+						}
+					]
+				},
+				{
+					"title": "Traffic",
+					"icon": "sliders",
+					"items": [
+						{
+							"title": "Traffic shaper",
+							"icon": "sliders",
+							"href": "/gallery/app/security/shaper",
+							"pages": [
+								{
+									"title": "By interface",
+									"icon": "ethernet",
+									"href": "/gallery/app/security/shaper"
+								},
+								{
+									"title": "By queue",
+									"icon": "layer-group",
+									"href": "/gallery/app/security/shaper-queues"
+								},
+								{
+									"title": "Limiters",
+									"icon": "gauge",
+									"href": "/gallery/app/security/limiters"
+								},
+								{
+									"title": "Wizards",
+									"icon": "wand-magic-sparkles",
+									"href": "/gallery/app/security/shaper-wizards"
+								}
+							]
+						}
+					]
+				},
+				{
+					"title": "Threat protection",
+					"icon": "user-shield",
+					"items": [
+						{
+							"title": "IDS / IPS",
+							"icon": "user-shield",
+							"href": "/gallery/app/security/ids"
+						},
+						{
+							"title": "Threat feeds",
+							"icon": "rss",
+							"href": "/gallery/app/security/feeds"
+						},
+						{
+							"title": "CrowdSec",
+							"icon": "users-viewfinder",
+							"href": "/gallery/app/security/crowdsec"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "vpn",
+			"title": "VPN",
+			"icon": "lock",
+			"groups": [
+				{
+					"title": "Tunnels",
+					"icon": "lock",
+					"items": [
+						{
+							"title": "WireGuard",
+							"icon": "bolt",
+							"href": "/gallery/app/vpn/wireguard",
+							"pages": [
+								{
+									"title": "Tunnels",
+									"icon": "network-wired",
+									"href": "/gallery/app/vpn/wireguard"
+								},
+								{
+									"title": "Peers",
+									"icon": "users",
+									"href": "/gallery/app/vpn/wireguard-peers"
+								},
+								{
+									"title": "Settings",
+									"icon": "gear",
+									"href": "/gallery/app/vpn/wireguard-settings"
+								},
+								{
+									"title": "Status",
+									"icon": "heart-pulse",
+									"href": "/gallery/app/vpn/wireguard-status"
+								}
+							]
+						},
+						{
+							"title": "OpenVPN",
+							"icon": "key",
+							"href": "/gallery/app/vpn/openvpn",
+							"pages": [
+								{
+									"title": "Servers",
+									"icon": "server",
+									"href": "/gallery/app/vpn/openvpn"
+								},
+								{
+									"title": "Clients",
+									"icon": "laptop",
+									"href": "/gallery/app/vpn/openvpn-clients"
+								},
+								{
+									"title": "Client overrides",
+									"icon": "user-gear",
+									"href": "/gallery/app/vpn/openvpn-csc"
+								},
+								{
+									"title": "Client export",
+									"icon": "file-export",
+									"href": "/gallery/app/vpn/openvpn-export"
+								}
+							]
+						},
+						{
+							"title": "IPsec",
+							"icon": "shield",
+							"href": "/gallery/app/vpn/ipsec",
+							"pages": [
+								{
+									"title": "Tunnels",
+									"icon": "network-wired",
+									"href": "/gallery/app/vpn/ipsec"
+								},
+								{
+									"title": "Mobile clients",
+									"icon": "mobile-screen",
+									"href": "/gallery/app/vpn/ipsec-mobile"
+								},
+								{
+									"title": "Pre-shared keys",
+									"icon": "key",
+									"href": "/gallery/app/vpn/ipsec-keys"
+								},
+								{
+									"title": "Advanced",
+									"icon": "sliders",
+									"href": "/gallery/app/vpn/ipsec-advanced"
+								}
+							]
+						},
+						{
+							"title": "L2TP",
+							"icon": "plug",
+							"href": "/gallery/app/vpn/l2tp"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "services",
+			"title": "Services",
+			"icon": "gears",
+			"groups": [
+				{
+					"title": "Network",
+					"icon": "network-wired",
+					"items": [
+						{
+							"title": "NTP",
+							"icon": "clock",
+							"href": "/gallery/app/services/ntp"
+						},
+						{
+							"title": "UPnP & NAT-PMP",
+							"icon": "tower-broadcast",
+							"href": "/gallery/app/services/upnp"
+						},
+						{
+							"title": "IGMP proxy",
+							"icon": "diagram-project",
+							"href": "/gallery/app/services/igmp"
+						}
+					]
+				},
+				{
+					"title": "Security",
+					"icon": "shield-halved",
+					"items": [
+						{
+							"title": "Captive portal",
+							"icon": "door-open",
+							"href": "/gallery/app/services/captive-portal"
+						},
+						{
+							"title": "ACME certificates",
+							"icon": "certificate",
+							"href": "/gallery/app/services/acme"
+						}
+					]
+				},
+				{
+					"title": "Monitoring",
+					"icon": "chart-line",
+					"items": [
+						{
+							"title": "SNMP",
+							"icon": "chart-simple",
+							"href": "/gallery/app/services/snmp"
+						}
+					]
+				},
+				{
+					"title": "Other",
+					"icon": "ellipsis",
+					"items": [
+						{
+							"title": "Wake-on-LAN",
+							"icon": "power-off",
+							"href": "/gallery/app/services/wol"
+						},
+						{
+							"title": "PPPoE server",
+							"icon": "plug",
+							"href": "/gallery/app/services/pppoe"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "insights",
+			"title": "Insights",
+			"icon": "chart-line",
+			"groups": [
+				{
+					"title": "Activity",
+					"icon": "chart-line",
+					"items": [
+						{
+							"title": "Logs",
+							"icon": "scroll",
+							"href": "/gallery/app/insights/logs",
+							"pages": [
+								{
+									"title": "Firewall",
+									"icon": "shield-halved",
+									"href": "/gallery/app/insights/logs"
+								},
+								{
+									"title": "System",
+									"icon": "server",
+									"href": "/gallery/app/insights/logs-system"
+								},
+								{
+									"title": "DHCP",
+									"icon": "address-book",
+									"href": "/gallery/app/insights/logs-dhcp"
+								},
+								{
+									"title": "DNS",
+									"icon": "globe",
+									"href": "/gallery/app/insights/logs-dns"
+								},
+								{
+									"title": "VPN",
+									"icon": "lock",
+									"href": "/gallery/app/insights/logs-vpn"
+								},
+								{
+									"title": "Settings",
+									"icon": "gear",
+									"href": "/gallery/app/insights/logs-settings"
+								}
+							]
+						},
+						{
+							"title": "Traffic",
+							"icon": "chart-area",
+							"href": "/gallery/app/insights/traffic"
+						},
+						{
+							"title": "States",
+							"icon": "table-cells",
+							"href": "/gallery/app/insights/states"
+						}
+					]
+				},
+				{
+					"title": "Status",
+					"icon": "heart-pulse",
+					"items": [
+						{
+							"title": "Gateways",
+							"icon": "route",
+							"href": "/gallery/app/insights/gateways"
+						},
+						{
+							"title": "Services",
+							"icon": "server",
+							"href": "/gallery/app/insights/services"
+						},
+						{
+							"title": "DHCP leases",
+							"icon": "address-card",
+							"href": "/gallery/app/insights/leases"
+						},
+						{
+							"title": "ARP / NDP",
+							"icon": "table-list",
+							"href": "/gallery/app/insights/arp"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tools",
+			"title": "Tools",
+			"icon": "toolbox",
+			"groups": [
+				{
+					"title": "Diagnostics",
+					"icon": "stethoscope",
+					"items": [
+						{
+							"title": "Ping",
+							"icon": "satellite-dish",
+							"href": "/gallery/app/tools/ping"
+						},
+						{
+							"title": "Traceroute",
+							"icon": "diagram-project",
+							"href": "/gallery/app/tools/traceroute"
+						},
+						{
+							"title": "DNS lookup",
+							"icon": "magnifying-glass",
+							"href": "/gallery/app/tools/dns"
+						},
+						{
+							"title": "Test port",
+							"icon": "plug-circle-check",
+							"href": "/gallery/app/tools/test-port"
+						},
+						{
+							"title": "Packet capture",
+							"icon": "file-waveform",
+							"href": "/gallery/app/tools/capture"
+						}
+					]
+				},
+				{
+					"title": "Maintenance",
+					"icon": "screwdriver-wrench",
+					"items": [
+						{
+							"title": "Backup & restore",
+							"icon": "floppy-disk",
+							"href": "/gallery/app/tools/backup",
+							"pages": [
+								{
+									"title": "Backup & restore",
+									"icon": "floppy-disk",
+									"href": "/gallery/app/tools/backup"
+								},
+								{
+									"title": "Remote backup",
+									"icon": "cloud-arrow-up",
+									"href": "/gallery/app/tools/backup-remote"
+								},
+								{
+									"title": "Config history",
+									"icon": "clock-rotate-left",
+									"href": "/gallery/app/tools/history"
+								}
+							]
+						},
+						{
+							"title": "Command prompt",
+							"icon": "terminal",
+							"href": "/gallery/app/tools/command"
+						},
+						{
+							"title": "Factory reset",
+							"icon": "rotate-left",
+							"href": "/gallery/app/tools/reset"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "system",
+			"title": "System",
+			"icon": "sliders",
+			"groups": [
+				{
+					"title": "Setup",
+					"icon": "gear",
+					"items": [
+						{
+							"title": "General",
+							"icon": "gear",
+							"href": "/gallery/app/system/general"
+						},
+						{
+							"title": "Appearance",
+							"icon": "palette",
+							"href": "/gallery/app/system/appearance"
+						},
+						{
+							"title": "Advanced",
+							"icon": "sliders",
+							"href": "/gallery/app/system/advanced",
+							"pages": [
+								{
+									"title": "Admin access",
+									"icon": "user-lock",
+									"href": "/gallery/app/system/advanced"
+								},
+								{
+									"title": "Firewall & NAT",
+									"icon": "shield-halved",
+									"href": "/gallery/app/system/advanced-firewall"
+								},
+								{
+									"title": "Networking",
+									"icon": "network-wired",
+									"href": "/gallery/app/system/advanced-network"
+								},
+								{
+									"title": "Miscellaneous",
+									"icon": "ellipsis",
+									"href": "/gallery/app/system/advanced-misc"
+								},
+								{
+									"title": "Notifications",
+									"icon": "bell",
+									"href": "/gallery/app/system/notifications"
+								},
+								{
+									"title": "Tunables",
+									"icon": "sliders",
+									"href": "/gallery/app/system/tunables"
+								}
+							]
+						}
+					]
+				},
+				{
+					"title": "Access",
+					"icon": "users",
+					"items": [
+						{
+							"title": "Users & groups",
+							"icon": "users",
+							"href": "/gallery/app/system/users",
+							"pages": [
+								{
+									"title": "Users",
+									"icon": "user",
+									"href": "/gallery/app/system/users"
+								},
+								{
+									"title": "Groups",
+									"icon": "users",
+									"href": "/gallery/app/system/groups"
+								},
+								{
+									"title": "Authentication servers",
+									"icon": "id-card",
+									"href": "/gallery/app/system/auth-servers"
+								},
+								{
+									"title": "Settings",
+									"icon": "gear",
+									"href": "/gallery/app/system/user-settings"
+								}
+							]
+						},
+						{
+							"title": "Certificates",
+							"icon": "certificate",
+							"href": "/gallery/app/system/certificates",
+							"pages": [
+								{
+									"title": "Authorities",
+									"icon": "building-shield",
+									"href": "/gallery/app/system/cas"
+								},
+								{
+									"title": "Certificates",
+									"icon": "certificate",
+									"href": "/gallery/app/system/certificates"
+								},
+								{
+									"title": "Revocation",
+									"icon": "ban",
+									"href": "/gallery/app/system/crls"
+								}
+							]
+						},
+						{
+							"title": "REST API",
+							"icon": "code",
+							"href": "/gallery/app/system/api"
+						}
+					]
+				},
+				{
+					"title": "Maintenance",
+					"icon": "cloud-arrow-down",
+					"items": [
+						{
+							"title": "Update Center",
+							"icon": "cloud-arrow-down",
+							"href": "/gallery/app/system/update"
+						},
+						{
+							"title": "Packages",
+							"icon": "boxes-stacked",
+							"href": "/gallery/app/system/packages"
+						},
+						{
+							"title": "High availability",
+							"icon": "server",
+							"href": "/gallery/app/system/ha"
+						}
+					]
+				}
+			]
+		}
+	],
+	"other": [
+		{
+			"title": "Profile",
+			"icon": "circle-user",
+			"href": "/gallery/app/me"
+		}
+	]
+}

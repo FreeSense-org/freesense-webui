@@ -10,11 +10,11 @@ FreeBSD-based firewall, rebuilt from scratch.
   they work with.
 - **Themes.** A theme is one JSON file (`<name>.theme.json`), validated by its
   versioned theme scheme (`schema/theme-2.0.schema.json`). Light and dark are mandatory. Users choose their own theme, mode, accent and density.
-- **One shell.** A top menu, plus a left section menu that slides out on areas with
-  sub-pages and slides away on full-width pages.
+- **One shell.** A centered layout: a top bar whose areas open mega dropdowns, and a
+  left card menu on features with several pages.
 - **No legacy.** Nothing from the 1.x WebUI is reused, wrapped or shimmed.
 
-> Status: **P1, toolchain.** The plan is in
+> Status: **P3, element library** (shell done). The plan is in
 > `freesense-project/planning/2026-10-08-webui-2.0-plan.md`. Nothing here ships yet.
 
 ## Repository layout
@@ -39,7 +39,7 @@ docs/                      architecture and the rules everyone follows
 | [docs/ELEMENTS.md](docs/ELEMENTS.md) | The element catalogue and the versioning contract |
 | [docs/PAGES.md](docs/PAGES.md) | Page patterns: how a page is a few lines, not a template |
 | [docs/THEMES.md](docs/THEMES.md) | Theme manifest, tokens, modes, accents, densities, distribution |
-| [docs/NAVIGATION.md](docs/NAVIGATION.md) | Areas, section menus, page layouts |
+| [docs/NAVIGATION.md](docs/NAVIGATION.md) | Areas, mega dropdowns, card menus, URLs |
 | [docs/PACKAGES.md](docs/PACKAGES.md) | How optional packages get an API side and a UI side |
 | [schema/theme-2.0.schema.json](schema/theme-2.0.schema.json) | Theme scheme 2.0: JSON Schema for `*.theme.json` files |
 | [docs/PORTING.md](docs/PORTING.md) | How a 1.x page becomes a 2.0 page |

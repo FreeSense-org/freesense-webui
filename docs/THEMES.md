@@ -74,7 +74,7 @@ Start from `packages/theme-freesense/freesense.theme.json`, or run
 | `densities` | Optional overrides for `comfortable` / `compact` sizes |
 | `fonts` | `ui` and `mono` families: bundled ones, or woff2 files shipped with the theme |
 | `motion` | Durations |
-| `skin` | Fixed choices for top bar, section menu, cards, tables and buttons. No free CSS |
+| `skin` | Fixed choices for top bar, card menu, cards, tables and buttons. No free CSS |
 
 Values are restricted to safe forms: hex colours, `px`/`rem` lengths, `ms`
 durations and simple shadows. That keeps themes safe to install from anyone.

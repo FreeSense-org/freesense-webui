@@ -1,59 +1,65 @@
 # Navigation
 
-> **Agreed 2026-10-08.** The area structure below replaces the 1.x
-> menus (System, Interfaces, Firewall, Services, VPN, Status, Diagnostics).
+> **Agreed 2026-10-08.** A centered layout like the 1.x WebUI, with mega
+> dropdowns in the top bar and a left card menu for features with several pages.
+> The area structure replaces the 1.x menus (System, Interfaces, Firewall,
+> Services, VPN, Status, Diagnostics).
 
 ## Shell
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ ◆ FreeSense   Dashboard  Network  Security  VPN  Services  Insights  Tools  System │ Ctrl+K [apply] [bell] [mode] (avatar) │  ← top bar (always)
-├──────────────┬───────────────────────────────────────────────────────────────┤
-│ NETWORK      │  Interfaces                                  [+ Add] [Apply]  │
-│ Interfaces * │  ───────────────────────────────────────────────────────────  │
-│ Assignments  │                                                               │
-│ VLANs        │   page content (elements)                                     │
-│ Bridges      │                                                               │
-│ …            │                                                               │
-└──────────────┴───────────────────────────────────────────────────────────────┘
-   ↑ section menu: slides in on `section` pages, slides away on `full` pages
+ ┌──────────────────────────────────────────────────────────────────────────────────┐
+ │      [FS] FreeSense │ Dashboard  Network v  Security v  VPN v  Services v …   [Search Ctrl K] [bell] [mode] (CA) │
+ └──────────────────────────────────────────────────────────────────────────────────┘
+          ┌──────────────────────────────── mega dropdown (VPN) ─────────────────┐
+          │ VPN                                              [ Filter VPN…     ] │
+          │ TUNNELS                                                              │
+          │  WireGuard   4 pages    OpenVPN   4 pages    IPsec   4 pages   L2TP  │
+          └──────────────────────────────────────────────────────────────────────┘
+
+        ┌─ WireGuard ──┐  VPN / WireGuard
+        │ Tunnels      │  Peers                                         [+ Add peer]
+        │ Peers      * │  ───────────────────────────────────────────────────────
+        │ Settings     │  page content (elements)
+        │ Status       │
+        └──────────────┘
+        ← card menu: only on features with several pages; single pages use the full width
 ```
 
-(Bracketed words in the sketch stand for Font Awesome icons.)
+(Bracketed words stand for Font Awesome icons.)
 
-- **Top bar** (always visible):
-  - logo, areas, command palette (Ctrl+K), Apply-pending indicator, notifications, live/pause, theme/mode quick switch;
-  - profile menu (avatar): Profile, Appearance, Sessions, Sign out.
-- **Section menu** (left):
-  - shown on pages with `LAYOUT = 'section'`; lists the area's sub-pages, grouped, with icons;
-  - it slides in when you enter the area from a full-width page and slides away when you go to a full-width page. Moving between pages of the same area leaves it in place;
-  - can be collapsed to an icon rail, remembered per user;
-  - on phones it is an off-canvas drawer opened from the area title.
-- **Full-width pages** (`LAYOUT = 'full'`): Dashboard, Topology, Update Center, Profile, Setup wizard.
+- **Top bar:** contents are centered with the page.
+  - The **areas** open mega dropdowns (grouped columns, icon headings, filter); **Dashboard** is a plain link.
+  - **Tools:** search / command palette (Ctrl+K), notifications, light/dark, and the profile avatar (Profile, Appearance, Sessions, Sign out).
+- **Card menu:** appears on the left of the content for multi-page features and replaces the 1.x tab bars.
+- **Full-width pages:** dashboard, single pages, Update Center and Profile.
+- **Phones:** areas in a drawer (accordion); the card menu becomes a horizontal scroller above the content.
+
+The shell and its behaviour are specified in `packages/ui/elements/app-shell/spec.md`.
 
 ## Areas
 
-| Area | Layout | Section menu |
-|---|---|---|
-| **Dashboard** | full | — |
-| **Network** | section | Interfaces · Assignments · VLANs · VXLAN · QinQ · Bridges · LAGG · GIF/GRE · Wireless · PPPs · Interface groups — *Routing:* Gateways · Gateway groups · Static routes — *Addressing:* DHCP server · DHCPv6 · Router advertisements · DHCP relay · DNS resolver · DNS forwarder · Dynamic DNS |
-| **Security** | section | Firewall rules · NAT (port forward, outbound, 1:1, NPt) · Aliases · Schedules · Virtual IPs · Traffic shaper · Limiters — *Packages:* IDS/IPS, threat feeds, CrowdSec … |
-| **VPN** | section | WireGuard · OpenVPN · IPsec · L2TP |
-| **Services** | section | NTP · SNMP · UPnP & NAT-PMP · Wake-on-LAN · IGMP proxy · Captive portal · Package services |
-| **Insights** | section | Logs · Traffic graphs · Interfaces status · Gateways status · Services status · States · DHCP leases · ARP/NDP · CARP · System activity |
-| **Tools** | section | Ping · Traceroute · DNS lookup · Test port · Packet capture · Command prompt · Edit file · Backup & restore · Config history · Factory reset |
-| **System** | section | General · Users & groups · Authentication servers · Certificates · Update Center · Packages · High availability · Advanced · Tunables · Notifications · REST API |
+| Area | Groups → items (*n* = multi-page feature with a card menu) |
+|---|---|
+| **Dashboard** | direct link |
+| **Network** | *Interfaces:* Interfaces, Assignments (7: Assignments, VLANs, QinQ, Bridges, LAGG, GIF/GRE, Interface groups), Wireless · *Routing:* Gateways (3: Gateways, Gateway groups, Static routes) · *Addressing:* DHCP server (per interface + Relay + Settings), DNS resolver (5), Dynamic DNS, Router advertisements |
+| **Security** | *Firewall:* Rules, NAT (4: Port forward, Outbound, 1:1, NPt), Aliases, Schedules, Virtual IPs · *Traffic:* Traffic shaper (4) · *Threat protection:* IDS/IPS, Threat feeds, CrowdSec (packages) |
+| **VPN** | *Tunnels:* WireGuard (4: Tunnels, Peers, Settings, Status), OpenVPN (4), IPsec (4), L2TP |
+| **Services** | *Network:* NTP, UPnP & NAT-PMP, IGMP proxy · *Security:* Captive portal, ACME · *Monitoring:* SNMP · *Other:* Wake-on-LAN, PPPoE server |
+| **Insights** | *Activity:* Logs (6: Firewall, System, DHCP, DNS, VPN, Settings), Traffic, States · *Status:* Gateways, Services, DHCP leases, ARP/NDP |
+| **Tools** | *Diagnostics:* Ping, Traceroute, DNS lookup, Test port, Packet capture · *Maintenance:* Backup & restore (3), Command prompt, Factory reset |
+| **System** | *Setup:* General, Appearance, Advanced (6) · *Access:* Users & groups (4), Certificates (3), REST API · *Maintenance:* Update Center, Packages, High availability |
 
-The profile is not under System. It lives under the avatar (`/me`).
+The profile lives under the avatar (`/me`), not in System. The gallery's
+`gallery/app/nav.json` is the working model of this table.
 
 ## URLs
 
-- Clean, lowercase, hyphenated: `/network/interfaces`, `/security/rules?if=wan`, `/security/rules/edit/12`, `/system/update`.
-- State that matters for a deep link (selected interface, tab, filter, view) is in the query string.
+- Clean, lowercase and hyphenated, with the area first: `/network/interfaces`, `/vpn/wireguard/peers`, `/security/rules?if=wan`, `/system/update`.
+- State that matters for a deep link (selected interface, filter, view) is in the query string.
 - Old 1.x URLs (`*.php`) are not mapped (no legacy). At cutover, unknown old URLs land on the dashboard.
 
 ## Packages
 
-Package plugins declare their pages with an area, an optional section group, an
-icon and a privilege. They appear in the section menu of that area. A package
-cannot add a new top-level area.
+- Package plugins declare their pages with an area, a group, an icon, a privilege and optional `pages` for a card menu. They appear in that area's mega dropdown.
+- A package cannot add a new top-level area.

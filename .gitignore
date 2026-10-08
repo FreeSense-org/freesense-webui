@@ -6,3 +6,4 @@ playwright-report/
 *.log
 .DS_Store
 # dist/ IS committed (the FreeSense-webui port is NO_BUILD); do not ignore it.
+.cache/

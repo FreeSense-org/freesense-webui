@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-fs-theme="freesense" data-fs-mode="auto" data-bs-theme="light" data-fs-accent="coral" data-fs-density="comfortable"
+	data-fs-skin-topbar="surface" data-fs-skin-section="surface" data-fs-skin-cards="outlined" data-fs-skin-tables="lines" data-fs-skin-buttons="rounded">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="fs-themes" content="/themes">
+<meta name="fs-csrf" content="gallery">
+<title>{{title}} · FreeSense</title>
+<script>
+	/* Server-side in the product (user preference). The gallery resolves 'auto' before first paint to avoid a flash. */
+	(function (r) { if (r.dataset.fsMode === 'auto') r.dataset.bsTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; })(document.documentElement);
+</script>
+<link rel="stylesheet" href="/ui/fs-ui.css">
+<link rel="stylesheet" id="fs-theme-freesense" href="/themes/freesense/theme.css">
+</head>
+<body class="fs-app" data-fs-el="app-shell" data-fs-layout="{{layout}}" data-fs-config='{"area":"{{area}}"}'>
+<a class="fs-skip" href="#fs-main">Skip to content</a>
+<div class="fs-progress" aria-hidden="true"></div>
+
+<header class="fs-topbar">
+	<div class="fs-topbar-inner">
+		<button type="button" class="fs-tb-btn fs-topbar-menu" data-fs-shell="drawer" aria-controls="fs-drawer" aria-expanded="false" aria-label="Open menu"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+		<a class="fs-brand" href="/gallery/app/" data-fs-nav><span class="fs-brand-mark" aria-hidden="true">FS</span><span class="fs-brand-name">FreeSense</span></a>
+		<nav class="fs-areas" aria-label="Main">{{areas}}</nav>
+		<div class="fs-topbar-tools">
+			<button type="button" class="fs-tb-search" data-fs-palette aria-label="Search pages and settings (Ctrl+K)"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>Search</span><kbd>Ctrl K</kbd></button>
+			<button type="button" class="fs-tb-btn" aria-label="Notifications, 3 new" title="Notifications"><i class="fa-solid fa-bell" aria-hidden="true"></i><span class="fs-tb-count" aria-hidden="true">3</span></button>
+			<button type="button" class="fs-tb-btn" data-fs-mode-toggle aria-label="Toggle light and dark" title="Toggle light and dark"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></button>
+			<a class="fs-tb-avatar" href="/gallery/app/me" data-fs-nav aria-label="Profile: Alex Morgan" title="Alex Morgan"><span aria-hidden="true">AM</span></a>
+		</div>
+	</div>
+</header>
+
+<div class="fs-drawer" id="fs-drawer" aria-label="Menu" hidden>{{drawer}}</div>
+<div class="fs-scrim" aria-hidden="true"></div>
+
+<div class="fs-body">
+	<aside class="fs-pagemenu" aria-label="{{menuTitle}}"{{menuHidden}}>{{menu}}</aside>
+	<main class="fs-main" id="fs-main" data-fs-main data-fs-page="{{page}}" data-fs-area="{{area}}" data-fs-layout="{{layout}}" tabindex="-1">
+{{main}}
+	</main>
+</div>
+
+<script type="application/json" id="fs-nav">{{nav}}</script>
+<script src="/ui/fs-ui.js"></script>
+<script>
+	/* Gallery-only: quick mode toggle until the profile menu element exists. */
+	jQuery(document).on('click', '[data-fs-mode-toggle]', () => FS.theme.set({ mode: FS.theme.resolved() === 'dark' ? 'light' : 'dark' }));
+</script>
+</body>
+</html>

@@ -50,7 +50,7 @@ A rule changes only through a pull request that edits this file.
 
 ## R7. One shell
 
-- The top bar and the section menu belong to the engine. A page declares only `LAYOUT = 'full'` or `LAYOUT = 'section'` and its area.
+- The top bar, mega dropdowns and card menu belong to the engine. A page declares only its area, group and, for multi-page features, its place in the feature's `pages`. The layout follows from that.
 - Pages never add navigation of their own beyond tabs and the view switch.
 
 ## R8. Icons

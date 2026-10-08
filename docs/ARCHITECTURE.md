@@ -5,7 +5,7 @@
 ```
  Browser                                    Firewall
  ┌─────────────────────────────────┐        ┌───────────────────────────────────────────┐
- │ Shell (top bar + section menu)  │        │ nginx                                     │
+ │ Shell (top bar + card menu)     │        │ nginx                                     │
  │ Page frame (server-rendered)    │◀──────▶│  /            → /usr/local/www-ui (2.0)   │
  │ Elements ── FS.el registry      │  HTML  │  /api/v1/*    → api/index.php (freesense) │
  │   │                             │        │                                           │
@@ -76,7 +76,7 @@ choices), validated by its theme scheme. It compiles to
 | `public/index.php` | Router: matches a route to a page class, checks auth and privilege, renders |
 | `Page` | Base class: `ROUTE`, `PRIV`, `AREA`, `LAYOUT` (`full` or `section`), `TITLE`, `build(Ui $ui)` |
 | `Ui` | Builder: one method per element; escapes everything; emits frame + skeleton + config |
-| `Shell` | Top bar, section menu, profile menu, status bar |
+| `Shell` | Centered top bar with mega dropdowns, card menu for multi-page features, profile menu |
 | `Menu` | Area and section registry built from page classes and plugin manifests |
 | `Session` | Reads the FreeSense GUI session; renders the sign-in page when there is none |
 
