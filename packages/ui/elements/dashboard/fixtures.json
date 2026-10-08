@@ -1,0 +1,106 @@
+{
+	"title": "Dashboard",
+	"description": "12-column widget grid with edit mode, drag and keyboard move, per-widget menu (refresh, interval, size, settings, collapse, remove), the widget catalogue and a per-user saved layout. The gallery fixtures do not save (persist: false); /gallery/app/ shows the saved, per-user dashboard.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Default layout",
+			"width": "full",
+			"surface": "page",
+			"config": { "persist": false, "linkBase": "/gallery/app" }
+		},
+		{
+			"name": "Edit mode",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"editing": true,
+				"widgets": [
+					{ "type": "system", "size": "md" },
+					{ "type": "resources", "size": "md", "settings": { "view": "meters" } },
+					{ "type": "gateways", "size": "md" }
+				]
+			}
+		},
+		{
+			"name": "Several copies with different settings",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"widgets": [
+					{ "type": "traffic", "size": "lg", "settings": { "iface": "wan" } },
+					{ "type": "traffic", "size": "lg", "every": 5, "settings": { "iface": "lan", "chips": false, "title": "LAN traffic" } },
+					{ "type": "metric", "size": "sm", "settings": { "label": "WAN download", "path": "/v1/status/traffic", "field": "wan.in_bps", "format": "bps" } },
+					{ "type": "metric", "size": "sm", "settings": { "label": "WAN_DHCP latency", "path": "/v1/status/gateways", "field": "[name=WAN_DHCP].rtt", "format": "ms", "warn": 30, "crit": 80 } },
+					{ "type": "metric", "size": "sm", "settings": { "label": "Firewall states", "path": "/v1/status/states", "field": "current", "format": "compact" } },
+					{ "type": "metric", "size": "sm", "settings": { "label": "CPU usage", "title": "CPU", "warn": 60, "crit": 85 } }
+				]
+			}
+		},
+		{
+			"name": "Small and medium widgets",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"widgets": [
+					{ "type": "thermal", "size": "sm" },
+					{ "type": "storage", "size": "sm", "settings": { "memory": true } },
+					{ "type": "quick-actions", "size": "sm" },
+					{ "type": "resources", "size": "sm", "settings": { "trend": false } },
+					{ "type": "states", "size": "md" },
+					{ "type": "dhcp-leases", "size": "md", "settings": { "iface": "IOT" } },
+					{ "type": "vpn", "size": "md", "settings": { "type": "wireguard" } }
+				]
+			}
+		},
+		{
+			"name": "Widget states: loading, empty, error, stale",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"widgets": [
+					{ "type": "metric", "size": "sm", "settings": { "title": "Loading (slow source)", "label": "Slow source", "path": "/v1/gallery/slow", "field": "value", "format": "num" } },
+					{ "type": "metric", "size": "sm", "settings": { "title": "Empty", "label": "No field", "path": "/v1/gallery/empty", "field": "value" } },
+					{ "type": "metric", "size": "sm", "settings": { "title": "Error", "label": "Broken source", "path": "/v1/gallery/fail", "field": "value" } },
+					{ "type": "metric", "size": "sm", "every": 2, "settings": { "title": "Stale (source stops answering)", "label": "Value", "path": "/v1/gallery/viz-stale?id=dashboard", "field": "value", "format": "num" } }
+				]
+			}
+		},
+		{
+			"name": "Collapsed, manual refresh, unknown type",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"widgets": [
+					{ "type": "services", "size": "md", "collapsed": true },
+					{ "type": "notices", "size": "md", "every": 0 },
+					{ "type": "acme-certificates", "size": "md" }
+				]
+			}
+		},
+		{
+			"name": "Long text and many items",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"persist": false,
+				"widgets": [
+					{ "type": "services", "size": "lg", "settings": { "limit": 30, "title": "Every service on the primary firewall in the main office building" } },
+					{ "type": "firewall-log", "size": "lg", "settings": { "limit": 20, "action": "block,reject" } },
+					{ "type": "top-talkers", "size": "full", "settings": { "count": 12, "by": "in" } }
+				]
+			}
+		},
+		{
+			"name": "Empty dashboard",
+			"width": "full",
+			"surface": "page",
+			"config": { "persist": false, "widgets": [] }
+		}
+	]
+}

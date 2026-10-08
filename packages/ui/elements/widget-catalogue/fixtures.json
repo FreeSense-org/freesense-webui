@@ -1,0 +1,12 @@
+{
+	"title": "Widget catalogue",
+	"description": "Every registered widget type, grouped by category, with search, description, a New badge, an icon preview and how many are already on the dashboard. The dashboard opens it in a drawer.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Inline list", "width": "lg", "config": { "inline": true, "counts": { "system": 1, "traffic": 2, "gateways": 1, "notices": 1 } } },
+		{ "name": "Search: VPN", "width": "md", "config": { "inline": true, "query": "vpn" } },
+		{ "name": "No match", "width": "md", "config": { "inline": true, "query": "printer toner" } },
+		{ "name": "Compact (no descriptions)", "width": "md", "config": { "inline": true, "compact": true, "types": ["system", "resources", "traffic", "metric"] } },
+		{ "name": "Trigger button (opens the drawer)", "width": "sm", "config": { "label": "Add widget", "variant": "primary" } }
+	]
+}
