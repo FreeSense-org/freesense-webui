@@ -1,0 +1,23 @@
+{
+	"title": "Avatar",
+	"description": "A user's picture, or initials on a colour picked from the theme's series tokens. Sizes xs to xl, optional presence.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Extra large", "width": "sm", "config": { "name": "Alex Morgan", "size": "xl" } },
+		{ "name": "Large", "width": "sm", "config": { "name": "Mette Holm", "size": "lg" } },
+		{ "name": "Medium", "width": "sm", "config": { "name": "Jonas Berg", "size": "md" } },
+		{ "name": "Small", "width": "sm", "config": { "name": "Ana Lima", "size": "sm" } },
+		{ "name": "Extra small", "width": "sm", "config": { "name": "Ana Lima", "size": "xs" } },
+		{ "name": "Accent colour", "width": "sm", "config": { "name": "Alex Morgan", "size": "lg", "color": "accent" } },
+		{ "name": "Series slot 7", "width": "sm", "config": { "name": "Peter Nørgaard", "size": "lg", "color": 7 } },
+		{ "name": "Presence: online", "width": "sm", "config": { "name": "Alex Morgan", "size": "lg", "presence": "online" } },
+		{ "name": "Presence: away", "width": "sm", "config": { "name": "Sofie Dahl", "size": "md", "presence": "away" } },
+		{ "name": "Presence: busy", "width": "sm", "config": { "name": "Ole Krag", "size": "md", "presence": "busy" } },
+		{ "name": "Presence: offline", "width": "sm", "config": { "name": "Ida Vang", "size": "md", "presence": "offline" } },
+		{ "name": "Username only", "width": "sm", "config": { "username": "admin", "size": "lg" } },
+		{ "name": "Broken image falls back to initials", "width": "sm", "config": { "name": "Lars Bo", "src": "/gallery/missing-avatar.png", "size": "lg" } },
+		{ "name": "From the API (/v1/me)", "width": "sm", "config": { "source": { "path": "/v1/me" }, "size": "lg" } },
+		{ "name": "Long name", "width": "sm", "config": { "name": "Maximiliane Alexandra van den Berghe-Oosterhuis", "size": "md" } },
+		{ "name": "No name", "width": "sm", "config": { "size": "md" } }
+	]
+}

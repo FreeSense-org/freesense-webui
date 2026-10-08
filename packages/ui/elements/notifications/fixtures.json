@@ -1,0 +1,14 @@
+{
+	"title": "Notifications",
+	"description": "Top-bar bell with the unread count; a panel lists notices with level, age and link, with dismiss and Dismiss all.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Live notices (click the bell)", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/notices" }, "every": 30 } },
+		{ "name": "Many, long text", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/notices-many" }, "every": 0 } },
+		{ "name": "Empty", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" }, "every": 0 } },
+		{ "name": "Loading", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/slow" }, "every": 0 } },
+		{ "name": "Error", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" }, "every": 0 } },
+		{ "name": "Stale (refresh fails after the first load)", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/flaky/notices" }, "every": 5 } },
+		{ "name": "Dismiss fails (rolls back)", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/notices-many" }, "every": 0, "dismiss": "/v1/gallery/identity/fail/{id}" } }
+	]
+}

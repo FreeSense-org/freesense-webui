@@ -1,0 +1,11 @@
+{
+	"title": "Profile menu",
+	"description": "Top-bar avatar button with the account dropdown: who is signed in, Light/Dark/Auto, accent, links and Sign out. Changes apply live and are saved.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Default (click the avatar)", "width": "md", "surface": "page", "config": { "links": { "profile": "/gallery/app/me", "appearance": "/gallery/app/me#appearance", "sessions": "/gallery/app/me#sessions" } } },
+		{ "name": "With quick mode toggle", "width": "md", "surface": "page", "config": { "modeToggle": true, "links": { "profile": "/gallery/app/me", "appearance": "/gallery/app/me#appearance", "sessions": "/gallery/app/me#sessions" } } },
+		{ "name": "Long name and email (given user)", "width": "md", "surface": "page", "config": { "user": { "username": "maximiliane.vandenberghe-oosterhuis", "name": "Maximiliane Alexandra van den Berghe-Oosterhuis", "email": "maximiliane.alexandra.vandenberghe-oosterhuis@network-operations.example.org", "role": "Read-only auditor" } } },
+		{ "name": "Unknown user (placeholder)", "width": "md", "surface": "page", "config": { "user": {} } }
+	]
+}
