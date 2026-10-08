@@ -1,0 +1,53 @@
+/*
+ * _section.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-section {
+		display: block;
+		min-width: 0;
+		&.has-divider {
+			padding-top: calc(var(--fs-gap) * 1.5);
+			border-top: var(--fs-border-width) solid var(--fs-border-default);
+		}
+	}
+	.fs-section-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 0.5rem var(--fs-gap);
+		margin-bottom: 0.875rem;
+	}
+	.fs-section-lead { flex: 1 1 16rem; min-width: 0; }
+	.fs-section-title {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		font-size: 1.0625rem;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+		> span { min-width: 0; }
+	}
+	h3.fs-section-title { font-size: 0.9375rem; }
+	.fs-section-icon { color: var(--fs-text-muted); font-size: 0.875em; }
+	.fs-section-desc {
+		margin: 0.25rem 0 0;
+		max-width: 48rem;
+		color: var(--fs-text-muted);
+		font-size: 0.875rem;
+		overflow-wrap: anywhere;
+	}
+	.fs-section-tools {
+		flex: none;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.fs-section-body { min-width: 0; }
+}

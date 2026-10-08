@@ -48,7 +48,9 @@ function sessionBack() {
 	return waitingForSession;
 }
 
+/* Accepts '/api/v1/x', '/v1/x' and '/x' (all mean /api/v1/x). */
 export function url(path, query) {
+	if (path.startsWith('/v1/')) path = path.slice(3);
 	let u = path.startsWith('/api/') ? path : config.base + path;
 	if (query && Object.keys(query).length) u += (u.includes('?') ? '&' : '?') + $.param(query);
 	return u;

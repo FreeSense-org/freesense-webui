@@ -1,0 +1,12 @@
+{
+	"title": "Topology",
+	"description": "Gateways, the firewall and its networks as a live diagram (draft).",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Live (interfaces + gateways)", "width": "full", "config": { "every": 5 } },
+		{ "name": "Half width, custom title", "width": "lg", "config": { "every": 10, "title": "Home office" } },
+		{ "name": "Loading", "width": "md", "config": { "interfaces": { "path": "/v1/gallery/slow" }, "gateways": { "path": "/v1/gallery/slow" } } },
+		{ "name": "Empty", "width": "md", "config": { "interfaces": { "path": "/v1/gallery/empty" }, "gateways": { "path": "/v1/gallery/empty" } } },
+		{ "name": "Error", "width": "md", "config": { "interfaces": { "path": "/v1/gallery/fail" } } }
+	]
+}

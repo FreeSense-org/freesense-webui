@@ -1,0 +1,44 @@
+{
+	"title": "Tabs",
+	"description": "In-page tabs with a More menu for tabs that do not fit, arrow keys, lazy content and optional ?tab= sync.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Interface status (URL sync)", "width": "full", "config": {
+			"label": "Interface sections", "query": true, "active": "overview",
+			"tabs": [
+				{ "id": "overview", "label": "Overview", "icon": "circle-info", "content": { "type": "kv", "source": { "path": "/status/interfaces/wan" }, "every": 5, "columns": 2, "fields": [
+					{ "path": "status", "label": "Status", "format": "status", "map": { "up": { "state": "ok", "label": "Up" }, "down": { "state": "crit", "label": "Down" } } },
+					{ "path": "if", "label": "Device", "mono": true },
+					{ "path": "ipv4", "label": "IPv4", "mono": true, "copyable": true },
+					{ "path": "ipv6", "label": "IPv6", "mono": true, "copyable": true },
+					{ "path": "in_bps", "label": "In", "format": "bps" },
+					{ "path": "out_bps", "label": "Out", "format": "bps" }
+				] } },
+				{ "id": "counters", "label": "Counters", "icon": "chart-column", "content": { "type": "kv", "source": { "path": "/status/interfaces/wan" }, "every": 5, "fields": [
+					{ "path": "bytes_in", "label": "Bytes in", "format": "bytes" },
+					{ "path": "bytes_out", "label": "Bytes out", "format": "bytes" },
+					{ "path": "errors_in", "label": "Errors in", "format": "num" },
+					{ "path": "errors_out", "label": "Errors out", "format": "num" },
+					{ "path": "collisions", "label": "Collisions", "format": "num" }
+				] } },
+				{ "id": "dhcp", "label": "DHCP lease", "badge": 1, "content": "Lease from 203.0.113.1, renews in 3 hours." },
+				{ "id": "ipv6", "label": "IPv6", "disabled": true, "content": "Not configured." }
+			] } },
+		{ "name": "Many tabs (More menu)", "width": "md", "config": {
+			"label": "Advanced settings",
+			"tabs": [
+				{ "id": "admin", "label": "Admin access", "content": "Protocol, port, session timeout and anti-lockout." },
+				{ "id": "firewall", "label": "Firewall & NAT", "content": "State table size, optimisation, bogon updates." },
+				{ "id": "networking", "label": "Networking", "content": "IPv6, hardware offloading, ARP handling." },
+				{ "id": "misc", "label": "Miscellaneous", "content": "Proxy, load balancing, power savings." },
+				{ "id": "tunables", "label": "System tunables", "badge": 42, "content": "sysctl values." },
+				{ "id": "notifications", "label": "Notifications", "content": "SMTP, Telegram and Pushover." }
+			] } },
+		{ "name": "Long labels", "width": "lg", "config": {
+			"tabs": [
+				{ "id": "a", "label": "Phase 1 proposals (IKE)", "content": "IKEv2 · AES-256-GCM · SHA-384 · DH 20" },
+				{ "id": "b", "label": "Phase 2 proposals (child SA)", "content": "ESP · AES-256-GCM · PFS group 20" },
+				{ "id": "c", "label": "Mobile clients and authentication", "content": "EAP-MSCHAPv2, virtual address pool 10.77.0.0/24" }
+			] } }
+	]
+}

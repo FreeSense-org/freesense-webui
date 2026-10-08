@@ -1,0 +1,36 @@
+{
+	"title": "Split view",
+	"description": "List and detail side by side; stacks below 992 px. Optional draggable divider.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Peers and peer detail (resizable)", "width": "full", "surface": "page", "config": {
+			"resizable": true, "listWidth": 18, "listLabel": "Peers", "detailLabel": "Peer details",
+			"list": { "el": "card", "config": { "title": "Peers", "icon": "users", "content": [
+				{ "el": "status", "config": { "state": "ok", "label": "office-gw", "detail": "38 s ago" } },
+				{ "el": "status", "config": { "state": "ok", "label": "pixel-9", "detail": "1 min ago" } },
+				{ "el": "status", "config": { "state": "neutral", "label": "laptop-claire", "detail": "never" } }
+			] } },
+			"detail": { "el": "card", "config": { "title": "office-gw", "subtitle": "Office site gateway · wg0", "icon": "building",
+				"actions": [{ "id": "edit", "icon": "pen", "label": "Edit peer" }],
+				"content": { "type": "kv", "source": { "path": "/vpn/wireguard/peers/office-gw" }, "every": 5, "fields": [
+					{ "path": "status", "label": "Status", "format": "status", "map": { "up": { "state": "ok", "label": "Connected" } } },
+					{ "path": "public_key", "label": "Public key", "mono": true, "copyable": true },
+					{ "path": "endpoint", "label": "Endpoint", "mono": true },
+					{ "path": "allowed_ips", "label": "Allowed IPs", "mono": true },
+					{ "path": "latest_handshake", "label": "Handshake", "format": "ago" },
+					{ "path": "rx", "label": "Received", "format": "bytes" },
+					{ "path": "tx", "label": "Sent", "format": "bytes" }
+				] } } } } },
+		{ "name": "Fixed width, text detail", "width": "full", "surface": "page", "config": {
+			"listWidth": 14,
+			"list": { "el": "section", "config": { "title": "Certificates", "level": 3, "content": ["webConfigurator default", "OpenVPN server", "Branch office IPsec"] } },
+			"detail": { "el": "section", "config": { "title": "webConfigurator default", "level": 3, "description": "Self-signed, valid until 2027-10-07", "content": { "type": "kv", "items": [
+				{ "label": "Subject", "value": "CN=fw01.home.arpa" },
+				{ "label": "Key", "value": "ECDSA P-256" },
+				{ "label": "SHA-256", "value": "4F:2A:91:0C:7B:EE:13:58:A6:D2:3F:90", "mono": true, "copyable": true }
+			] } } } } },
+		{ "name": "Empty detail", "width": "full", "surface": "page", "config": {
+			"list": { "el": "card", "config": { "title": "Peers", "content": "No peer selected." } },
+			"detail": { "el": "card", "config": { "content": { "type": "text", "text": "Select a peer to see its details.", "muted": true } } } } }
+	]
+}

@@ -1,0 +1,90 @@
+/*
+ * _kv-list.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-kv {
+		display: block;
+		container-type: inline-size;
+		min-width: 0;
+	}
+	.fs-kv-list {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		column-gap: calc(var(--fs-gap) * 2);
+		margin: 0;
+	}
+	.fs-kv-row {
+		display: grid;
+		grid-template-columns: minmax(6.5rem, 38%) minmax(0, 1fr);
+		gap: 0.25rem var(--fs-gap);
+		align-items: center;
+		min-height: var(--fs-row-h);
+		padding: 0.375rem 0;
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+		&[hidden] { display: none; }
+	}
+	.fs-kv-list > .fs-kv-row:last-child { border-bottom: 0; }
+	.fs-kv-key {
+		margin: 0;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		font-weight: 500;
+		overflow-wrap: anywhere;
+	}
+	.fs-kv-value {
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		min-width: 0;
+		margin: 0;
+		color: var(--fs-text-strong);
+	}
+	.fs-kv-val {
+		min-width: 0;
+		overflow-wrap: anywhere;
+		&.is-num { font-variant-numeric: tabular-nums; }
+		> a { color: var(--fs-accent-text); text-decoration: none; &:hover { text-decoration: underline; } }
+	}
+	.fs-kv-unit {
+		margin-left: 0.25em;
+		color: var(--fs-text-muted);
+		font-size: 0.8125em;
+	}
+	.fs-kv-copy {
+		flex: none;
+		display: inline-grid;
+		place-items: center;
+		width: 1.75rem;
+		min-height: 1.75rem;
+		height: 1.75rem;
+		padding: 0;
+		border-radius: var(--fs-radius-sm);
+		font-size: 0.75rem;
+		opacity: 0.7;
+		transition: opacity var(--fs-dur-fast);
+		&:hover, &:focus-visible { opacity: 1; }
+		&.is-copied { color: var(--fs-status-ok); opacity: 1; }
+		&[hidden] { display: none; }
+	}
+	.fs-kv-row:hover .fs-kv-copy { opacity: 1; }
+
+	/* label above value: explicit, or automatically in narrow containers */
+	.fs-kv[data-layout='stacked'] .fs-kv-row {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.125rem;
+	}
+	@container (max-width: 17.5rem) {
+		.fs-kv-row { grid-template-columns: minmax(0, 1fr); gap: 0.125rem; }
+	}
+	@container (min-width: 36rem) {
+		.fs-kv[data-columns='2'] .fs-kv-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		.fs-kv[data-columns='2'] .fs-kv-list > .fs-kv-row:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+	}
+	@media (pointer: coarse) {
+		.fs-kv-copy { width: 2.5rem; height: 2.5rem; min-height: 2.5rem; opacity: 1; }
+	}
+}

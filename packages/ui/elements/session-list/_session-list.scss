@@ -1,0 +1,117 @@
+/*
+ * _session-list.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-session-list {
+		display: block;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+	}
+	[data-fs-skin-cards='elevated'] .fs-session-list { border-color: transparent; box-shadow: var(--fs-shadow-md); }
+	[data-fs-skin-cards='flat'] .fs-session-list { border-color: transparent; background: var(--fs-surface-sunken); }
+	.fs-session-list.is-stale .fs-session-list-items { opacity: 0.6; }
+
+	.fs-session-list-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 0.75rem var(--fs-gap);
+		padding: var(--fs-pad) var(--fs-pad) 0.75rem;
+		.btn[hidden] { display: none; }
+	}
+	.fs-session-list-title { margin: 0; font-size: 1.0625rem; }
+	.fs-session-list-desc { margin: 0.25rem 0 0; color: var(--fs-text-muted); font-size: 0.8125rem; }
+	.fs-session-list-others[data-armed='true'] { border-color: var(--fs-status-crit); color: var(--fs-status-crit); }
+	.fs-session-list-body { padding: 0 var(--fs-pad) var(--fs-pad); }
+	.fs-session-list-body > .fs-state-loading { padding-top: 0.5rem; }
+
+	.fs-session-list-items {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-md);
+	}
+	.fs-session-list-item {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 0.25rem 0.875rem;
+		padding: 0.75rem 0.875rem;
+		& + & { border-top: var(--fs-border-width) solid var(--fs-border-default); }
+	}
+	.fs-session-list-icon {
+		display: grid;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+		.is-current & { background: color-mix(in srgb, var(--fs-accent-fill) 12%, transparent); color: var(--fs-accent-text); }
+	}
+	.fs-session-list-main { min-width: 0; }
+	.fs-session-list-agent {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.25rem 0.625rem;
+		margin: 0;
+		color: var(--fs-text-strong);
+		font-weight: 600;
+		overflow-wrap: anywhere;
+	}
+	.fs-session-list-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3125rem;
+		padding: 0.0625rem 0.5rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--fs-status-ok) 12%, transparent);
+		color: var(--fs-status-ok);
+		font-size: 0.75rem;
+		font-weight: 600;
+		white-space: nowrap;
+		> i { font-size: 0.6875rem; }
+	}
+	.fs-session-list-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.125rem 1rem;
+		margin: 0.1875rem 0 0;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		font-variant-numeric: tabular-nums;
+	}
+	.fs-session-list-ip { color: var(--fs-text-default); }
+	.fs-session-list-confirm {
+		grid-column: 2 / -1;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem 1rem;
+		margin-top: 0.5rem;
+		padding: 0.625rem 0.75rem;
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-status-crit) 35%, transparent);
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-status-crit) 7%, transparent);
+		animation: fs-sl-in var(--fs-dur-base) ease-out;
+	}
+	@keyframes fs-sl-in { from { opacity: 0; transform: translateY(-0.25rem); } }
+	.fs-session-list-confirm-text { color: var(--fs-text-strong); font-size: 0.8125rem; }
+	.fs-session-list-confirm-actions { display: flex; gap: 0.5rem; }
+	@media (max-width: 575.98px) {
+		.fs-session-list-item { grid-template-columns: auto minmax(0, 1fr); }
+		.fs-session-list-revoke { grid-column: 2; justify-self: start; min-height: 2.5rem; }
+		.fs-session-list-confirm { grid-column: 1 / -1; }
+		.fs-session-list-confirm-actions .btn { min-height: 2.5rem; }
+		.fs-session-list-others { min-height: 2.5rem; }
+	}
+}

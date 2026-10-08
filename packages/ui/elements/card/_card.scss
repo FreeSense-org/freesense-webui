@@ -1,0 +1,134 @@
+/*
+ * _card.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
+ * Card skin map (html[data-fs-skin-cards]):
+ *   outlined (default)  raised surface, hairline border, no shadow
+ *   raised              raised surface, hairline border, small shadow
+ *   flat                raised surface, no border, no shadow
+ */
+@layer elements {
+	.fs-card {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		background: var(--fs-surface-raised);
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		color: var(--fs-text-default);
+		transition: opacity var(--fs-dur-base);
+	}
+	[data-fs-skin-cards='raised'] .fs-card { box-shadow: var(--fs-shadow-sm); }
+	[data-fs-skin-cards='flat'] .fs-card { border-color: transparent; box-shadow: none; }
+
+	.fs-card-head {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		padding: var(--fs-pad) var(--fs-pad) 0;
+	}
+	.fs-card-icon {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+		font-size: 0.875rem;
+	}
+	.fs-card-lead {
+		flex: 1 1 auto;
+		min-width: 0;
+		align-self: center;
+	}
+	.fs-card-title {
+		margin: 0;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--fs-text-strong);
+		overflow-wrap: anywhere;
+	}
+	.fs-card-subtitle {
+		margin: 0.125rem 0 0;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		overflow-wrap: anywhere;
+	}
+	.fs-card-toggle {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		max-width: 100%;
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-align: left;
+		border-radius: var(--fs-radius-sm);
+		cursor: pointer;
+	}
+	.fs-card-title-text { min-width: 0; }
+	.fs-card-chevron {
+		flex: none;
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		transition: transform var(--fs-dur-fast);
+	}
+	.fs-card.is-collapsed .fs-card-chevron { transform: rotate(-90deg); }
+	.fs-card.is-collapsed .fs-card-head { padding-bottom: var(--fs-pad); }
+
+	.fs-card-tools {
+		flex: none;
+		display: flex;
+		align-items: center;
+		gap: 0.25rem;
+		margin: -0.25rem -0.5rem -0.25rem 0;
+		> .fs-status { margin-right: 0.25rem; }
+	}
+
+	.fs-card-body {
+		flex: 1 1 auto;
+		min-width: 0;
+		padding: var(--fs-pad);
+		> .fs-nest-text:last-child { margin-bottom: 0; }
+	}
+	.fs-card-head + .fs-card-body { padding-top: 0.875rem; }
+	.fs-card.is-flush > .fs-card-body { padding: 0; }
+	.fs-card.is-flush > .fs-card-head + .fs-card-body { padding-top: 0.75rem; }
+
+	.fs-card-foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem var(--fs-gap);
+		padding: 0.75rem var(--fs-pad);
+		border-top: var(--fs-border-width) solid var(--fs-border-default);
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		&[hidden] { display: none; }
+	}
+	.fs-card-foot-text { flex: 1 1 auto; min-width: 0; }
+	.fs-card-foot-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+	.fs-card-foot-link { margin-left: auto; padding-inline: 0; }
+
+	/* Nested content (nest.js): paragraphs and stacked child elements */
+	.fs-nest-text {
+		margin: 0 0 0.75rem;
+		overflow-wrap: anywhere;
+		&:last-child { margin-bottom: 0; }
+	}
+	.fs-nest-stack {
+		display: flex;
+		flex-direction: column;
+		gap: var(--fs-gap);
+		min-width: 0;
+	}
+}

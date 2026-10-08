@@ -1,0 +1,19 @@
+{
+	"title": "Ring",
+	"description": "Circular gauge with thresholds, the value in the centre and a label.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "CPU (live)", "width": "sm", "config": { "label": "CPU", "source": { "path": "/v1/status/system" }, "field": "cpu.usage", "detailField": "cpu.model", "every": 2, "warn": 60, "crit": 85 } },
+		{ "name": "Memory (value of max)", "width": "sm", "config": { "label": "Memory", "source": { "path": "/v1/status/system" }, "field": "memory.used", "maxField": "memory.total", "format": "num", "unit": "MiB", "every": 5 } },
+		{ "name": "State table", "width": "sm", "config": { "label": "States", "source": { "path": "/v1/status/states" }, "field": "current", "maxField": "max", "format": "compact", "every": 3 } },
+		{ "name": "Temperature (value)", "width": "sm", "config": { "label": "Core 0", "source": { "path": "/v1/status/system" }, "field": "temps.0.c", "format": "raw", "unit": "°C", "decimals": 0, "max": 100, "display": "value", "warn": 70, "crit": 85, "every": 3, "color": 4 } },
+		{ "name": "Warning", "width": "sm", "config": { "label": "Swap", "value": 81 } },
+		{ "name": "Critical", "width": "sm", "config": { "label": "Disk /var/log", "value": 96 } },
+		{ "name": "Small", "width": "sm", "config": { "label": "Load", "size": "sm", "value": 34 } },
+		{ "name": "Large", "width": "sm", "config": { "label": "Bandwidth used this month", "size": "lg", "value": 612, "max": 1000, "format": "num", "unit": "GB" } },
+		{ "name": "Long label", "width": "sm", "config": { "label": "Suricata inspection queue on the WAN interface", "value": 12 } },
+		{ "name": "Loading", "width": "sm", "config": { "label": "Slow", "source": { "path": "/v1/gallery/slow" }, "field": "value" } },
+		{ "name": "Empty", "width": "sm", "config": { "label": "Empty", "source": { "path": "/v1/gallery/empty" }, "field": "value" } },
+		{ "name": "Error", "width": "md", "config": { "label": "Error", "source": { "path": "/v1/gallery/fail" }, "field": "value" } }
+	]
+}

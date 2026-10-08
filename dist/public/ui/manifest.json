@@ -7,7 +7,7 @@
 	],
 	"files": {
 		"themes/freesense/theme.css": "e3fb36f9ece997e7a429836e2a5321855444bc8998ef9a7993f2c81fe5aa8903",
-		"themes/freesense/theme.json": "9139fccd39e6ab1138b35a98e1f461c70f3e3c29c859dbfdf4278874ab77f15f",
+		"themes/freesense/theme.json": "1c2072414f3c391c79c41104975c1df4bcd6cbc1c5015aa91106735f8aeb4e2c",
 		"ui/LICENSES.txt": "58d50253ecbd2ac3c9daf6bdbaca97aad5ed67bdfb6ccb4c7bf57ccb89885a1c",
 		"ui/fonts/fa-solid-900.woff2": "24e5fae26b41c08b2df81c91669f5aaae71d81a84a4713fc56b5c621b78dd456",
 		"ui/fonts/inter-latin-ext-wght-normal.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
@@ -16,7 +16,7 @@
 		"ui/fonts/jetbrains-mono-latin-600-normal.woff2": "400c6bfda18d5d14acad1c15d6dcb9f8e13c015e7286317e0b9a482539bef147",
 		"ui/fonts/jetbrains-mono-latin-ext-400-normal.woff2": "505dfba8ecbe77e82765f36d317ed7ef4ac42719dc5f4ae68d1c483fd22d0d14",
 		"ui/fonts/jetbrains-mono-latin-ext-600-normal.woff2": "90899aac1c15552c028fd205376bb537a2a5205164fe8626efabad77d7260c20",
-		"ui/fs-ui.css": "c8cd8204d0d0e9092c463b207fa43e274212098e4884050b6e4703ca09e56b17",
-		"ui/fs-ui.js": "523d2e450778a3d39b04e488c1c9a71c395cb1d37dbb1b02263eec98cdfd77d2"
+		"ui/fs-ui.css": "6536b8e00087f123ed5a31cf92b5c4260814a8191d25008ad8668ab0c50a37a9",
+		"ui/fs-ui.js": "3986fb74f79a3ac4f8359361c835dc347580f01c9206fb0978b570a002a26fde"
 	}
 }

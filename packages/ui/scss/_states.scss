@@ -48,6 +48,28 @@
 	.fs-state-text { margin: 0; max-width: 32rem; color: var(--fs-text-muted); font-size: 0.875em; }
 	.fs-state .btn { margin-top: 0.5rem; }
 
+	.fs-state-compact {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+		color: var(--fs-status-crit);
+		font-size: 0.8125rem;
+		span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--fs-text-muted); }
+	}
+	.fs-state-retry {
+		display: inline-grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		margin-left: auto;
+		border: 0;
+		border-radius: var(--fs-radius-sm);
+		background: transparent;
+		color: var(--fs-text-muted);
+		&:hover { background: var(--fs-surface-sunken); color: var(--fs-text-strong); }
+	}
+
 	[data-fs-stale] {
 		position: relative;
 		opacity: 0.72;

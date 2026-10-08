@@ -1,0 +1,27 @@
+{
+	"title": "Toolbar",
+	"description": "Search, filters, view switch and actions above a collection; a bulk-action bar appears while items are selected.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Firewall rules", "width": "full", "config": {
+			"label": "Rule tools",
+			"search": { "placeholder": "Search rules" },
+			"filters": [
+				{ "id": "action", "type": "chips", "label": "Action", "multiple": true, "options": [{ "value": "pass", "label": "Pass", "count": 14 }, { "value": "block", "label": "Block", "count": 3 }, { "value": "reject", "label": "Reject", "count": 1 }] },
+				{ "id": "proto", "label": "Protocol", "options": [{ "value": "tcp", "label": "TCP" }, { "value": "udp", "label": "UDP" }, { "value": "icmp", "label": "ICMP" }] }
+			],
+			"actions": [{ "id": "add", "label": "Add rule", "icon": "plus", "variant": "primary" }],
+			"bulk": [{ "id": "enable", "label": "Enable", "icon": "toggle-on" }, { "id": "disable", "label": "Disable", "icon": "toggle-off" }, { "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true }] } },
+		{ "name": "DHCP leases with view switch", "width": "full", "config": {
+			"search": { "placeholder": "Search hostname, IP or MAC", "delay": 300 },
+			"filters": [{ "id": "state", "type": "chips", "label": "Lease state", "value": "all", "options": [{ "value": "all", "label": "All" }, { "value": "active", "label": "Active" }, { "value": "static", "label": "Static" }, { "value": "expired", "label": "Expired" }] }],
+			"view": { "label": "Layout", "value": "table", "options": [{ "id": "table", "label": "Table", "icon": "table-list", "iconOnly": true }, { "id": "cards", "label": "Cards", "icon": "grip", "iconOnly": true }] },
+			"actions": [{ "id": "export", "label": "Export", "icon": "download" }] } },
+		{ "name": "Selection active", "width": "full", "config": {
+			"search": true,
+			"bulk": [{ "id": "release", "label": "Release", "icon": "eject" }, { "id": "static", "label": "Make static", "icon": "thumbtack" }],
+			"actions": [{ "id": "refresh", "label": "Refresh", "icon": "rotate-right", "iconOnly": true }],
+			"selection": 3 } },
+		{ "name": "Search only", "width": "md", "config": { "search": { "placeholder": "Filter aliases" } } }
+	]
+}

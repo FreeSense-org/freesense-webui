@@ -50,7 +50,9 @@ function go(href, { push = true } = {}) {
 			$(document).trigger('fs:navigated', [info]);
 			const h1 = imported.querySelector('h1');
 			if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus({ preventScroll: true }); }
-			window.scrollTo(0, 0);
+			const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+			if (target) target.scrollIntoView({ block: 'start' });
+			else window.scrollTo(0, 0);
 		})
 		.fail((xhr, status) => { if (status !== 'abort') location.href = href; })
 		.always(() => { busy = null; $app.removeClass('is-navigating'); });

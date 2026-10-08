@@ -1,0 +1,39 @@
+{
+	"title": "Card",
+	"description": "Titled surface with header actions, nested content and a footer. Follows the theme's card skin.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "System, with a nested kv-list", "width": "md", "surface": "page", "config": {
+			"title": "System", "icon": "server", "subtitle": "fw01.home.arpa",
+			"actions": [{ "id": "refresh", "icon": "rotate-right", "label": "Refresh" }],
+			"menu": [{ "id": "edit", "icon": "pen", "label": "Edit general setup", "href": "/system/general" }, { "divider": true }, { "id": "reboot", "icon": "power-off", "label": "Reboot", "danger": true }],
+			"content": { "type": "kv", "source": { "path": "/status/system" }, "every": 5, "fields": [
+				{ "path": "version", "label": "Version" },
+				{ "path": "uptime", "label": "Uptime", "format": "duration" },
+				{ "path": "cpu.usage", "label": "CPU", "format": "pct" },
+				{ "path": "memory.used", "of": "memory.total", "label": "Memory", "format": "bytes", "scale": 1048576 }
+			] },
+			"footer": { "text": "Updated every 5 seconds", "link": { "id": "details", "label": "Hardware details", "href": "/insights/system" } } } },
+		{ "name": "Status in header, text body", "width": "md", "surface": "page", "config": {
+			"title": "Firmware update", "icon": "cloud-arrow-down", "status": { "state": "info", "label": "Available" },
+			"content": ["FreeSense 1.1.0-DEV (20261008-0100) is available on the Development channel.", "Development builds are experimental and unsupported."],
+			"footer": { "actions": [{ "id": "update", "label": "Open Update Center", "href": "/system/update" }], "primary": true } } },
+		{ "name": "Collapsible", "width": "md", "surface": "page", "config": {
+			"title": "Advanced options", "subtitle": "Rarely needed", "collapsible": true, "collapsed": true,
+			"content": { "type": "text", "text": "Advanced settings are shown here when the card is expanded.", "muted": true } } },
+		{ "name": "Nested elements", "width": "lg", "surface": "page", "config": {
+			"title": "Gateways", "icon": "route",
+			"content": [
+				{ "el": "status", "config": { "state": "ok", "label": "WAN_DHCP", "detail": "8.4 ms" } },
+				{ "el": "status", "config": { "state": "warn", "label": "WAN2_PPPOE", "detail": "4% loss" } },
+				{ "el": "status", "config": { "state": "ok", "label": "WG_SITE_GW", "detail": "21.8 ms" } }
+			] } },
+		{ "name": "Loading content", "width": "sm", "surface": "page", "config": { "title": "Services", "content": { "type": "kv", "source": { "path": "/gallery/slow" }, "fields": [{ "path": "0.name", "label": "Name" }] } } },
+		{ "name": "Error content", "width": "sm", "surface": "page", "config": { "title": "Services", "content": { "type": "kv", "source": { "path": "/gallery/fail" }, "fields": [{ "path": "name", "label": "Name" }] } } },
+		{ "name": "Long text", "width": "sm", "surface": "page", "config": {
+			"title": "Site-to-site tunnel to the Copenhagen branch office over the backup fibre link", "subtitle": "IPsec phase 1 · IKEv2 · AES-256-GCM · PRF SHA-384 · DH group 20 (NIST P-384)",
+			"actions": [{ "id": "edit", "icon": "pen", "label": "Edit" }],
+			"content": "A very long body paragraph that wraps across several lines to check spacing, line height and the hairline footer below when a description is unusually wordy." } },
+		{ "name": "No title", "width": "sm", "surface": "page", "config": { "content": "A bare card with body content only." } }
+	]
+}

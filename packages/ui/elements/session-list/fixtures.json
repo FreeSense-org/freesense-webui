@@ -1,0 +1,14 @@
+{
+	"title": "Session list",
+	"description": "Active sessions with device, IP, start and last seen; sign out other sessions after an inline confirmation.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "My sessions", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/me/sessions" } } },
+		{ "name": "Many sessions", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/sessions-many" }, "revoke": "/v1/gallery/identity/sessions/{id}", "every": 0 } },
+		{ "name": "Sign out fails (rolls back)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/me/sessions" }, "revoke": "/v1/gallery/identity/fail/{id}", "every": 0 } },
+		{ "name": "Loading", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/slow" } } },
+		{ "name": "Empty", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" } } },
+		{ "name": "Error", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" } } },
+		{ "name": "Stale (refresh fails after the first load)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/flaky/sessions" }, "every": 5 } }
+	]
+}
