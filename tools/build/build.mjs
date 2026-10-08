@@ -97,7 +97,7 @@ for (const [dir, re] of fonts) {
 log(`fonts ${readdirSync(join(uiOut, 'fonts')).length} files`);
 
 /* 3b. Third-party licenses for everything bundled into dist/ */
-const bundled = ['bootstrap', '@popperjs/core', 'jquery', '@fortawesome/fontawesome-free', '@fontsource-variable/inter', '@fontsource/jetbrains-mono'];
+const bundled = ['bootstrap', '@popperjs/core', 'jquery', 'uplot', '@fortawesome/fontawesome-free', '@fontsource-variable/inter', '@fontsource/jetbrains-mono'];
 const notices = [`FreeSense WebUI ${ui.version}
 Copyright (c) 2026 The FreeSense Project
 Licensed under the Apache License, Version 2.0.
