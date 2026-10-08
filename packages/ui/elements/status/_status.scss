@@ -35,6 +35,7 @@
 		}
 		/* dot: small coloured dot instead of the icon (dense lists); the label stays */
 		&[data-variant='dot'] > i {
+			--fa-width: 0.5rem;
 			display: inline-block;
 			flex: none;
 			width: 0.5rem;

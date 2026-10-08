@@ -37,7 +37,7 @@
 	.g-links a { color: var(--fs-text-muted); text-decoration: none; font-weight: 500; }
 	.g-links a[aria-current] { color: var(--fs-accent-text); }
 	.g-brand .fs-brand-mark { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: var(--fs-radius-sm); background: var(--fs-accent-fill); color: var(--fs-accent-on); font-size: 0.6875rem; font-weight: 800; }
-	.g-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1600px; margin: 0 auto; }
+	.g-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); width: 100%; max-width: 1600px; margin: 0 auto; }
 	.g-index { position: sticky; top: 60px; align-self: start; height: calc(100vh - 60px); overflow: auto; padding: 16px; border-right: var(--fs-border-width) solid var(--fs-border-default); }
 	.g-index ul { list-style: none; padding: 0; margin: 12px 0 0; }
 	.g-index a { display: flex; justify-content: space-between; padding: 5px 8px; border-radius: var(--fs-radius-sm); color: var(--fs-text-default); text-decoration: none; font-size: 0.8125rem; }

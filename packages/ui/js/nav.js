@@ -22,6 +22,15 @@ import $ from 'jquery';
 import { live } from './live.js';
 
 let busy = null;
+const guards = new Set();
+
+/* Ask every registered guard; a guard returns true/false or a Promise of it. */
+async function mayLeave() {
+	for (const g of guards) {
+		try { if ((await g()) === false) return false; } catch { return false; }
+	}
+	return true;
+}
 
 function mainInfo(node) {
 	return {
@@ -67,13 +76,28 @@ $(document).on('click', 'a[data-fs-nav]', function (e) {
 	if (!sameOrigin(this) || location.protocol === 'file:') return;
 	if (this.pathname === location.pathname && this.search === location.search && this.hash) return;
 	e.preventDefault();
-	go(this.href);
+	const href = this.href;
+	mayLeave().then((ok) => { if (ok) go(href); });
 });
 
-window.addEventListener('popstate', (e) => { if (e.state && e.state.fsNav) go(location.href, { push: false }); });
+let restoring = false;
+window.addEventListener('popstate', (e) => {
+	if (!e.state || !e.state.fsNav) return;
+	if (restoring) { restoring = false; return; }
+	const target = location.href;
+	mayLeave().then((ok) => {
+		if (ok) go(target, { push: false });
+		else { restoring = true; history.go(1); }
+	});
+});
 if (location.protocol !== 'file:') history.replaceState({ fsNav: true }, '', location.href);
 
 export const nav = {
 	go,
+	/**
+	 * Register a guard asked before partial navigation (links, Back/Forward).
+	 * Returns an unregister function. Elements with unsaved changes use this.
+	 */
+	beforeLeave(fn) { guards.add(fn); return () => guards.delete(fn); },
 	current() { const m = document.querySelector('[data-fs-main]'); return m ? mainInfo(m) : null; }
 };

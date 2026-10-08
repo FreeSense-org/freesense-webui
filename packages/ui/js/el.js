@@ -85,7 +85,9 @@ export const el = {
 		if (observer) return;
 		observer = new MutationObserver((records) => {
 			for (const r of records) {
-				r.removedNodes.forEach((n) => scan(n, destroyNode));
+				/* A node that is moved (removed and re-added in the same task) keeps its
+				 * instance: destruction waits a microtask and skips connected nodes. */
+				r.removedNodes.forEach((n) => scan(n, (x) => queueMicrotask(() => { if (!x.isConnected) destroyNode(x); })));
 				r.addedNodes.forEach((n) => scan(n, initNode));
 			}
 		});

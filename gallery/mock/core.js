@@ -527,13 +527,15 @@
 
 	/* POST /api/v1/batch {requests: [{id, method, path}]} -> [{id, status, body}] */
 	route('POST', '/api/v1/batch', function (p, q, body) {
+		var delay = 0;
 		var out = ((body && body.requests) || []).map(function (r) {
 			var u = new URL(r.path, location.origin);
 			var path = u.pathname.slice(u.pathname.indexOf('/api/v1/'));
 			var res = dispatch((r.method || 'GET').toUpperCase(), path, u.searchParams, null);
+			delay = Math.max(delay, res.delay || 0);
 			return { id: r.id, status: res.status, body: res.body };
 		});
-		return ok(out);
+		return Object.assign(ok(out), delay ? { delay: delay } : {});
 	});
 
 	/* --------------------------------------------------------------- transport */

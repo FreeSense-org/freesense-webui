@@ -67,7 +67,11 @@ async function flush() {
 function schedule() {
 	if (state.scheduled) return;
 	state.scheduled = true;
-	(typeof requestAnimationFrame === 'function' && !document.hidden ? requestAnimationFrame : (f) => setTimeout(f, 0))(flush);
+	/* Next frame, with a timer fallback: frames do not run in background tabs. */
+	let done = false;
+	const once = () => { if (!done) { done = true; flush(); } };
+	if (typeof requestAnimationFrame === 'function' && !document.hidden) requestAnimationFrame(once);
+	setTimeout(once, 50);
 }
 
 export const batch = {

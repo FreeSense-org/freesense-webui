@@ -5,7 +5,7 @@
  * Copyright (c) 2026 The FreeSense Project
  * SPDX-License-Identifier: Apache-2.0
  */
-/* Gallery mock routes: current user, preferences, sessions, version, update, jobs. */
+/* Gallery mock routes: current user, preferences, sessions, version. */
 (function (M) {
 	'use strict';
 
@@ -34,7 +34,6 @@
 		product: 'FreeSense', version: '1.1.0-DEVELOPMENT', build: '20261008-0100', channel: 'development', arch: 'amd64',
 		freebsd: '16.0-CURRENT', boot_environment: 'default', update: { available: true, latest: '1.1.0-DEVELOPMENT 20261009-0100', checked: new Date(T0 - 40 * 60000).toISOString() }
 	};
-	var jobs = {};
 
 	M.route('GET', '/api/v1/me', function () { return M.ok(Object.assign({}, me, { preferences: prefs })); });
 	M.route('PUT', '/api/v1/me/profile', function (p, q, b) {
@@ -58,33 +57,5 @@
 	});
 	M.route('GET', '/api/v1/system/version', function () { return M.ok(version); });
 
-	/* Jobs: long operations with a log cursor (?after=<line>). */
-	M.route('POST', '/api/v1/jobs/demo', function (p, q, b) {
-		var id = 'j' + Math.random().toString(36).slice(2, 8);
-		var steps = (b && b.steps) || ['Checking for updates', 'Creating boot environment snapshot', 'Downloading packages (412 MiB)', 'Verifying signatures', 'Installing System packages', 'Updating Optional Packages', 'Finishing'];
-		jobs[id] = { id: id, title: (b && b.title) || 'Demo job', started: Date.now(), steps: steps, fail: !!(b && b.fail) };
-		return M.ok({ id: id });
-	});
-	M.route('GET', '/api/v1/jobs/{id}', function (p, q) {
-		var j = jobs[p.id];
-		if (!j) return M.err(404, 'Job not found');
-		var elapsed = (Date.now() - j.started) / 1000;
-		var per = 2.5;
-		var done = Math.min(j.steps.length, Math.floor(elapsed / per));
-		var failed = j.fail && done >= 3;
-		if (failed) done = 3;
-		var lines = [];
-		for (var i = 0; i < done + (done < j.steps.length && !failed ? 1 : 0); i++) {
-			lines.push({ n: lines.length + 1, t: new Date(j.started + i * per * 1000).toISOString(), text: '>>> ' + j.steps[i] + '...' });
-			if (i < done) lines.push({ n: lines.length + 1, t: new Date(j.started + (i + 0.8) * per * 1000).toISOString(), text: 'done.' });
-		}
-		if (failed) lines.push({ n: lines.length + 1, t: new Date().toISOString(), text: 'ERROR: signature verification failed for FreeSense-system-1.1.0.pkg', level: 'error' });
-		var after = +q.get('after') || 0;
-		var state = failed ? 'failed' : done >= j.steps.length ? 'succeeded' : 'running';
-		return M.ok({
-			id: j.id, title: j.title, state: state, progress: Math.round(Math.min(1, elapsed / (per * j.steps.length)) * 100),
-			step: j.steps[Math.min(done, j.steps.length - 1)], steps: j.steps.length, started: new Date(j.started).toISOString(),
-			log: lines.filter(function (l) { return l.n > after; })
-		}, { cursor: lines.length });
-	});
+	/* Jobs (/v1/jobs/*) live in routes-ops.js. */
 })(window.FSMock);

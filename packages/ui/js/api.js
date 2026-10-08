@@ -76,6 +76,33 @@ export function request(method, path, body, opts = {}) {
 	});
 }
 
+/**
+ * Upload a file (multipart/form-data) with progress:
+ *   api.upload('/v1/system/backup/restore', file, { field: 'file', fields: {...}, onProgress: (pct) => … })
+ */
+export function upload(path, file, { field = 'file', fields = {}, query = null, onProgress = null, timeout = 0 } = {}) {
+	const fd = new FormData();
+	fd.append(field, file);
+	for (const [k, v] of Object.entries(fields)) fd.append(k, v);
+	return new Promise((resolve, reject) => {
+		$.ajax({
+			url: url(path, query),
+			type: 'POST',
+			data: fd,
+			processData: false,
+			contentType: false,
+			dataType: 'json',
+			timeout,
+			headers: { 'X-CSRF-Token': csrf(), 'X-Requested-With': 'FreeSense-WebUI' },
+			xhr() {
+				const x = $.ajaxSettings.xhr();
+				if (onProgress && x.upload) x.upload.addEventListener('progress', (e) => { if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100)); });
+				return x;
+			}
+		}).done((res) => resolve(res || {})).fail((xhr, status) => reject(normalise(xhr, status)));
+	});
+}
+
 export const api = {
 	config,
 	url,
@@ -84,5 +111,6 @@ export const api = {
 	post: (path, body, opts) => request('POST', path, body ?? {}, opts),
 	put: (path, body, opts) => request('PUT', path, body ?? {}, opts),
 	patch: (path, body, opts) => request('PATCH', path, body ?? {}, opts),
-	del: (path, opts) => request('DELETE', path, null, opts)
+	del: (path, opts) => request('DELETE', path, null, opts),
+	upload
 };

@@ -26,6 +26,7 @@ el.define('stat-tile', {
 		const fo = { unit: c.unit, decimals: c.decimals };
 		const spark = c.spark ? { points: 30, variant: 'area', color: 1, ...(typeof c.spark === 'object' ? c.spark : {}) } : null;
 		const history = Array.isArray(c.history) ? c.history.map(num).filter((v) => v !== null) : [];
+		let accumulate = false;
 		let prev = num(c.previous);
 		let cur = null;
 
@@ -91,8 +92,9 @@ el.define('stat-tile', {
 			renderTrend();
 			renderStatus(data);
 			if (spark) {
-				/* Live values accumulate; a static tile draws its `history` as given. */
-				if (v !== null && (c.source || !history.length)) { history.push(v); while (history.length > spark.points) history.shift(); }
+				/* Live values (from a source or from set()) accumulate; a configured
+				 * `history` is drawn as given until set() adds to it. */
+				if (v !== null && (c.source || accumulate || !history.length)) { history.push(v); while (history.length > spark.points) history.shift(); }
 				sparkSvg(history, spark, $plot);
 			}
 		}
@@ -100,7 +102,7 @@ el.define('stat-tile', {
 		if (!c.source) {
 			render(num(c.value));
 			return {
-				set(v) { prev = cur; render(num(v)); }
+				set(v) { prev = cur; accumulate = true; render(num(v)); }
 			};
 		}
 
