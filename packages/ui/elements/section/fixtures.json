@@ -1,0 +1,34 @@
+{
+	"title": "Section",
+	"description": "Titled group of content inside a page, without card chrome.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "With actions and a kv-list", "width": "lg", "config": {
+			"title": "Interface details", "description": "Addresses and link state of the WAN interface (igc0).",
+			"actions": [{ "id": "edit", "label": "Edit", "icon": "pen", "href": "/network/interfaces/wan" }],
+			"menu": [{ "id": "renew", "label": "Renew DHCP lease", "icon": "rotate-right" }, { "id": "release", "label": "Release lease", "icon": "eject", "danger": true }],
+			"content": { "type": "kv", "items": [
+				{ "label": "IPv4 address", "value": "203.0.113.24/24", "mono": true, "copyable": true },
+				{ "label": "IPv6 address", "value": "2001:db8:24::2/64", "mono": true, "copyable": true },
+				{ "label": "MAC address", "value": "00:e0:67:2a:11:01", "mono": true, "copyable": true },
+				{ "label": "Media", "value": "2500baseT <full-duplex>" }
+			] } } },
+		{ "name": "Divider, level 3, text", "width": "lg", "config": {
+			"title": "Danger zone", "level": 3, "icon": "triangle-exclamation", "divider": true,
+			"description": "These actions cannot be undone.",
+			"actions": [{ "id": "factory", "label": "Factory reset", "icon": "power-off", "danger": true }],
+			"content": "Restoring the factory configuration erases all settings, users, certificates and installed packages." } },
+		{ "name": "Grid of statuses", "width": "lg", "config": {
+			"title": "Services",
+			"content": { "el": "grid", "config": { "span": { "base": 12, "sm": 6 }, "gap": "sm", "items": [
+				{ "el": "status", "config": { "state": "ok", "label": "Unbound DNS", "detail": "running" } },
+				{ "el": "status", "config": { "state": "ok", "label": "DHCP server", "detail": "running" } },
+				{ "el": "status", "config": { "state": "crit", "label": "NTP", "detail": "stopped" } },
+				{ "el": "status", "config": { "state": "ok", "label": "OpenVPN", "detail": "running" } }
+			] } } } },
+		{ "name": "Long text", "width": "md", "config": {
+			"title": "Outbound NAT mode for networks behind the site-to-site tunnels",
+			"description": "Automatic rules translate every local network to the WAN address; hybrid mode keeps those and adds your own rules above them, while manual mode uses only the rules you create.",
+			"content": "Pick hybrid mode when one internal network must leave through a different public address." } }
+	]
+}

@@ -1,0 +1,11 @@
+{
+	"title": "View switch",
+	"description": "Segmented control between views of the same data. Emits fs:view; optional ?view= sync.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Table / cards", "width": "sm", "config": { "label": "Layout", "value": "table", "options": [{ "id": "table", "label": "Table", "icon": "table-list" }, { "id": "cards", "label": "Cards", "icon": "grip" }] } },
+		{ "name": "Time range (URL sync)", "width": "md", "config": { "label": "Time range", "query": "range", "value": "1h", "options": [{ "id": "live", "label": "Live" }, { "id": "1h", "label": "1 h" }, { "id": "24h", "label": "24 h" }, { "id": "7d", "label": "7 d" }, { "id": "30d", "label": "30 d" }] } },
+		{ "name": "Icons only, small", "width": "sm", "config": { "label": "Density", "size": "sm", "options": [{ "id": "list", "label": "List", "icon": "list", "iconOnly": true }, { "id": "grid", "label": "Grid", "icon": "grip", "iconOnly": true }, { "id": "tree", "label": "Tree", "icon": "folder-tree", "iconOnly": true }] } },
+		{ "name": "Full width, disabled option", "width": "md", "config": { "label": "Address family", "block": true, "value": "ipv4", "options": [{ "id": "ipv4", "label": "IPv4" }, { "id": "ipv6", "label": "IPv6" }, { "id": "both", "label": "IPv4 + IPv6", "disabled": true }] } }
+	]
+}

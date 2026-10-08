@@ -1,0 +1,130 @@
+/*
+ * _toolbar.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-toolbar {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.625rem var(--fs-gap);
+		min-width: 0;
+		margin-bottom: var(--fs-gap);
+	}
+	.fs-toolbar-main,
+	.fs-toolbar-bulk {
+		flex: 1 1 20rem;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+		&[hidden] { display: none; }
+	}
+	.fs-toolbar-search {
+		position: relative;
+		flex: 0 1 18rem;
+		min-width: 10rem;
+	}
+	.fs-toolbar-search-icon {
+		position: absolute;
+		top: 50%;
+		left: 0.75rem;
+		transform: translateY(-50%);
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		pointer-events: none;
+	}
+	.fs-toolbar-input {
+		padding-left: 2.125rem;
+		border-radius: var(--fs-radius-md);
+	}
+	.fs-toolbar-filters {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+	}
+	.fs-toolbar-select {
+		width: auto;
+		max-width: 14rem;
+		border-radius: var(--fs-radius-md);
+	}
+	.fs-toolbar-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+	}
+	.fs-toolbar-chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		min-height: 2rem;
+		padding: 0 0.75rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: 999px;
+		background: var(--fs-surface-raised);
+		color: var(--fs-text-default);
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		white-space: nowrap;
+		cursor: pointer;
+		transition: background-color var(--fs-dur-fast), border-color var(--fs-dur-fast), color var(--fs-dur-fast);
+		> i { font-size: 0.875em; color: var(--fs-text-muted); }
+		&:hover { background: var(--fs-surface-sunken); }
+		&[aria-pressed='true'] {
+			border-color: color-mix(in srgb, var(--fs-accent-fill) 55%, transparent);
+			background: color-mix(in srgb, var(--fs-accent-fill) 10%, var(--fs-surface-raised));
+			color: var(--fs-accent-text);
+			font-weight: 600;
+			> i { color: inherit; }
+		}
+	}
+	.fs-toolbar-chip-count {
+		color: var(--fs-text-muted);
+		font-variant-numeric: tabular-nums;
+		font-size: 0.75rem;
+	}
+	.fs-toolbar-bulk {
+		min-height: var(--fs-control-h);
+		padding: 0.25rem 0.375rem 0.25rem 0.875rem;
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-accent-fill) 8%, var(--fs-surface-raised));
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-accent-fill) 30%, transparent);
+	}
+	.fs-toolbar-count {
+		color: var(--fs-text-strong);
+		font-weight: 600;
+		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+	}
+	.fs-toolbar-bulk-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+	}
+	.fs-toolbar-clear { margin-left: auto; }
+	.fs-toolbar-end {
+		flex: 0 0 auto;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 0.5rem;
+		margin-left: auto;
+	}
+
+	@media (max-width: 575.98px) {
+		.fs-toolbar-search { flex: 1 1 100%; }
+		.fs-toolbar-select { flex: 1 1 auto; max-width: none; }
+		.fs-toolbar-end { flex: 1 1 100%; justify-content: flex-start; margin-left: 0; }
+	}
+	@media (pointer: coarse) {
+		.fs-toolbar-chip { min-height: 2.5rem; }
+	}
+}

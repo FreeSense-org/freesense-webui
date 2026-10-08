@@ -1,0 +1,56 @@
+/*
+ * _split-view.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-split {
+		--fs-split-w: 20rem;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--fs-gap);
+		min-width: 0;
+	}
+	.fs-split-pane { min-width: 0; }
+	.fs-split-bar { display: none; }
+
+	@media (min-width: 992px) {
+		.fs-split {
+			grid-template-columns: var(--fs-split-w) minmax(0, 1fr);
+			align-items: start;
+		}
+		.fs-split.is-resizable {
+			grid-template-columns: var(--fs-split-w) auto minmax(0, 1fr);
+			column-gap: 0;
+		}
+		.fs-split-bar {
+			position: relative;
+			display: block;
+			align-self: stretch;
+			width: var(--fs-gap);
+			min-height: 3rem;
+			cursor: col-resize;
+			touch-action: none;
+			border-radius: var(--fs-radius-sm);
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				bottom: 0;
+				left: 50%;
+				width: var(--fs-border-width);
+				background: var(--fs-border-default);
+				transition: background-color var(--fs-dur-fast);
+			}
+			&:hover::after,
+			&:focus-visible::after { background: var(--fs-border-strong); }
+		}
+		.fs-split.is-resizing {
+			cursor: col-resize;
+			user-select: none;
+			.fs-split-bar::after { background: var(--fs-accent-fill); }
+		}
+	}
+}

@@ -1,0 +1,40 @@
+{
+	"title": "Page header",
+	"description": "Breadcrumb, title, subtitle, status chips, one primary action, secondary actions and help. On phones the secondary actions move into a menu.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "WireGuard peers", "width": "full", "surface": "page", "config": {
+			"breadcrumb": [{ "label": "VPN", "href": "/vpn" }, { "label": "WireGuard", "href": "/vpn/wireguard" }, { "label": "Peers" }],
+			"title": "Peers",
+			"subtitle": "Remote devices and sites that connect to your WireGuard tunnels.",
+			"chips": [{ "state": "ok", "label": "Service running" }, { "state": "info", "label": "2 of 3 connected" }],
+			"primary": { "id": "add", "label": "Add peer", "icon": "plus" },
+			"actions": [{ "id": "import", "label": "Import", "icon": "file-import" }, { "id": "export", "label": "Export", "icon": "download", "href": "/api/v1/vpn/wireguard/peers.conf", "external": true }],
+			"help": { "href": "https://docs.freesense.org/vpn/wireguard/peers" } } },
+		{ "name": "Status page, no actions", "width": "full", "surface": "page", "config": {
+			"breadcrumb": [{ "label": "Insights", "href": "/insights" }, { "label": "Gateways" }],
+			"title": "Gateways",
+			"chips": [{ "state": "warn", "label": "WAN2_PPPOE degraded", "detail": "4% loss" }] } },
+		{ "name": "Settings page", "width": "full", "surface": "page", "config": {
+			"breadcrumb": [{ "label": "System", "href": "/system" }, { "label": "General" }],
+			"title": "General setup",
+			"subtitle": "Hostname, domain, DNS servers, time zone and language.",
+			"primary": { "id": "save", "label": "Save", "icon": "floppy-disk", "disabled": true },
+			"actions": [{ "id": "reset", "label": "Reset to defaults", "icon": "rotate-left", "danger": true }],
+			"help": { "href": "https://docs.freesense.org/system/general" } } },
+		{ "name": "Long title, many actions", "width": "full", "surface": "page", "config": {
+			"breadcrumb": [{ "label": "Security", "href": "/security" }, { "label": "Firewall rules", "href": "/security/rules" }, { "label": "GUEST_NETWORK_ISOLATED_VLAN_120" }],
+			"title": "Rules for GUEST_NETWORK_ISOLATED_VLAN_120 (igc2.120, guest wireless and conference rooms)",
+			"subtitle": "Rules are evaluated top to bottom; the first match wins. Floating rules and the default deny apply after interface rules.",
+			"chips": [{ "state": "warn", "label": "Changes not applied" }, { "state": "ok", "label": "18 rules" }, { "state": "neutral", "label": "Schedule: office hours" }],
+			"primary": { "id": "add", "label": "Add rule", "icon": "plus" },
+			"actions": [
+				{ "id": "apply", "label": "Apply changes", "icon": "check" },
+				{ "id": "separator", "label": "Add separator", "icon": "grip-lines" },
+				{ "id": "copy", "label": "Copy to interface", "icon": "copy" },
+				{ "id": "logs", "label": "View logs", "icon": "list", "href": "/insights/logs/firewall?if=opt1" }
+			],
+			"help": { "href": "https://docs.freesense.org/security/rules" } } },
+		{ "name": "Minimal", "width": "lg", "surface": "page", "config": { "title": "Dashboard" } }
+	]
+}

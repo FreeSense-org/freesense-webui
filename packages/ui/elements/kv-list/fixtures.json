@@ -1,0 +1,71 @@
+{
+	"title": "Key-value list",
+	"description": "Details as label and value: static, or mapped from an API source with formats and copy buttons.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "System information (live)", "width": "lg", "config": {
+			"source": { "path": "/status/system" }, "every": 5,
+			"fields": [
+				{ "path": "hostname", "label": "Hostname", "copyable": true },
+				{ "path": "version", "label": "Version" },
+				{ "path": "channel", "label": "Channel" },
+				{ "path": "platform", "label": "Platform" },
+				{ "path": "cpu.model", "label": "CPU" },
+				{ "path": "uptime", "label": "Uptime", "format": "duration" },
+				{ "path": "memory.used", "of": "memory.total", "label": "Memory", "format": "bytes", "scale": 1048576 },
+				{ "path": "states.current", "label": "States", "format": "num" },
+				{ "path": "dns", "label": "DNS servers", "mono": true },
+				{ "path": "last_config_change", "label": "Last change", "format": "ago" },
+				{ "path": "serial", "label": "Serial", "mono": true, "copyable": true }
+			] } },
+		{ "name": "Two columns", "width": "full", "config": {
+			"source": { "path": "/status/system" }, "every": 10, "columns": 2,
+			"fields": [
+				{ "path": "hostname", "label": "Hostname", "copyable": true },
+				{ "path": "freebsd", "label": "FreeBSD" },
+				{ "path": "cpu.cores", "label": "CPU cores", "format": "num" },
+				{ "path": "cpu.usage", "label": "CPU usage", "format": "pct" },
+				{ "path": "swap.used", "of": "swap.total", "label": "Swap", "format": "bytes", "scale": 1048576 },
+				{ "path": "bios", "label": "BIOS" },
+				{ "path": "time", "label": "System time", "format": "datetime" },
+				{ "path": "update.available", "label": "Update", "format": "status", "map": { "true": { "state": "info", "label": "Update available" }, "false": { "state": "ok", "label": "Up to date" } } }
+			] } },
+		{ "name": "WireGuard peer", "width": "md", "config": {
+			"source": { "path": "/vpn/wireguard/peers/office-gw" }, "every": 5,
+			"fields": [
+				{ "path": "status", "label": "Status", "format": "status", "map": { "up": { "state": "ok", "label": "Connected" }, "down": { "state": "crit", "label": "Disconnected" } } },
+				{ "path": "public_key", "label": "Public key", "mono": true, "copyable": true },
+				{ "path": "endpoint", "label": "Endpoint", "mono": true, "copyable": true },
+				{ "path": "allowed_ips", "label": "Allowed IPs", "mono": true },
+				{ "path": "latest_handshake", "label": "Handshake", "format": "ago" },
+				{ "path": "rx", "label": "Received", "format": "bytes" },
+				{ "path": "tx", "label": "Sent", "format": "bytes" }
+			] } },
+		{ "name": "Static", "width": "md", "config": {
+			"items": [
+				{ "label": "Interface", "value": "igc0 (WAN)" },
+				{ "label": "IPv4 address", "value": "203.0.113.24/24", "mono": true, "copyable": true },
+				{ "label": "Gateway", "value": "WAN_DHCP", "href": "/network/gateways" },
+				{ "label": "Link", "value": "ok", "format": "status", "map": { "ok": { "state": "ok", "label": "2.5 Gbit/s full duplex" } } },
+				{ "label": "MTU", "value": 1500, "format": "num" },
+				{ "label": "Description", "value": null }
+			] } },
+		{ "name": "Long text, stacked", "width": "sm", "config": {
+			"layout": "stacked",
+			"items": [
+				{ "label": "Certificate subject", "value": "CN=fw01.home.arpa, O=Example Home Network Infrastructure Operations, L=Copenhagen, C=DK", "copyable": true },
+				{ "label": "SHA-256 fingerprint", "value": "4F:2A:91:0C:7B:EE:13:58:A6:D2:3F:90:11:C4:7A:5E:02:B9:68:FD:44:1E:8A:C3:7D:20:9B:6F:E1:05:3A:D8", "mono": true, "copyable": true }
+			] } },
+		{ "name": "Loading", "width": "sm", "config": { "source": { "path": "/gallery/slow" }, "fields": [{ "path": "0.name", "label": "Name" }] } },
+		{ "name": "Empty", "width": "sm", "config": { "source": { "path": "/gallery/empty" }, "fields": [{ "path": "name", "label": "Name" }] } },
+		{ "name": "Error", "width": "sm", "config": { "source": { "path": "/gallery/fail" }, "fields": [{ "path": "name", "label": "Name" }] } },
+		{ "name": "Stale", "width": "sm", "note": "second refresh fails", "config": {
+			"source": { "path": "/gallery/layout/flaky", "query": { "k": "kv" } }, "every": 3,
+			"fields": [
+				{ "path": "hostname", "label": "Hostname" },
+				{ "path": "version", "label": "Version" },
+				{ "path": "uptime", "label": "Uptime", "format": "duration" },
+				{ "path": "last_check", "label": "Checked", "format": "ago" }
+			] } }
+	]
+}
