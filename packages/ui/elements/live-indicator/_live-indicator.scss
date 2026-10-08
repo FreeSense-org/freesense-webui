@@ -1,0 +1,81 @@
+/*
+ * _live-indicator.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-live-indicator {
+		--fs-li: var(--fs-status-ok);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.125rem;
+		padding: 0 0.125rem 0 0.625rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: 999px;
+		background: var(--fs-surface-raised);
+		font-size: 0.8125rem;
+		white-space: nowrap;
+
+		&[data-state='paused'] { --fs-li: var(--fs-status-neutral); }
+		&[data-state='stale'] { --fs-li: var(--fs-status-warn); }
+		&[data-state='offline'] { --fs-li: var(--fs-status-crit); }
+		&.is-compact { padding-left: 0.5rem; }
+		&.is-static { min-height: 1.875rem; padding-right: 0.75rem; }
+	}
+
+	.fs-live-indicator-state {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4375rem;
+		color: var(--fs-text-default);
+		font-weight: 500;
+	}
+
+	.fs-live-indicator-icon {
+		position: relative;
+		display: inline-grid;
+		place-items: center;
+		width: 0.875rem;
+		color: var(--fs-li);
+		font-size: 0.75rem;
+
+		/* live: a small dot with a soft ring that breathes */
+		[data-state='live'] & > i { font-size: 0.5rem; }
+		[data-state='live'] &::after {
+			content: '';
+			position: absolute;
+			inset: 50% auto auto 50%;
+			width: 0.5rem;
+			height: 0.5rem;
+			margin: -0.25rem 0 0 -0.25rem;
+			border-radius: 50%;
+			background: var(--fs-li);
+			opacity: 0;
+			animation: fs-live-ring 2.4s ease-out infinite;
+		}
+	}
+	@keyframes fs-live-ring {
+		0% { opacity: 0.45; transform: scale(1); }
+		70%, 100% { opacity: 0; transform: scale(2.6); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.fs-live-indicator-icon::after { display: none; }
+	}
+
+	.fs-live-indicator-btn {
+		display: inline-grid;
+		place-items: center;
+		width: 1.75rem;
+		height: 1.75rem;
+		min-height: 0;
+		padding: 0;
+		border-radius: 50%;
+		font-size: 0.6875rem;
+	}
+
+	@media (pointer: coarse) {
+		.fs-live-indicator-btn { width: 2.5rem; height: 2.5rem; }
+	}
+}

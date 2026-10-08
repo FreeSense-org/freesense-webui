@@ -1,0 +1,42 @@
+{
+	"title": "Drawer",
+	"description": "Side panel on the right for details and quick edits: title, nested elements, footer actions. Full screen on phones.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Service details", "width": "md", "config": {
+			"label": "DNS Resolver", "icon": "circle-info", "variant": "secondary",
+			"drawer": {
+				"title": "DNS Resolver", "subtitle": "unbound · running for 12d 5h", "icon": "server",
+				"body": [
+					{ "el": "status", "config": { "state": "ok", "label": "Running", "detail": "PID 1203" } },
+					{ "heading": "Listening on" },
+					{ "el": "chip", "config": { "label": "Interfaces", "items": [{ "label": "LAN" }, { "label": "GUEST" }, { "label": "IOT" }, { "label": "Localhost" }] } },
+					{ "heading": "Notes" },
+					{ "el": "callout", "config": { "level": "info", "title": "DNSSEC is on", "text": "Answers that fail validation are dropped." } },
+					{ "text": "Changes to the resolver settings restart the service and clear its cache." }
+				],
+				"footer": [
+					{ "label": "Close" },
+					{ "label": "Restart", "icon": "rotate-right", "variant": "primary", "action": { "method": "POST", "path": "/v1/status/services/unbound/restart" } }
+				]
+			} } },
+		{ "name": "Large, many items", "width": "md", "config": {
+			"label": "Rule details", "icon": "list", "variant": "secondary",
+			"drawer": {
+				"title": "Default allow LAN to any", "subtitle": "LAN · rule 3 · tracker 1700000103", "size": "lg",
+				"body": [
+					{ "el": "badge", "config": { "items": [{ "label": "Pass", "tone": "ok" }, { "label": "IPv4+IPv6" }, { "label": "any protocol" }, { "label": "1,288 states", "tone": "info" }] } },
+					{ "heading": "Source" }, { "text": "LAN net" },
+					{ "heading": "Destination" }, { "text": "any" },
+					{ "heading": "Gateway" }, { "text": "default" },
+					{ "heading": "Schedule" }, { "text": "always" },
+					{ "heading": "Advanced" },
+					{ "el": "callout", "config": { "level": "warn", "title": "Very broad rule", "text": "Consider an explicit allow list for IoT devices on this network." } },
+					{ "text": "Created 2026-09-12 10:22 by admin@192.168.1.31. Last changed 2026-10-04 18:40." },
+					{ "el": "empty-state", "config": { "icon": "clock-rotate-left", "title": "No change history", "text": "This rule has not been edited since it was created.", "size": "sm" } }
+				],
+				"footer": [{ "label": "Close" }, { "label": "Edit rule", "variant": "primary", "href": "#edit" }]
+			} } },
+		{ "name": "No footer", "width": "sm", "config": { "label": "Open", "drawer": { "title": "Nothing to show", "body": [{ "el": "empty-state", "config": { "icon": "inbox", "title": "No details", "size": "sm" } }], "footer": [] } } }
+	]
+}

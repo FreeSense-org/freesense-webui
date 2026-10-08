@@ -1,0 +1,21 @@
+{
+	"title": "Apply bar",
+	"description": "Sticky bar while saved changes are not active yet: text, Apply and an optional Discard. Polls the pending endpoint and shows at once on fs:pending.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Firewall, pending", "width": "full", "surface": "page", "note": "comes back 20 s after Apply (mock)", "config": {
+			"text": "Firewall changes are pending", "source": { "path": "/v1/gallery/feedback/pending", "query": { "set": "a" } },
+			"apply": { "path": "/v1/gallery/feedback/apply?set=a" },
+			"discard": { "path": "/v1/gallery/feedback/discard?set=a" }, "every": 5 } },
+		{ "name": "Real firewall endpoint", "width": "full", "surface": "page", "note": "hidden until a change, e.g. delete an alias in Confirm", "config": {
+			"text": "Firewall changes are pending", "source": { "path": "/v1/firewall/pending" }, "apply": { "path": "/v1/firewall/apply" }, "success": "Firewall rules reloaded" } },
+		{ "name": "Apply fails", "width": "full", "surface": "page", "config": {
+			"text": "NAT changes are pending", "detail": "", "source": { "path": "/v1/gallery/feedback/pending", "query": { "set": "one" } },
+			"apply": { "path": "/v1/gallery/feedback/apply-fail" } } },
+		{ "name": "Long text", "width": "md", "surface": "page", "config": {
+			"text": "Traffic shaper and limiter changes on WAN, LAN and GUEST are pending",
+			"detail": "Applying reloads the filter and resets the queues; active VoIP calls may drop for a second.",
+			"applyLabel": "Apply now", "source": { "path": "/v1/gallery/feedback/pending", "query": { "set": "c" } },
+			"apply": { "path": "/v1/gallery/feedback/apply?set=c" }, "discard": { "path": "/v1/gallery/feedback/discard?set=c", "confirm": false } } }
+	]
+}

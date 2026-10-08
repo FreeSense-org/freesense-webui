@@ -1,0 +1,26 @@
+{
+	"title": "Danger confirm",
+	"description": "Type-to-confirm for destructive actions: the button stays disabled until the object's name is typed.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Reset the state table", "width": "md", "config": {
+			"label": "Reset the state table", "icon": "eraser",
+			"title": "Reset the state table", "text": "Every open connection through the firewall is dropped, including this session's. Clients reconnect on their own.",
+			"name": "fw01.home.arpa", "confirmLabel": "Reset states",
+			"action": { "method": "POST", "path": "/v1/diagnostics/states/reset" } } },
+		{ "name": "Delete alias", "width": "md", "config": {
+			"label": "Delete alias", "icon": "trash",
+			"title": "Delete alias WEB_SERVERS?", "text": "2 rules refer to this alias.",
+			"details": ["WAN · NAT web01 HTTPS", "LAN · Admin to DMZ"],
+			"name": "WEB_SERVERS", "confirmLabel": "Delete alias",
+			"action": { "method": "DELETE", "path": "/v1/firewall/aliases/WEB_SERVERS" } } },
+		{ "name": "Request fails", "width": "md", "config": {
+			"label": "Factory reset", "icon": "power-off",
+			"title": "Reset to factory defaults", "text": "All configuration is erased and the firewall reboots.",
+			"name": "factory reset", "confirmLabel": "Erase and reboot",
+			"action": { "method": "POST", "path": "/v1/gallery/feedback/fail" } } },
+		{ "name": "Long name", "width": "md", "config": {
+			"label": "Delete tunnel", "icon": "trash",
+			"title": "Delete the IPsec tunnel?", "name": "Branch_Aarhus_Datacenter_Primary_Phase1_con2", "confirmLabel": "Delete tunnel" } }
+	]
+}

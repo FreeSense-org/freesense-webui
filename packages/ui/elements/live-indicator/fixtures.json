@@ -1,0 +1,12 @@
+{
+	"title": "Live indicator",
+	"description": "Live, paused, out-of-date or disconnected, with a pause/resume button. Pausing affects every live element on the page.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Default", "width": "sm", "config": {} },
+		{ "name": "With heartbeat", "width": "sm", "config": { "source": { "path": "/v1/status/system" }, "every": 10 } },
+		{ "name": "Connection lost", "width": "sm", "config": { "source": { "path": "/v1/gallery/fail" }, "every": 5 } },
+		{ "name": "Compact", "width": "sm", "config": { "compact": true } },
+		{ "name": "No control, custom label", "width": "sm", "config": { "control": false, "labels": { "live": "Live data" } } }
+	]
+}

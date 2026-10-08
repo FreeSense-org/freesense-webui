@@ -1,0 +1,26 @@
+{
+	"title": "Confirm",
+	"description": "Promise-based confirmation dialog: confirm({title, text, confirmLabel, danger}) resolves true or false. The element is a button that asks first, then runs an API call.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Delete alias", "width": "md", "config": {
+			"label": "Delete alias", "icon": "trash", "danger": true,
+			"title": "Delete alias WEB_SERVERS?", "text": "Rules that use this alias stop matching. The change is pending until you apply it.",
+			"confirmLabel": "Delete", "action": { "method": "DELETE", "path": "/v1/firewall/aliases/WEB_SERVERS" }, "success": "Alias deleted" } },
+		{ "name": "Neutral question", "width": "md", "config": {
+			"label": "Restart DNS Resolver", "icon": "rotate-right",
+			"title": "Restart the DNS Resolver?", "text": "Name resolution pauses for a few seconds while unbound restarts.",
+			"confirmLabel": "Restart", "action": { "method": "POST", "path": "/v1/status/services/unbound/restart" } } },
+		{ "name": "With details", "width": "md", "config": {
+			"label": "Disable 3 rules", "variant": "secondary",
+			"title": "Disable 3 rules on WAN?", "details": ["NAT web01 HTTPS", "NAT mail01 SMTP/IMAPS", "OpenVPN RoadWarrior"],
+			"confirmLabel": "Disable" } },
+		{ "name": "Request fails", "width": "md", "note": "shows an error toast", "config": {
+			"label": "Delete alias RFC1918_ALL", "icon": "trash", "danger": true,
+			"title": "Delete alias RFC1918_ALL?", "confirmLabel": "Delete", "action": { "method": "DELETE", "path": "/v1/firewall/aliases/RFC1918_ALL" } } },
+		{ "name": "Long title, icon only", "width": "sm", "config": {
+			"label": "Remove certificate", "icon": "trash", "iconOnly": true, "danger": true,
+			"title": "Remove the certificate webConfigurator default (fw01.home.arpa, 6a3f9c1e2b7d4e8f) from the certificate manager?",
+			"confirmLabel": "Remove" } }
+	]
+}

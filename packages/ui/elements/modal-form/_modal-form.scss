@@ -1,0 +1,59 @@
+/*
+ * _modal-form.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* The dialog frame comes from .fs-dialog (confirm); the fields live here. */
+@layer elements {
+	.fs-modal-form {
+		.fs-mf-form {
+			display: flex;
+			flex-direction: column;
+			gap: var(--fs-gap);
+		}
+		.fs-mf-field { margin: 0; }
+		.form-label {
+			margin-bottom: 0.3125rem;
+			font-size: 0.875em;
+			font-weight: 600;
+			color: var(--fs-text-strong);
+		}
+		.fs-mf-req { color: var(--fs-status-crit); }
+		.fs-mf-help {
+			margin: 0.3125rem 0 0;
+			font-size: 0.8125em;
+			color: var(--fs-text-muted);
+		}
+		.fs-mf-error:empty { display: none; }
+		.fs-mf-error { font-size: 0.8125em; }
+		.fs-mf-switch {
+			display: flex;
+			align-items: center;
+			gap: 0.625rem;
+			min-height: var(--fs-control-h);
+			padding-left: 0;
+			.form-check-input { float: none; margin: 0; width: 2.25em; height: 1.25em; }
+			.form-check-label { font-weight: 500; }
+		}
+		.fs-mf-switch .fs-mf-help { flex-basis: 100%; }
+		.fs-mf-switch { flex-wrap: wrap; }
+		textarea.form-control { min-height: 5rem; resize: vertical; }
+
+		.fs-mf-alert {
+			display: flex;
+			align-items: flex-start;
+			gap: 0.5rem;
+			padding: 0.625rem 0.75rem;
+			border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-status-crit) 35%, var(--fs-border-default));
+			border-radius: var(--fs-radius-sm);
+			background: color-mix(in srgb, var(--fs-status-crit) 8%, var(--fs-surface-raised));
+			color: var(--fs-text-default);
+			font-size: 0.875em;
+			> i { margin-top: 0.1875rem; color: var(--fs-status-crit); }
+			&[hidden] { display: none; }
+			&:focus { outline: none; }
+		}
+	}
+}

@@ -1,0 +1,102 @@
+/*
+ * _chip.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-chips {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.375rem;
+		&:focus { outline: none; }
+	}
+	.fs-chips-clear {
+		min-height: 1.875rem;
+		padding: 0 0.375rem;
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.fs-chip {
+		display: inline-flex;
+		align-items: stretch;
+		max-width: 100%;
+		min-height: 1.875rem;
+		border: var(--fs-border-width) solid var(--fs-border-strong);
+		border-radius: 999px;
+		background: var(--fs-surface-raised);
+		color: var(--fs-text-default);
+		font-size: 0.8125rem;
+		line-height: 1.2;
+		vertical-align: middle;
+		transition: background-color var(--fs-dur-fast), border-color var(--fs-dur-fast), color var(--fs-dur-fast);
+
+		&.is-pressed {
+			border-color: color-mix(in srgb, var(--fs-accent-fill) 55%, var(--fs-border-strong));
+			background: color-mix(in srgb, var(--fs-accent-fill) 12%, var(--fs-surface-raised));
+			color: var(--fs-accent-text);
+			font-weight: 600;
+		}
+		&.is-removable:not(.is-toggle) {
+			background: var(--fs-surface-sunken);
+			border-color: var(--fs-border-default);
+		}
+	}
+
+	.fs-chip-main {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		min-width: 0;
+		padding: 0.25rem 0.75rem;
+		border: 0;
+		border-radius: 999px;
+		background: transparent;
+		color: inherit;
+		font: inherit;
+		.is-removable > & { padding-right: 0.25rem; }
+	}
+	button.fs-chip-main {
+		cursor: pointer;
+		&:hover { background: color-mix(in srgb, var(--fs-text-strong) 6%, transparent); }
+		&:disabled { cursor: default; opacity: 0.6; }
+	}
+	.fs-chip-content { display: inline-flex; align-items: center; gap: 0.375rem; min-width: 0; }
+	.fs-chip-content > i { font-size: 0.875em; color: var(--fs-text-muted); }
+	.is-pressed .fs-chip-content > i { color: var(--fs-accent-text); }
+	.fs-chip-name { color: var(--fs-text-muted); font-weight: 500; }
+	.fs-chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	.fs-chip-count {
+		padding: 0 0.375rem;
+		border-radius: 999px;
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		.is-pressed & { background: color-mix(in srgb, var(--fs-accent-fill) 18%, transparent); color: var(--fs-accent-text); }
+	}
+
+	.fs-chip-remove {
+		display: inline-grid;
+		flex: none;
+		place-items: center;
+		width: 1.625rem;
+		margin: 0.125rem 0.125rem 0.125rem 0;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--fs-text-muted);
+		font-size: 0.6875rem;
+		cursor: pointer;
+		&:hover { background: color-mix(in srgb, var(--fs-text-strong) 10%, transparent); color: var(--fs-text-strong); }
+	}
+
+	@media (pointer: coarse) {
+		.fs-chip, .fs-chips-clear { min-height: 2.5rem; }
+		.fs-chip-remove { width: 2.25rem; }
+	}
+}
