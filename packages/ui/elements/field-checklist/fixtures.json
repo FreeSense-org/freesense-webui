@@ -1,0 +1,129 @@
+{
+	"title": "Checklist field",
+	"description": "Several values from a list, with search, counter and select all.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Short list",
+			"width": "md",
+			"config": {
+				"name": "protocols",
+				"label": "Protocols",
+				"value": [
+					"tcp"
+				],
+				"options": [
+					{
+						"value": "tcp",
+						"label": "TCP"
+					},
+					{
+						"value": "udp",
+						"label": "UDP"
+					},
+					{
+						"value": "icmp",
+						"label": "ICMP"
+					}
+				]
+			}
+		},
+		{
+			"name": "From the API, with details",
+			"width": "lg",
+			"config": {
+				"name": "ifaces",
+				"label": "Interfaces",
+				"value": [
+					"lan",
+					"opt2"
+				],
+				"options": {
+					"source": {
+						"path": "/v1/gallery/forms/options",
+						"query": {
+							"set": "interfaces"
+						}
+					},
+					"value": "id",
+					"label": "descr",
+					"detail": "detail"
+				}
+			}
+		},
+		{
+			"name": "Many items, searchable",
+			"width": "md",
+			"config": {
+				"name": "zones",
+				"label": "Time zones",
+				"value": [
+					"Europe/Berlin"
+				],
+				"options": {
+					"source": {
+						"path": "/v1/gallery/forms/options",
+						"query": {
+							"set": "timezones"
+						}
+					},
+					"value": "id",
+					"label": "city",
+					"group": "region"
+				}
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "days",
+				"label": "Days",
+				"required": true,
+				"error": "Choose at least one day.",
+				"options": [
+					"Mon",
+					"Tue",
+					"Wed",
+					"Thu",
+					"Fri",
+					"Sat",
+					"Sun"
+				]
+			}
+		},
+		{
+			"name": "Options fail to load",
+			"width": "md",
+			"config": {
+				"name": "fail",
+				"label": "Broken source",
+				"options": {
+					"source": {
+						"path": "/v1/gallery/fail"
+					},
+					"value": "id",
+					"label": "id"
+				}
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "flags",
+				"label": "TCP flags",
+				"value": [
+					"SYN"
+				],
+				"disabled": true,
+				"options": [
+					"FIN",
+					"SYN",
+					"RST",
+					"ACK"
+				]
+			}
+		}
+	]
+}

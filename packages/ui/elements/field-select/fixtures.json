@@ -1,0 +1,140 @@
+{
+	"title": "Select field",
+	"description": "One value from a list; searchable combobox for long lists; static or API options.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Native",
+			"width": "md",
+			"config": {
+				"name": "ipproto",
+				"label": "Address family",
+				"value": "inet",
+				"options": [
+					{
+						"value": "inet",
+						"label": "IPv4"
+					},
+					{
+						"value": "inet6",
+						"label": "IPv6"
+					},
+					{
+						"value": "inet46",
+						"label": "IPv4 + IPv6"
+					}
+				]
+			}
+		},
+		{
+			"name": "Searchable, grouped (API)",
+			"width": "md",
+			"config": {
+				"name": "tz",
+				"label": "Time zone",
+				"value": "Europe/Copenhagen",
+				"options": {
+					"source": {
+						"path": "/v1/gallery/forms/options",
+						"query": {
+							"set": "timezones"
+						}
+					},
+					"value": "id",
+					"label": "city",
+					"group": "region"
+				}
+			}
+		},
+		{
+			"name": "With details (API + static)",
+			"width": "md",
+			"config": {
+				"name": "gateway",
+				"label": "Gateway",
+				"value": "default",
+				"options": {
+					"source": {
+						"path": "/v1/status/gateways"
+					},
+					"value": "name",
+					"label": "name",
+					"detail": "address",
+					"prepend": [
+						{
+							"value": "default",
+							"label": "Default",
+							"detail": "Use the routing table"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "Required, error",
+			"width": "md",
+			"config": {
+				"name": "level",
+				"label": "Log level",
+				"required": true,
+				"error": "Choose how much the service logs.",
+				"options": [
+					"error",
+					"warning",
+					"info",
+					"debug"
+				]
+			}
+		},
+		{
+			"name": "Loading options",
+			"width": "md",
+			"config": {
+				"name": "slow",
+				"label": "Slow source",
+				"options": {
+					"source": {
+						"path": "/v1/gallery/slow"
+					},
+					"value": "name",
+					"label": "name"
+				}
+			}
+		},
+		{
+			"name": "Options fail to load",
+			"width": "md",
+			"config": {
+				"name": "fail",
+				"label": "Broken source",
+				"options": {
+					"source": {
+						"path": "/v1/gallery/fail"
+					},
+					"value": "id",
+					"label": "id"
+				}
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "mode",
+				"label": "Mode",
+				"value": "auto",
+				"disabled": true,
+				"options": [
+					{
+						"value": "auto",
+						"label": "Automatic"
+					},
+					{
+						"value": "manual",
+						"label": "Manual"
+					}
+				]
+			}
+		}
+	]
+}

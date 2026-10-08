@@ -1,0 +1,103 @@
+{
+	"title": "Segmented field",
+	"description": "A small set of exclusive options, optionally with icons and tones.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Rule action (tones)",
+			"width": "md",
+			"config": {
+				"name": "action",
+				"label": "Action",
+				"value": "block",
+				"options": [
+					{
+						"value": "pass",
+						"label": "Pass",
+						"icon": "circle-check",
+						"tone": "pass"
+					},
+					{
+						"value": "block",
+						"label": "Block",
+						"icon": "ban",
+						"tone": "block"
+					},
+					{
+						"value": "reject",
+						"label": "Reject",
+						"icon": "circle-minus",
+						"tone": "reject"
+					}
+				]
+			}
+		},
+		{
+			"name": "Plain",
+			"width": "md",
+			"config": {
+				"name": "direction",
+				"label": "Direction",
+				"value": "in",
+				"options": [
+					{
+						"value": "in",
+						"label": "In"
+					},
+					{
+						"value": "out",
+						"label": "Out"
+					},
+					{
+						"value": "any",
+						"label": "Any"
+					}
+				]
+			}
+		},
+		{
+			"name": "Nothing chosen, error",
+			"width": "md",
+			"config": {
+				"name": "mode",
+				"label": "Mode",
+				"required": true,
+				"error": "Choose a mode.",
+				"options": [
+					{
+						"value": "router",
+						"label": "Router"
+					},
+					{
+						"value": "bridge",
+						"label": "Bridge"
+					}
+				]
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "stats",
+				"label": "Statistics",
+				"value": "loop",
+				"disabled": true,
+				"options": [
+					{
+						"value": "off",
+						"label": "Off"
+					},
+					{
+						"value": "loop",
+						"label": "Loop"
+					},
+					{
+						"value": "all",
+						"label": "Loop + peers"
+					}
+				]
+			}
+		}
+	]
+}

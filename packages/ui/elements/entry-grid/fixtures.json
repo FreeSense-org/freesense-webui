@@ -1,0 +1,152 @@
+{
+	"title": "Entry grid",
+	"description": "Repeatable rows of sub-fields: add, remove, reorder, min/max rows.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Alias entries",
+			"width": "lg",
+			"config": {
+				"name": "entries",
+				"label": "Entries",
+				"min": 1,
+				"max": 10,
+				"fields": [
+					{
+						"name": "value",
+						"type": "text",
+						"label": "Value",
+						"required": true,
+						"mono": true,
+						"width": "lg"
+					},
+					{
+						"name": "descr",
+						"type": "text",
+						"label": "Description",
+						"width": "lg"
+					}
+				],
+				"value": [
+					{
+						"value": "172.16.40.10",
+						"descr": "web01"
+					},
+					{
+						"value": "172.16.40.12",
+						"descr": "web02"
+					}
+				]
+			}
+		},
+		{
+			"name": "Mixed types",
+			"width": "full",
+			"config": {
+				"name": "servers",
+				"label": "Time servers",
+				"addLabel": "Add server",
+				"fields": [
+					{
+						"name": "address",
+						"type": "address",
+						"label": "Server",
+						"allow": [
+							"ip",
+							"fqdn"
+						],
+						"width": "xl"
+					},
+					{
+						"name": "port",
+						"type": "port",
+						"label": "Port",
+						"width": "sm",
+						"range": false,
+						"alias": false
+					},
+					{
+						"name": "pool",
+						"type": "switch",
+						"label": "Pool",
+						"width": "auto"
+					},
+					{
+						"name": "prefer",
+						"type": "switch",
+						"label": "Prefer",
+						"width": "auto"
+					}
+				],
+				"value": [
+					{
+						"address": "0.freesense.pool.ntp.org",
+						"port": "123",
+						"pool": true
+					},
+					{
+						"address": "bad host!",
+						"port": "",
+						"prefer": true
+					}
+				]
+			}
+		},
+		{
+			"name": "Empty",
+			"width": "md",
+			"config": {
+				"name": "overrides",
+				"label": "Host overrides",
+				"addLabel": "Add override",
+				"fields": [
+					{
+						"name": "host",
+						"type": "text",
+						"label": "Host",
+						"width": "md"
+					},
+					{
+						"name": "ip",
+						"type": "address",
+						"label": "Address",
+						"allow": [
+							"ip"
+						],
+						"width": "md"
+					}
+				],
+				"value": []
+			}
+		},
+		{
+			"name": "Read-only",
+			"width": "md",
+			"config": {
+				"name": "routes",
+				"label": "Routes",
+				"disabled": true,
+				"fields": [
+					{
+						"name": "net",
+						"type": "text",
+						"label": "Network",
+						"mono": true
+					},
+					{
+						"name": "gw",
+						"type": "text",
+						"label": "Gateway",
+						"mono": true
+					}
+				],
+				"value": [
+					{
+						"net": "10.50.0.0/16",
+						"gw": "WG_SITE_GW"
+					}
+				]
+			}
+		}
+	]
+}

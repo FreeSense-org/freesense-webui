@@ -1,0 +1,62 @@
+{
+	"title": "Switch field",
+	"description": "Boolean on/off with an optional caption.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "With caption",
+			"width": "md",
+			"config": {
+				"name": "log",
+				"label": "Log",
+				"text": "Log packets that match this rule",
+				"value": true
+			}
+		},
+		{
+			"name": "Without caption",
+			"width": "md",
+			"config": {
+				"name": "enabled",
+				"label": "Enabled",
+				"value": false,
+				"help": "Shows On or Off."
+			}
+		},
+		{
+			"name": "Mapped values",
+			"width": "md",
+			"config": {
+				"name": "blockpriv",
+				"label": "Private networks",
+				"text": "Block private networks on this interface",
+				"values": [
+					"",
+					"yes"
+				],
+				"value": "yes"
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "accept",
+				"label": "Licence",
+				"text": "I have read the licence terms",
+				"error": "Accept the licence to continue."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "ha",
+				"label": "High availability",
+				"text": "Sync this setting to the backup node",
+				"value": true,
+				"disabled": true
+			}
+		}
+	]
+}

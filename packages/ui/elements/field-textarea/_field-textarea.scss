@@ -1,0 +1,30 @@
+/*
+ * _field-textarea.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-textarea {
+		position: relative;
+		textarea.form-control { min-height: 5rem; resize: vertical; line-height: 1.5; }
+		.fs-textarea-code {
+			min-height: 8rem;
+			background: var(--fs-surface-sunken);
+			font-size: 0.8125rem;
+			line-height: 1.6;
+			tab-size: 4;
+			white-space: pre;
+			overflow-x: auto;
+			&:focus { background: var(--fs-surface-raised); }
+		}
+	}
+	.fs-textarea-meta {
+		margin-top: 0.25rem;
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		text-align: right;
+		&:empty { display: none; }
+	}
+}

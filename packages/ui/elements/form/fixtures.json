@@ -1,0 +1,187 @@
+{
+	"title": "Form",
+	"description": "Schema-driven editor: sections as cards, collapsible advanced options, live show/hide rules, dirty guard, Ctrl+S, inline and summary errors (422).",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Firewall rule: edit",
+			"note": "rule 114; try port 9000:8000, tag a-b or synproxy with UDP",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/rules" },
+				"load": { "path": "/v1/firewall/rules/114" },
+				"save": { "method": "PUT", "path": "/v1/firewall/rules/{id}" },
+				"summary": true
+			}
+		},
+		{
+			"name": "Firewall rule: new",
+			"note": "Create posts to /v1/firewall/rules",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/rules" },
+				"values": { "interface": "lan", "source": "LAN net", "destination_port": "443" },
+				"save": { "method": "POST", "path": "/v1/firewall/rules" },
+				"submitLabel": "Create rule",
+				"summary": true
+			}
+		},
+		{
+			"name": "System rule (read-only)",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/rules" },
+				"load": { "path": "/v1/firewall/rules/110" },
+				"save": { "method": "PUT", "path": "/v1/firewall/rules/{id}" },
+				"cancelHref": "#el-form",
+				"summary": true
+			}
+		},
+		{
+			"name": "Alias editor",
+			"note": "try 300.1.1.1 or a duplicate entry",
+			"width": "lg",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/aliases" },
+				"load": { "path": "/v1/firewall/aliases/WEB_SERVERS" },
+				"save": { "method": "PUT", "path": "/v1/firewall/aliases/{name}" }
+			}
+		},
+		{
+			"name": "New alias",
+			"note": "the name ADMIN_HOSTS is taken",
+			"width": "lg",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/aliases" },
+				"values": { "type": "network", "entries": [{ "value": "", "descr": "" }] },
+				"save": { "method": "POST", "path": "/v1/firewall/aliases" },
+				"submitLabel": "Create alias"
+			}
+		},
+		{
+			"name": "Alias with many entries",
+			"width": "lg",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/firewall/aliases" },
+				"load": { "path": "/v1/firewall/aliases/IOT_DEVICES" },
+				"save": { "method": "PUT", "path": "/v1/firewall/aliases/{name}" }
+			}
+		},
+		{
+			"name": "NTP settings",
+			"note": "try a pool with an IP address, or two preferred servers",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"schemaSource": { "path": "/v1/schema/services/ntp" },
+				"load": { "path": "/v1/services/ntp" },
+				"save": { "method": "PUT", "path": "/v1/services/ntp" }
+			}
+		},
+		{
+			"name": "Every field type and state",
+			"note": "preset errors; save with host name fw01 for a server 422",
+			"width": "full",
+			"surface": "page",
+			"config": {
+				"save": { "method": "PUT", "path": "/v1/gallery/forms/demo" },
+				"errors": {
+					"relay": "Enter any, an address, a network in CIDR form, a host name or an alias.",
+					"loglevel": "Choose how much the service logs.",
+					"peers.1.endpoint": "Enter a host name or an address."
+				},
+				"errorMessage": "These values came back from the server.",
+				"values": {
+					"hostname": "edge-fw",
+					"locked": "fw01.home.arpa",
+					"mtu": 1500,
+					"psk": "",
+					"motd": "Authorised use only.",
+					"config": "server:\n  verbosity: 1\n  prefetch: yes\n",
+					"loglevel": "",
+					"tz": "Europe/Copenhagen",
+					"protocols": ["tcp", "udp"],
+					"ifaces": ["lan"],
+					"active": true,
+					"verbose": false,
+					"policy": "reject",
+					"relay": "300.1.2.3",
+					"dest": "!RFC1918_ALL",
+					"port": "8000-8100",
+					"peers": [
+						{ "name": "office-gw", "endpoint": "198.51.100.20", "port": "51820", "keepalive": true },
+						{ "name": "phone", "endpoint": "bad host!", "port": "", "keepalive": false }
+					],
+					"window": { "days": ["mon", "tue", "wed", "thu", "fri"], "from": "08:00", "to": "18:00" },
+					"accent": "teal"
+				},
+				"schema": {
+					"title": "Every field type",
+					"sections": [
+						{ "id": "text", "title": "Text and numbers", "description": "Labels sit above inputs at every width; half and third widths pair up on wide forms.", "fields": [
+							{ "name": "hostname", "type": "text", "label": "Host name", "required": true, "width": "half", "mono": true, "pattern": "^[a-z0-9-]{1,63}$", "patternMessage": "Use lower-case letters, digits and hyphens.", "help": "Without the domain." },
+							{ "name": "domain", "type": "text", "label": "Domain", "width": "half", "prefix": "host.", "placeholder": "home.arpa" },
+							{ "name": "locked", "type": "text", "label": "Disabled field", "disabled": true, "width": "half", "help": "Set by the installer." },
+							{ "name": "mtu", "type": "number", "label": "MTU", "width": "half", "min": 576, "max": 9000, "unit": "bytes" },
+							{ "name": "long", "type": "text", "label": "A deliberately long label that wraps onto a second line on narrow screens, to check that the label, input and help stay aligned", "help": "Help text can be long as well: it explains what the setting does, when to change it and what the default is, without repeating the label word for word." },
+							{ "name": "psk", "type": "secret", "label": "Pre-shared key", "generate": { "length": 32, "charset": "base64" }, "required": true, "help": "Reveal shows the key; generate creates a random 32-character key." },
+							{ "name": "motd", "type": "textarea", "label": "Login banner", "maxLength": 200, "width": "half" },
+							{ "name": "config", "type": "textarea", "label": "Custom options", "code": true, "rows": 4, "width": "half" }
+						] },
+						{ "id": "choices", "title": "Choices", "fields": [
+							{ "name": "loglevel", "type": "select", "label": "Log level", "required": true, "width": "half", "options": [{ "value": "error", "label": "Errors" }, { "value": "warn", "label": "Warnings" }, { "value": "info", "label": "Information" }, { "value": "debug", "label": "Debug" }] },
+							{ "name": "tz", "type": "select", "label": "Time zone (searchable)", "width": "half", "options": { "source": { "path": "/v1/gallery/forms/options", "query": { "set": "timezones" } }, "value": "id", "label": "city", "group": "region" } },
+							{ "name": "protocols", "type": "checklist", "label": "Protocols", "width": "half", "options": [{ "value": "tcp", "label": "TCP" }, { "value": "udp", "label": "UDP" }, { "value": "icmp", "label": "ICMP" }] },
+							{ "name": "active", "type": "switch", "label": "Service", "text": "Start the service at boot", "width": "half" },
+							{ "name": "ifaces", "type": "checklist", "label": "Interfaces (from the API)", "options": { "source": { "path": "/v1/gallery/forms/options", "query": { "set": "interfaces" } }, "value": "id", "label": "descr", "detail": "detail" } },
+							{ "name": "policy", "type": "segmented", "label": "Default policy", "width": "half", "options": [{ "value": "pass", "label": "Pass", "icon": "circle-check", "tone": "pass" }, { "value": "block", "label": "Block", "icon": "ban", "tone": "block" }, { "value": "reject", "label": "Reject", "icon": "circle-minus", "tone": "reject" }] },
+							{ "name": "verbose", "type": "switch", "label": "Verbose (no caption)", "width": "half", "enabledWhen": { "field": "active", "truthy": true }, "help": "Enabled only while the service starts at boot." },
+							{ "name": "mode", "type": "segmented", "label": "Disabled segmented", "disabled": true, "default": "auto", "options": [{ "value": "auto", "label": "Automatic" }, { "value": "manual", "label": "Manual" }] }
+						] },
+						{ "id": "network", "title": "Network", "fields": [
+							{ "name": "relay", "type": "address", "label": "Relay to", "width": "two-thirds", "required": true },
+							{ "name": "port", "type": "port", "label": "Port range", "width": "third" },
+							{ "name": "dest", "type": "address", "label": "Destination (invertible)", "invert": true, "width": "half", "help": "Not matches everything except this." },
+							{ "name": "server", "type": "typeahead", "label": "Syslog server", "width": "half", "mono": true, "suggestions": [{ "value": "logs.home.arpa", "detail": "Graylog" }, { "value": "192.168.1.20", "detail": "nas" }, { "value": "siem.example.org", "detail": "SIEM" }], "help": "Type to see suggestions." }
+						] },
+						{ "id": "lists", "title": "Lists and files", "fields": [
+							{ "name": "peers", "type": "entry-grid", "label": "Peers", "min": 1, "max": 8, "addLabel": "Add peer", "fields": [
+								{ "name": "name", "type": "text", "label": "Name", "required": true, "width": "md" },
+								{ "name": "endpoint", "type": "address", "label": "Endpoint", "width": "lg", "allow": ["ip", "fqdn"] },
+								{ "name": "port", "type": "port", "label": "Port", "width": "sm", "range": false, "alias": false },
+								{ "name": "keepalive", "type": "switch", "label": "Keepalive", "width": "auto" }
+							] },
+							{ "name": "cert", "type": "file", "label": "Certificate (upload)", "width": "half", "accept": ".pem,.crt", "maxSize": 65536, "upload": { "path": "/v1/gallery/forms/upload" }, "help": "Names containing fail are refused by the mock." },
+							{ "name": "key", "type": "file", "label": "Private key (read in the browser)", "width": "half", "accept": ".key,.pem,.txt", "maxSize": 16384, "read": "text" }
+						] },
+						{ "id": "time", "title": "Time and appearance", "advanced": true, "description": "Collapsed by default, like every advanced section.", "fields": [
+							{ "name": "when", "type": "datetime", "label": "Maintenance starts", "width": "half" },
+							{ "name": "expires", "type": "datetime", "mode": "date", "label": "Expires on", "width": "half" },
+							{ "name": "window", "type": "datetime", "mode": "time", "range": true, "days": true, "label": "Schedule" },
+							{ "name": "accent", "type": "color", "label": "Accent colour", "allowDefault": true }
+						] }
+					]
+				}
+			}
+		},
+		{
+			"name": "Compact density",
+			"width": "lg",
+			"surface": "page",
+			"config": {
+				"density": "compact",
+				"schemaSource": { "path": "/v1/schema/firewall/aliases" },
+				"load": { "path": "/v1/firewall/aliases/ADMIN_HOSTS" },
+				"save": { "method": "PUT", "path": "/v1/firewall/aliases/{name}" }
+			}
+		},
+		{ "name": "Loading", "note": "schema arrives after 8 s", "width": "md", "surface": "page", "config": { "schemaSource": { "path": "/v1/gallery/forms/slow-schema" }, "values": { "name": "NEW_ALIAS", "type": "host" } } },
+		{ "name": "Error", "width": "md", "surface": "page", "config": { "schemaSource": { "path": "/v1/gallery/fail" } } }
+	]
+}

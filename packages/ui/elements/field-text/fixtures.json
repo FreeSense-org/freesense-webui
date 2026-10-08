@@ -1,0 +1,69 @@
+{
+	"title": "Text field",
+	"description": "Single-line text with optional prefix/suffix, monospace and a pattern check.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Default",
+			"width": "md",
+			"config": {
+				"name": "hostname",
+				"label": "Host name",
+				"value": "fw01",
+				"help": "Without the domain.",
+				"mono": true
+			}
+		},
+		{
+			"name": "Prefix and suffix",
+			"width": "md",
+			"config": {
+				"name": "url",
+				"label": "Update URL",
+				"prefix": "https://",
+				"suffix": "/api",
+				"placeholder": "updates.example.org"
+			}
+		},
+		{
+			"name": "Required, empty",
+			"width": "md",
+			"config": {
+				"name": "descr",
+				"label": "Description",
+				"required": true,
+				"placeholder": "What is this for?"
+			}
+		},
+		{
+			"name": "Error",
+			"width": "md",
+			"config": {
+				"name": "domain",
+				"label": "Domain",
+				"value": "home arpa",
+				"error": "A domain cannot contain spaces."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "serial",
+				"label": "Serial number",
+				"value": "PT24A9F0021",
+				"disabled": true,
+				"mono": true
+			}
+		},
+		{
+			"name": "Long label and help",
+			"width": "md",
+			"config": {
+				"name": "long",
+				"label": "A deliberately long label that wraps onto several lines to check alignment of label, input and help",
+				"help": "Help text explains what the setting does, when to change it and what the default is, without repeating the label."
+			}
+		}
+	]
+}

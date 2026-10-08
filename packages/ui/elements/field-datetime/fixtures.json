@@ -1,0 +1,73 @@
+{
+	"title": "Date and time field",
+	"description": "Date, time or both; ranges and weekday schedules.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Date and time",
+			"width": "md",
+			"config": {
+				"name": "when",
+				"label": "Maintenance starts",
+				"value": "2026-10-12T02:00"
+			}
+		},
+		{
+			"name": "Date only",
+			"width": "md",
+			"config": {
+				"name": "expires",
+				"label": "Expires on",
+				"mode": "date",
+				"value": "2027-01-31"
+			}
+		},
+		{
+			"name": "Weekly schedule",
+			"width": "md",
+			"config": {
+				"name": "window",
+				"label": "Work hours",
+				"mode": "time",
+				"range": true,
+				"days": true,
+				"value": {
+					"days": [
+						"mon",
+						"tue",
+						"wed",
+						"thu",
+						"fri"
+					],
+					"from": "08:00",
+					"to": "18:00"
+				}
+			}
+		},
+		{
+			"name": "Range error",
+			"width": "md",
+			"config": {
+				"name": "backup",
+				"label": "Backup window",
+				"mode": "time",
+				"range": true,
+				"value": {
+					"from": "04:00",
+					"to": "01:00"
+				},
+				"error": "The end must be after the start."
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "md",
+			"config": {
+				"name": "built",
+				"label": "Built",
+				"value": "2026-10-07T01:00",
+				"disabled": true
+			}
+		}
+	]
+}

@@ -1,0 +1,52 @@
+/*
+ * _field-datetime.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-dt {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		> .fs-dt-input { max-width: 16rem; }
+	}
+	.fs-dt-range {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.5rem;
+		.fs-dt-input { flex: 1 1 9rem; min-width: 0; max-width: 16rem; }
+	}
+	.fs-dt-sep { color: var(--fs-text-muted); }
+	.fs-dt-days {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+	}
+	.fs-dt-day {
+		display: inline-grid;
+		place-items: center;
+		min-width: 2.75rem;
+		min-height: 2rem;
+		padding: 0 0.5rem;
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-border-strong) 55%, var(--fs-border-default));
+		border-radius: 999px;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		font-weight: 600;
+		cursor: pointer;
+		user-select: none;
+		transition: background-color var(--fs-dur-fast), color var(--fs-dur-fast), border-color var(--fs-dur-fast);
+		&:hover { color: var(--fs-text-strong); }
+	}
+	.fs-seg-input:checked + .fs-dt-day {
+		border-color: var(--fs-accent-fill);
+		background: var(--fs-accent-fill);
+		color: var(--fs-accent-on);
+	}
+	.fs-seg-input:focus-visible + .fs-dt-day { outline: var(--fs-focus-width) solid var(--fs-accent-fill); outline-offset: 0.125rem; }
+	.fs-seg-input:disabled + .fs-dt-day { cursor: default; opacity: 0.7; }
+	@media (pointer: coarse) { .fs-dt-day { min-height: 2.5rem; } }
+}

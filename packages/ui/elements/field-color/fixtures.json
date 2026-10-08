@@ -1,0 +1,36 @@
+{
+	"title": "Colour field",
+	"description": "Accent picker limited to the theme's contrast-checked accents.",
+	"status": "draft",
+	"fixtures": [
+		{
+			"name": "Accent",
+			"width": "lg",
+			"config": {
+				"name": "accent",
+				"label": "Accent colour",
+				"value": "coral"
+			}
+		},
+		{
+			"name": "With theme default",
+			"width": "lg",
+			"config": {
+				"name": "accent2",
+				"label": "Dashboard accent",
+				"allowDefault": true
+			}
+		},
+		{
+			"name": "Disabled",
+			"width": "lg",
+			"config": {
+				"name": "accent3",
+				"label": "Accent (managed)",
+				"value": "teal",
+				"disabled": true,
+				"help": "Set by the organisation theme."
+			}
+		}
+	]
+}

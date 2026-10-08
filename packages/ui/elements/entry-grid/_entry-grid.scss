@@ -1,0 +1,108 @@
+/*
+ * _entry-grid.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Rows of sub-fields: a table-like grid on wide forms, stacked cards on narrow ones. */
+@layer elements {
+	.fs-eg {
+		container-type: inline-size;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-raised);
+		&.is-invalid { border-color: var(--fs-status-crit); }
+	}
+	.fs-eg-head,
+	.fs-eg-row {
+		display: grid;
+		grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+		align-items: start;
+		gap: 0.5rem;
+		padding: 0.5rem 0.5rem 0.5rem 0.75rem;
+	}
+	.fs-eg-head {
+		grid-template-columns: 1.5rem var(--fs-eg-cols);
+		padding-top: 0.5rem;
+		padding-bottom: 0.375rem;
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		font-weight: 600;
+		&::before { content: '#'; }
+		&[hidden] { display: none; }
+	}
+	.fs-eg-col { display: flex; gap: 0.25rem; min-width: 0; overflow-wrap: anywhere; }
+	.fs-eg-rows {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.fs-eg-row {
+		grid-template-columns: 1.5rem var(--fs-eg-cols);
+		& + & { border-top: var(--fs-border-width) solid var(--fs-border-default); }
+	}
+	.fs-eg-cells { display: contents; }
+	.fs-eg-num {
+		align-self: start;
+		padding-top: calc((var(--fs-control-h) - 1.25rem) / 2);
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+	}
+	.fs-eg-cell { gap: 0.25rem; }
+	.fs-eg-cell-label { display: none; color: var(--fs-text-muted); font-size: 0.75rem; font-weight: 600; }
+	.fs-eg-cell .fs-switch { justify-content: center; }
+	.fs-eg-cell .fs-addr-kind { display: none; }
+	.fs-eg-cell .fs-addr > .form-control { border-radius: var(--fs-radius-sm); }
+	.fs-eg-col.is-center { justify-content: center; }
+	.fs-eg-acts {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 0.125rem;
+		min-height: var(--fs-control-h);
+		.btn { min-width: 2rem; min-height: 2rem; padding: 0.25rem; border-color: transparent; color: var(--fs-text-muted); }
+		.btn:hover:not(:disabled) { color: var(--fs-text-strong); }
+		.fs-eg-rm:hover:not(:disabled) { color: var(--fs-status-crit); }
+		.btn:disabled { opacity: 0.35; }
+	}
+	.fs-eg-empty {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 1rem 0.75rem;
+		color: var(--fs-text-muted);
+		font-size: 0.875rem;
+		&[hidden] { display: none; }
+	}
+	.fs-eg-foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.5rem 0.75rem;
+		border-top: var(--fs-border-width) solid var(--fs-border-default);
+		background: var(--fs-surface-sunken);
+		border-radius: 0 0 calc(var(--fs-radius-md) - var(--fs-border-width)) calc(var(--fs-radius-md) - var(--fs-border-width));
+	}
+	.fs-eg-add { display: inline-flex; align-items: center; gap: 0.4375rem; }
+	.fs-eg-count { margin-left: auto; color: var(--fs-text-muted); font-size: 0.8125rem; }
+	.fs-eg.is-disabled .fs-eg-foot { display: none; }
+
+	/* Narrow: each row becomes a small card with its own labels. */
+	@container (max-width: 30rem) {
+		.fs-eg-head { display: none; }
+		.fs-eg-row {
+			grid-template-columns: minmax(0, 1fr) auto;
+			grid-template-areas: 'num acts' 'cells cells';
+			gap: 0.5rem;
+			padding: 0.75rem;
+		}
+		.fs-eg-num { grid-area: num; padding-top: 0.375rem; font-weight: 600; &::before { content: '#'; } }
+		.fs-eg-acts { grid-area: acts; min-height: 0; .btn { min-width: 2.5rem; min-height: 2.5rem; } }
+		.fs-eg-cells { grid-area: cells; display: flex; flex-direction: column; gap: 0.625rem; }
+		.fs-eg-cell-label { display: block; }
+		.fs-eg-cell .fs-switch { justify-content: flex-start; }
+	}
+}

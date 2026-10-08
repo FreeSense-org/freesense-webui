@@ -1,0 +1,58 @@
+/*
+ * _field-segmented.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Segmented control. The .fs-seg-input radios are visually hidden; datetime days and colour reuse them. */
+@layer elements {
+	.fs-seg {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		max-width: 100%;
+		padding: 0.1875rem;
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-border-strong) 55%, var(--fs-border-default));
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-sunken);
+		&.is-invalid { border-color: var(--fs-status-crit); }
+	}
+	.fs-seg-btn {
+		--fs-seg-c: var(--fs-accent-text);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.4375rem;
+		min-height: calc(var(--fs-control-h) - 0.5rem);
+		padding: 0.25rem 0.875rem;
+		border-radius: calc(var(--fs-radius-md) - 0.1875rem);
+		color: var(--fs-text-muted);
+		font-weight: 500;
+		line-height: 1.2;
+		cursor: pointer;
+		user-select: none;
+		transition: background-color var(--fs-dur-fast), color var(--fs-dur-fast), box-shadow var(--fs-dur-fast);
+		> i { font-size: 0.8125rem; }
+		&:hover { color: var(--fs-text-strong); }
+		&[data-tone='pass'], &[data-tone='ok'] { --fs-seg-c: var(--fs-action-pass); }
+		&[data-tone='block'], &[data-tone='crit'] { --fs-seg-c: var(--fs-action-block); }
+		&[data-tone='reject'] { --fs-seg-c: var(--fs-action-reject); }
+		&[data-tone='match'] { --fs-seg-c: var(--fs-action-match); }
+		&[data-tone='warn'] { --fs-seg-c: var(--fs-status-warn); }
+	}
+	.fs-seg-input:checked + .fs-seg-btn {
+		background: var(--fs-surface-raised);
+		color: var(--fs-seg-c);
+		font-weight: 600;
+		box-shadow: var(--fs-shadow-sm), inset 0 0 0 var(--fs-border-width) var(--fs-border-default);
+	}
+	.fs-seg-input:focus-visible + .fs-seg-btn {
+		outline: var(--fs-focus-width) solid var(--fs-accent-fill);
+		outline-offset: 0.0625rem;
+	}
+	.fs-seg-input:disabled + .fs-seg-btn { cursor: default; &:hover { color: var(--fs-text-muted); } }
+	.fs-seg.is-disabled { opacity: 0.85; }
+	.fs-seg.is-disabled .fs-seg-input:checked + .fs-seg-btn { color: var(--fs-text-default); }
+	@media (pointer: coarse) { .fs-seg-btn { min-height: 2.5rem; } }
+}
