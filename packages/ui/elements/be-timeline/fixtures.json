@@ -1,0 +1,12 @@
+{
+	"title": "Boot environment timeline",
+	"description": "Boot environments and snapshots as a vertical timeline with Active and Next boot badges; activate or roll back, snapshot now, rename and delete.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Boot environments", "width": "lg", "surface": "page", "config": {} },
+		{ "name": "Many, with long descriptions (read-only)", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/be-many" }, "readOnly": true } },
+		{ "name": "Loading", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/slow" } } },
+		{ "name": "Empty (UFS install)", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" }, "readOnly": true } },
+		{ "name": "Error", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" } } }
+	]
+}
