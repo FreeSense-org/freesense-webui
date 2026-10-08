@@ -1,4 +1,11 @@
 /*
+ * nav.js
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * FS.nav — partial navigation.
  *
  * Links marked data-fs-nav (the shell marks all of its own) are fetched with

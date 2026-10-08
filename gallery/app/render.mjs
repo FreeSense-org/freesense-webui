@@ -1,4 +1,11 @@
 /*
+ * render.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * Gallery-only renderer for /gallery/app/*: fills shell.html from nav.json the
  * same way the PHP Shell will. The markup helpers here are mirrored by the JS
  * in app-shell.js (which re-renders the card menu after partial navigation).

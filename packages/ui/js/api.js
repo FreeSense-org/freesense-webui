@@ -1,4 +1,11 @@
 /*
+ * api.js
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * FS.api — JSON client for the FreeSense REST API.
  *
  * Authenticates with the GUI session cookie plus the X-CSRF-Token header

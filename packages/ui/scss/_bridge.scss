@@ -1,4 +1,11 @@
 /*
+ * _bridge.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * Bridge: point Bootstrap's runtime custom properties at FreeSense tokens.
  * Selectors match Bootstrap's own (:root and [data-bs-theme]) so the bridge
  * wins by layer order, in both colour modes, for every theme.

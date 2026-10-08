@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 /*
+ * build-inventory.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * build-inventory.mjs — baseline inventory of the 1.x WebUI.
  *
  * Reads a freesense checkout (read-only) and records, for every 1.x page and

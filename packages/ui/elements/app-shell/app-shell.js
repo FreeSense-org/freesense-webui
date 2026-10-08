@@ -1,4 +1,11 @@
 /*
+ * app-shell.js
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * app-shell behaviour: mega dropdowns (open/close, hover switching, filter,
  * keyboard), the left card menu for features with several pages, the phone
  * drawer and active states after partial navigation. See spec.md.

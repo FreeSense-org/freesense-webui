@@ -1,0 +1,18 @@
+{
+	"title": "Status",
+	"description": "Icon plus text for a state. Colour is never the only signal.",
+	"status": "stable",
+	"fixtures": [
+		{ "name": "Health", "width": "md", "config": { "state": "ok", "label": "Online", "detail": "12 ms" } },
+		{ "name": "Warning", "width": "md", "config": { "state": "warn", "label": "Packet loss", "detail": "4%" } },
+		{ "name": "Critical", "width": "md", "config": { "state": "crit", "label": "Down", "detail": "41 min" } },
+		{ "name": "Pill: pass", "width": "sm", "config": { "state": "pass", "label": "Pass", "variant": "pill" } },
+		{ "name": "Pill: block", "width": "sm", "config": { "state": "block", "label": "Block", "variant": "pill" } },
+		{ "name": "Pill: reject", "width": "sm", "config": { "state": "reject", "label": "Reject", "variant": "pill" } },
+		{ "name": "Pill: match", "width": "sm", "config": { "state": "match", "label": "Match", "variant": "pill" } },
+		{ "name": "Dot", "width": "sm", "config": { "state": "ok", "label": "Running", "variant": "dot" } },
+		{ "name": "Pending", "width": "sm", "config": { "state": "pending", "label": "Applying" } },
+		{ "name": "Info", "width": "sm", "config": { "state": "info", "label": "Update available" } },
+		{ "name": "Neutral", "width": "sm", "config": { "state": "neutral", "label": "Not configured" } }
+	]
+}

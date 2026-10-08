@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 /*
+ * build.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * build.mjs — build dist/ (committed; the FreeSense-webui port does not build).
  *
  *   dist/public/ui/fs-ui.css        engine CSS (Bootstrap + bridge + elements), theme-agnostic
@@ -56,7 +63,8 @@ const compiled = sass.compile(join(root, 'packages', 'ui', 'scss', 'index.scss')
 	silenceDeprecations: ['import', 'global-builtin', 'color-functions', 'if-function'],
 	style: 'expanded'
 });
-const css = transform({ filename: 'fs-ui.css', code: Buffer.from(compiled.css), minify: true, targets }).code;
+const banner = `/*! FreeSense WebUI ${ui.version} | Copyright (c) 2026 The FreeSense Project | Apache-2.0 | Third-party licenses: LICENSES.txt */`;
+const css = Buffer.concat([Buffer.from(`${banner}\n`), transform({ filename: 'fs-ui.css', code: Buffer.from(compiled.css), minify: true, targets }).code]);
 writeFileSync(join(uiOut, 'fs-ui.css'), css);
 log(`fs-ui.css ${(css.length / 1024).toFixed(0)} KiB`);
 
@@ -69,6 +77,7 @@ await build({
 	minify: true,
 	target: ['chrome111', 'firefox113', 'safari16.4'],
 	legalComments: 'eof',
+	banner: { js: banner },
 	alias: { 'fs-elements': join(cache, 'elements.js') },
 	nodePaths: [nm],
 	define: { __FS_UI_VERSION__: JSON.stringify(ui.version), __FS_THEME_SCHEME__: JSON.stringify(ui.freesense.themeScheme) },
@@ -86,6 +95,30 @@ for (const [dir, re] of fonts) {
 	for (const f of readdirSync(dir).filter((n) => re.test(n))) copyFileSync(join(dir, f), join(uiOut, 'fonts', f));
 }
 log(`fonts ${readdirSync(join(uiOut, 'fonts')).length} files`);
+
+/* 3b. Third-party licenses for everything bundled into dist/ */
+const bundled = ['bootstrap', '@popperjs/core', 'jquery', '@fortawesome/fontawesome-free', '@fontsource-variable/inter', '@fontsource/jetbrains-mono'];
+const notices = [`FreeSense WebUI ${ui.version}
+Copyright (c) 2026 The FreeSense Project
+Licensed under the Apache License, Version 2.0.
+
+This distribution includes the following third-party software:
+`];
+for (const name of bundled) {
+	const dir = join(nm, ...name.split('/'));
+	const pj = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+	const lic = readdirSync(dir).find((f) => /^(licen[cs]e|copying)(\.(md|txt))?$/i.test(f));
+	notices.push(`
+${'='.repeat(78)}
+${pj.name} ${pj.version} (${typeof pj.license === 'string' ? pj.license : 'see below'})
+${pj.homepage || ''}
+${'='.repeat(78)}
+
+${lic ? readFileSync(join(dir, lic), 'utf8').trim() : '(license text not shipped by the package)'}
+`);
+}
+writeFileSync(join(uiOut, 'LICENSES.txt'), notices.join(''));
+log(`licenses ${bundled.length} packages`);
 
 /* 4. Themes */
 const themes = [];

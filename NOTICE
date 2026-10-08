@@ -1,0 +1,8 @@
+FreeSense WebUI
+Copyright (c) 2026 The FreeSense Project
+
+This product is written by The FreeSense Project and licensed under the
+Apache License, Version 2.0 (see LICENSE).
+
+The built files in dist/ include third-party software under their own
+licenses; see dist/public/ui/LICENSES.txt.

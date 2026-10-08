@@ -1,4 +1,11 @@
 /*
+ * batch.js
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * FS.batch — collect GET requests made in the same tick and send them as one
  * POST /api/v1/batch, because php-fpm has only a few workers on small boxes.
  *

@@ -1,0 +1,56 @@
+/*
+ * _states.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Shared loading / empty / error / stale states (FS.states). */
+@layer elements {
+	.fs-state {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		padding: calc(var(--fs-pad) * 1.5) var(--fs-pad);
+		text-align: center;
+	}
+	.fs-state-loading {
+		align-items: stretch;
+		gap: 0.625rem;
+		padding: var(--fs-pad) 0;
+	}
+	.fs-skel {
+		display: block;
+		height: 0.75rem;
+		border-radius: 999px;
+		background: linear-gradient(90deg, var(--fs-surface-sunken) 0%, color-mix(in srgb, var(--fs-surface-sunken) 40%, var(--fs-surface-raised)) 50%, var(--fs-surface-sunken) 100%) 0 0 / 200% 100%;
+		animation: fs-skel 1.4s ease-in-out infinite;
+	}
+	@keyframes fs-skel { to { background-position: -200% 0; } }
+
+	.fs-state-icon {
+		display: grid;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: 50%;
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+		font-size: 1.125rem;
+	}
+	.fs-state-error .fs-state-icon {
+		background: color-mix(in srgb, var(--fs-status-crit) 12%, transparent);
+		color: var(--fs-status-crit);
+	}
+	.fs-state-title { margin: 0.25rem 0 0; font-weight: 600; color: var(--fs-text-strong); }
+	.fs-state-text { margin: 0; max-width: 32rem; color: var(--fs-text-muted); font-size: 0.875em; }
+	.fs-state .btn { margin-top: 0.5rem; }
+
+	[data-fs-stale] {
+		position: relative;
+		opacity: 0.72;
+		transition: opacity var(--fs-dur-base);
+	}
+}

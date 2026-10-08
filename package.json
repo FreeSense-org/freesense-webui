@@ -13,7 +13,7 @@
 	],
 	"scripts": {
 		"build": "node tools/build/build.mjs",
-		"check": "node tools/theme/check.mjs && node tools/theme/frozen.mjs && node tools/inventory/build-inventory.mjs --check",
+		"check": "node tools/check/provenance.mjs && node tools/theme/check.mjs && node tools/theme/frozen.mjs && node tools/inventory/build-inventory.mjs --check",
 		"check:themes": "node tools/theme/check.mjs",
 		"gallery": "node tools/build/serve.mjs",
 		"inventory": "node tools/inventory/build-inventory.mjs",

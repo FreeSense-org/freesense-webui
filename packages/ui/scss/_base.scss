@@ -1,3 +1,10 @@
+/*
+ * _base.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /* Base: typography, focus, motion. */
 @layer base {
 	html { -webkit-text-size-adjust: 100%; }
@@ -10,7 +17,12 @@
 		transition: background-color var(--fs-dur-base), color var(--fs-dur-base);
 	}
 
-	code, kbd, samp, pre, .fs-mono { font-family: var(--fs-font-mono); }
+	body { line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+	h1, h2, h3, h4, h5, h6 { font-weight: 600; letter-spacing: -0.011em; color: var(--fs-text-strong); }
+	h1 { font-size: 1.5rem; line-height: 1.25; }
+	h2 { font-size: 1.125rem; }
+	h3 { font-size: 1rem; }
+	code, kbd, samp, pre, .fs-mono { font-family: var(--fs-font-mono); font-size: 0.9em; }
 	.fs-num, .fs-mono { font-variant-numeric: tabular-nums; }
 	.fs-muted { color: var(--fs-text-muted); }
 

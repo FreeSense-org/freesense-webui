@@ -78,3 +78,9 @@ A rule changes only through a pull request that edits this file.
 ## R12. Translations
 
 - Every visible string goes through gettext (PHP) or `FS.i18n` (JS). There is no hard-coded English in elements.
+
+## R13. FreeSense's own work
+
+- WebUI 2.0 is written from scratch by The FreeSense Project. Every source file starts with the FreeSense header (`Copyright (c) 2026 The FreeSense Project`, `SPDX-License-Identifier: Apache-2.0`). **[CI]**
+- Nothing in this repository mentions the project FreeSense descends from or its former owners. Upstream credits belong only to files that contain upstream code, and those live in the backend (`freesense`), not here. **[CI]** (`tools/check/provenance.mjs`)
+- Third-party libraries bundled into `dist/` keep their own licenses, collected in `dist/public/ui/LICENSES.txt` by the build.

@@ -1,3 +1,10 @@
+/*
+ * gallery.css
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /* Gallery chrome only (not shipped). Uses tokens like everything else. */
 @layer page {
 	.g-head {
@@ -23,4 +30,34 @@
 	.g-pass { color: var(--fs-action-pass); }
 	.g-block { color: var(--fs-action-block); }
 	.g-reject { color: var(--fs-action-reject); }
+}
+
+@layer page {
+	.g-links { display: flex; gap: 16px; }
+	.g-links a { color: var(--fs-text-muted); text-decoration: none; font-weight: 500; }
+	.g-links a[aria-current] { color: var(--fs-accent-text); }
+	.g-brand .fs-brand-mark { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: var(--fs-radius-sm); background: var(--fs-accent-fill); color: var(--fs-accent-on); font-size: 0.6875rem; font-weight: 800; }
+	.g-split { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1600px; margin: 0 auto; }
+	.g-index { position: sticky; top: 60px; align-self: start; height: calc(100vh - 60px); overflow: auto; padding: 16px; border-right: var(--fs-border-width) solid var(--fs-border-default); }
+	.g-index ul { list-style: none; padding: 0; margin: 12px 0 0; }
+	.g-index a { display: flex; justify-content: space-between; padding: 5px 8px; border-radius: var(--fs-radius-sm); color: var(--fs-text-default); text-decoration: none; font-size: 0.8125rem; }
+	.g-index a:hover { background: var(--fs-surface-sunken); }
+	.g-draft { font-size: 0.625rem; color: var(--fs-status-warn); text-transform: uppercase; letter-spacing: 0.05em; }
+	.g-elements .g-main { max-width: none; padding: 24px; }
+	.g-el { margin-bottom: 48px; scroll-margin-top: 72px; }
+	.g-el > header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+	.g-el > header h2 { font-size: 1.125rem; margin: 0; font-weight: 600; color: var(--fs-text-strong); }
+	.g-el > header code { font-size: 0.75rem; color: var(--fs-text-muted); }
+	.g-solo { margin-left: auto; font-size: 0.75rem; }
+	.g-fixtures { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; margin-top: 12px; }
+	.g-fixture { margin: 0; min-width: 0; grid-column: span 4; }
+	.g-w-sm { grid-column: span 3; } .g-w-md { grid-column: span 4; } .g-w-lg { grid-column: span 6; } .g-w-full { grid-column: span 12; }
+	.g-fixture figcaption { font-size: 0.75rem; margin-bottom: 6px; }
+	.g-stage { min-width: 0; }
+	.g-stage-page { padding: 16px; border-radius: var(--fs-radius-lg); background: var(--fs-surface-page); border: var(--fs-border-width) dashed var(--fs-border-default); }
+	@media (max-width: 991.98px) {
+		.g-split { grid-template-columns: 1fr; }
+		.g-index { position: static; height: auto; border-right: 0; }
+		.g-fixture, .g-w-sm, .g-w-md, .g-w-lg { grid-column: span 12; }
+	}
 }

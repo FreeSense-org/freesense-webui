@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 /*
+ * check.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * check.mjs — validate theme files: scheme compatibility, schema, contrast.
  *   node tools/theme/check.mjs [file.theme.json...] [--scheme 2.0]
  * Without files, checks every packages/theme-NAME/*.theme.json.

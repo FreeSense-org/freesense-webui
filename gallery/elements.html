@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-fs-theme="freesense" data-fs-mode="auto" data-bs-theme="light" data-fs-accent="coral" data-fs-density="comfortable"
+	data-fs-skin-topbar="surface" data-fs-skin-section="surface" data-fs-skin-cards="outlined" data-fs-skin-tables="lines" data-fs-skin-buttons="rounded">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="fs-themes" content="/themes">
+<meta name="fs-csrf" content="gallery">
+<title>Elements · FreeSense UI</title>
+<script>(function (r) { if (r.dataset.fsMode === 'auto') r.dataset.bsTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; })(document.documentElement);</script>
+<link rel="stylesheet" href="/ui/fs-ui.css">
+<link rel="stylesheet" id="fs-theme-freesense" href="/themes/freesense/theme.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body class="g-elements">
+<header class="g-head">
+	<div class="g-brand"><span class="fs-brand-mark" aria-hidden="true">FS</span> Element gallery <span class="badge text-bg-secondary" id="g-version"></span></div>
+	<nav class="g-links" aria-label="Gallery"><a href="/gallery/">Tokens</a><a href="/gallery/elements.html" aria-current="page">Elements</a><a href="/gallery/app/">App</a></nav>
+	<form class="g-controls" aria-label="Appearance">
+		<label>Mode <select class="form-select form-select-sm" id="g-mode"><option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+		<label>Accent <select class="form-select form-select-sm" id="g-accent"></select></label>
+		<label>Density <select class="form-select form-select-sm" id="g-density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></label>
+	</form>
+</header>
+<div class="g-split">
+	<nav class="g-index" aria-label="Elements"><input type="search" class="form-control form-control-sm" id="g-filter" placeholder="Filter elements" aria-label="Filter elements"><ul id="g-list"></ul></nav>
+	<main class="g-main" id="g-main" data-fs-main></main>
+</div>
+<script src="/ui/fs-ui.js"></script>
+<!--fs-mock-->
+<script src="elements.js"></script>
+</body>
+</html>

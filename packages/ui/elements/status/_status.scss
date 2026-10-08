@@ -1,0 +1,52 @@
+/*
+ * _status.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-status {
+		--fs-st: var(--fs-status-neutral);
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4375rem;
+		color: var(--fs-text-default);
+		white-space: nowrap;
+		> i { color: var(--fs-st); font-size: 0.875em; }
+		&[data-state='ok'] { --fs-st: var(--fs-status-ok); }
+		&[data-state='warn'] { --fs-st: var(--fs-status-warn); }
+		&[data-state='crit'] { --fs-st: var(--fs-status-crit); }
+		&[data-state='info'] { --fs-st: var(--fs-status-info); }
+		&[data-state='pending'] { --fs-st: var(--fs-status-info); > i { animation: fa-spin 1.2s linear infinite; } }
+		&[data-state='pass'] { --fs-st: var(--fs-action-pass); }
+		&[data-state='block'] { --fs-st: var(--fs-action-block); }
+		&[data-state='reject'] { --fs-st: var(--fs-action-reject); }
+		&[data-state='match'] { --fs-st: var(--fs-action-match); }
+
+		/* pill: tinted background, coloured text (used in tables and headers) */
+		&[data-variant='pill'] {
+			padding: 0.125rem 0.625rem 0.125rem 0.5rem;
+			border-radius: 999px;
+			background: color-mix(in srgb, var(--fs-st) 12%, transparent);
+			color: var(--fs-st);
+			font-size: 0.8125em;
+			font-weight: 600;
+		}
+		/* dot: small coloured dot instead of the icon (dense lists); the label stays */
+		&[data-variant='dot'] > i {
+			display: inline-block;
+			flex: none;
+			width: 0.5rem;
+			height: 0.5rem;
+			border-radius: 50%;
+			background: var(--fs-st);
+			font-size: 0;
+		}
+	}
+	.fs-status-detail {
+		color: var(--fs-text-muted);
+		font-size: 0.875em;
+		&::before { content: '·'; margin-right: 0.4375rem; }
+	}
+}

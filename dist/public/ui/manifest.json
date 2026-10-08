@@ -6,8 +6,9 @@
 		"freesense"
 	],
 	"files": {
-		"themes/freesense/theme.css": "1945f47fb971f9b15120a5fd2c6b2d0815d529d877a34d9627f1ee73abbb23a9",
-		"themes/freesense/theme.json": "5f8ac7efe1350e4b3337981fb28f666746d59be2ad2caaf39f1b3c698a55bce1",
+		"themes/freesense/theme.css": "e3fb36f9ece997e7a429836e2a5321855444bc8998ef9a7993f2c81fe5aa8903",
+		"themes/freesense/theme.json": "9139fccd39e6ab1138b35a98e1f461c70f3e3c29c859dbfdf4278874ab77f15f",
+		"ui/LICENSES.txt": "553fc7e8cda7608d927df199cd6d13dcc4ba214dbd1b389af43f5a2f2be2a957",
 		"ui/fonts/fa-solid-900.woff2": "24e5fae26b41c08b2df81c91669f5aaae71d81a84a4713fc56b5c621b78dd456",
 		"ui/fonts/inter-latin-ext-wght-normal.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
 		"ui/fonts/inter-latin-wght-normal.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
@@ -15,7 +16,7 @@
 		"ui/fonts/jetbrains-mono-latin-600-normal.woff2": "400c6bfda18d5d14acad1c15d6dcb9f8e13c015e7286317e0b9a482539bef147",
 		"ui/fonts/jetbrains-mono-latin-ext-400-normal.woff2": "505dfba8ecbe77e82765f36d317ed7ef4ac42719dc5f4ae68d1c483fd22d0d14",
 		"ui/fonts/jetbrains-mono-latin-ext-600-normal.woff2": "90899aac1c15552c028fd205376bb537a2a5205164fe8626efabad77d7260c20",
-		"ui/fs-ui.css": "df1f004373298462a6a117af9ec53e9b3cbb2e31f4083763690206322ca7c893",
-		"ui/fs-ui.js": "b51890ef8eeff4116b62c4d46ec2c6ca0407252020eed3973003153b13857a22"
+		"ui/fs-ui.css": "c8cd8204d0d0e9092c463b207fa43e274212098e4884050b6e4703ca09e56b17",
+		"ui/fs-ui.js": "523d2e450778a3d39b04e488c1c9a71c395cb1d37dbb1b02263eec98cdfd77d2"
 	}
 }

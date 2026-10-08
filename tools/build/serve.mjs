@@ -1,34 +1,70 @@
 #!/usr/bin/env node
 /*
- * serve.mjs — local static server for the gallery (development only).
+ * serve.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
+ * serve.mjs — local server for the gallery (development only).
  *   npm run gallery   → http://localhost:8770/gallery/
- * Serves the repository root read-only; /ui and /themes map to dist/public.
+ *
+ *   /ui/*, /themes/*        dist/public (the built engine and themes)
+ *   /gallery/app/*          the shell, rendered from gallery/app (like the PHP Shell)
+ *   /gallery/fixtures.json  every packages/ui/elements/<name>/fixtures.json
+ *   <!--fs-mock-->          in any gallery HTML: replaced by the mock API scripts
+ * The page modules are re-imported on each request, so edits show up on reload.
  */
 import { createServer } from 'node:http';
-import { readFile, stat } from 'node:fs/promises';
+import { readFile, stat, readdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join, normalize, extname, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { renderApp } from '../../gallery/app/render.mjs';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const port = Number(process.env.PORT || 8770);
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.txt': 'text/plain; charset=utf-8' };
+
+async function mockScripts() {
+	const files = (await readdir(join(root, 'gallery', 'mock'))).filter((f) => /^routes-.*\.js$/.test(f)).sort();
+	return ['core.js', ...files].map((f) => `<script src="/gallery/mock/${f}"></script>`).join('\n');
+}
+
+async function fixtures() {
+	const dir = join(root, 'packages', 'ui', 'elements');
+	const out = [];
+	for (const name of (await readdir(dir)).sort()) {
+		const f = join(dir, name, 'fixtures.json');
+		if (!existsSync(f)) continue;
+		try { out.push({ name, ...JSON.parse(await readFile(f, 'utf8')) }); } catch (e) { out.push({ name, error: String(e) }); }
+	}
+	return out;
+}
+
+function send(res, status, type, body) {
+	res.writeHead(status, { 'Content-Type': type, 'Cache-Control': 'no-store' }).end(body);
+}
 
 createServer(async (req, res) => {
 	let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-	if (path.startsWith('/gallery/app') && !/\.[a-z0-9]+$/.test(path)) {
-		const html = await renderApp(path).catch((e) => { console.error(e); return null; });
-		if (html) { res.writeHead(200, { 'Content-Type': types['.html'], 'Cache-Control': 'no-store' }).end(html); return; }
-	}
-	if (path.startsWith('/ui/') || path.startsWith('/themes/')) path = '/dist/public' + path;
-	if (path.endsWith('/')) path += 'index.html';
-	const file = normalize(join(root, path));
-	if (!file.startsWith(root)) { res.writeHead(403).end(); return; }
 	try {
-		if (!(await stat(file)).isFile()) throw new Error();
-		res.writeHead(200, { 'Content-Type': types[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
-		res.end(await readFile(file));
-	} catch {
-		res.writeHead(404, { 'Content-Type': 'text/plain' }).end('Not found');
+		if (path === '/gallery/fixtures.json') return send(res, 200, types['.json'], JSON.stringify(await fixtures()));
+		if (path.startsWith('/gallery/app') && !/\.[a-z0-9]+$/.test(path)) {
+			const mod = await import(`${pathToFileURL(join(root, 'gallery', 'app', 'render.mjs')).href}?t=${Date.now()}`);
+			const html = await mod.renderApp(path);
+			if (html) return send(res, 200, types['.html'], html.replace('<!--fs-mock-->', await mockScripts()));
+		}
+		if (path.startsWith('/ui/') || path.startsWith('/themes/')) path = '/dist/public' + path;
+		if (path.endsWith('/')) path += 'index.html';
+		const file = normalize(join(root, path));
+		if (!file.startsWith(root)) return send(res, 403, 'text/plain', 'Forbidden');
+		if (!(await stat(file)).isFile()) throw new Error('not a file');
+		let body = await readFile(file);
+		if (extname(file) === '.html') body = body.toString('utf8').replace('<!--fs-mock-->', await mockScripts());
+		return send(res, 200, types[extname(file)] || 'application/octet-stream', body);
+	} catch (e) {
+		if (e && e.code !== 'ENOENT' && e.message !== 'not a file') console.error(e);
+		return send(res, 404, 'text/plain', 'Not found');
 	}
 }).listen(port, () => console.log(`gallery: http://localhost:${port}/gallery/`));

@@ -1,5 +1,12 @@
 #!/usr/bin/env node
 /*
+ * frozen.mjs
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * frozen.mjs — released theme schemes must never change (RULES R9).
  *
  * schema/released.json maps each released scheme to the sha256 of its schema

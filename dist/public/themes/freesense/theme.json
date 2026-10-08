@@ -3,7 +3,7 @@
 	"name": "freesense",
 	"title": "FreeSense",
 	"version": "2.0.0-alpha.0",
-	"description": "The default FreeSense look: calm neutral surfaces, crisp type and a coral accent.",
+	"description": "The default FreeSense look: calm, airy surfaces, hairline borders, crisp type and a coral accent.",
 	"author": "The FreeSense Project",
 	"license": "Apache-2.0",
 	"defaultMode": "auto",
@@ -43,7 +43,7 @@
 		"buttons": "rounded"
 	},
 	"preview": {
-		"light": "#f3f5f8",
-		"dark": "#0e1116"
+		"light": "#f4f5f7",
+		"dark": "#111214"
 	}
 }

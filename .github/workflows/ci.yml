@@ -20,6 +20,8 @@ jobs:
           cache: npm
       - name: Install (no dependency install scripts)
         run: npm ci --ignore-scripts
+      - name: Provenance (FreeSense headers, no upstream references)
+        run: node tools/check/provenance.mjs
       - name: Unit tests
         run: npm test
       - name: Theme checks (scheme, schema, contrast)

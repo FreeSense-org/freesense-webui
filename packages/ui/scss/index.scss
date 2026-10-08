@@ -1,4 +1,11 @@
 /*
+ * index.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
  * @freesense/ui — engine stylesheet.
  *
  * Everything here is theme-agnostic: colours, radii, fonts and sizes are CSS
@@ -16,4 +23,5 @@
 @use 'bootstrap';
 @use 'bridge';
 @use 'base';
+@use 'states';
 @use 'elements'; // generated: .cache/_elements.scss

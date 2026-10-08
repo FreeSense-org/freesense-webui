@@ -1,3 +1,10 @@
+/*
+ * fmt.js
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
 /* FS.fmt — formatting for rates, sizes, durations and times. */
 
 const fixed = (v, big) => (v >= big ? Math.round(v) : v.toFixed(v >= 10 ? 1 : 2));
