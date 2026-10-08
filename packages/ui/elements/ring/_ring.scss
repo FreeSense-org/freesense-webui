@@ -1,0 +1,88 @@
+/*
+ * _ring.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-ring {
+		--fs-ring-c: var(--fs-series-1);
+		--fs-ring-d: 7.5rem;
+		display: inline-block;
+		max-width: 100%;
+		vertical-align: top;
+		&[data-level='warn'] { --fs-ring-now: var(--fs-status-warn); }
+		&[data-level='crit'] { --fs-ring-now: var(--fs-status-crit); }
+		&[data-size='sm'] { --fs-ring-d: 4.75rem; .fs-ring-num { font-size: 1rem; } .fs-ring-unit { font-size: 0.6875rem; } .fs-ring-level span { display: none; } }
+		&[data-size='lg'] { --fs-ring-d: 10rem; .fs-ring-num { font-size: 2rem; } }
+		.fs-state { padding: 0.5rem; }
+		.fs-state-loading { width: var(--fs-ring-d); }
+	}
+	.fs-ring-wrap {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.625rem;
+		text-align: center;
+	}
+	.fs-ring-dial {
+		position: relative;
+		width: var(--fs-ring-d);
+		height: var(--fs-ring-d);
+		> svg { display: block; width: 100%; height: 100%; transform: rotate(-90deg); }
+	}
+	.fs-ring-track {
+		fill: none;
+		stroke: var(--fs-border-default);
+		stroke-width: 8;
+	}
+	.fs-ring-arc {
+		fill: none;
+		stroke: var(--fs-ring-now, var(--fs-ring-c));
+		stroke-width: 8;
+		stroke-linecap: round;
+		stroke-dasharray: 100 100;
+		stroke-dashoffset: 100;
+		transition: stroke-dashoffset var(--fs-dur-slow) ease-out, stroke var(--fs-dur-base);
+	}
+	.fs-ring-centre {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.125rem;
+	}
+	.fs-ring-value {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 0.125rem;
+		color: var(--fs-text-strong);
+		line-height: 1;
+		white-space: nowrap;
+	}
+	.fs-ring-num { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+	.fs-ring-unit { color: var(--fs-text-muted); font-size: 0.8125rem; font-weight: 500; }
+	.fs-ring-level {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		color: var(--fs-ring-now, var(--fs-text-muted));
+		font-size: 0.6875rem;
+		font-weight: 600;
+		&:empty { display: none; }
+	}
+	.fs-ring-caption {
+		display: flex;
+		flex-direction: column;
+		max-width: max(var(--fs-ring-d), 9rem);
+		line-height: 1.35;
+	}
+	.fs-ring-label { color: var(--fs-text-default); font-weight: 500; overflow-wrap: anywhere; }
+	.fs-ring-detail { color: var(--fs-text-muted); font-size: 0.8125rem; font-variant-numeric: tabular-nums; }
+	@media (prefers-reduced-motion: reduce) {
+		.fs-ring-arc { transition: none; }
+	}
+}

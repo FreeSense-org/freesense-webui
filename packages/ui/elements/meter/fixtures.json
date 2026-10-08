@@ -1,0 +1,21 @@
+{
+	"title": "Meter",
+	"description": "Horizontal usage bar with warn/crit thresholds (percent of max).",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "CPU (live)", "width": "md", "config": { "label": "CPU", "source": { "path": "/v1/status/system" }, "field": "cpu.usage", "every": 2, "warn": 60, "crit": 85 } },
+		{ "name": "State table (value of max)", "width": "md", "config": { "label": "State table", "source": { "path": "/v1/status/states" }, "field": "current", "maxField": "max", "format": "num", "every": 3 } },
+		{ "name": "Memory (MiB)", "width": "md", "config": { "label": "Memory", "source": { "path": "/v1/status/system" }, "field": "memory.used", "maxField": "memory.total", "format": "num", "unit": "MiB", "every": 5 } },
+		{ "name": "Disk (bytes)", "width": "md", "config": { "label": "/ (zfs)", "source": { "path": "/v1/status/system" }, "field": "disks.0.used", "maxField": "disks.0.total", "format": "bytes", "every": 30 } },
+		{ "name": "Warning", "width": "md", "config": { "label": "Swap", "value": 78, "show": "pct" } },
+		{ "name": "Critical", "width": "md", "config": { "label": "/var/log", "value": 9.6e9, "max": 1e10, "format": "bytes" } },
+		{ "name": "Low is bad (battery)", "width": "md", "config": { "label": "UPS battery", "value": 18, "warn": 30, "crit": 15, "direction": "below", "color": "ok" } },
+		{ "name": "Small, series colour", "width": "sm", "config": { "label": "mbuf", "size": "sm", "color": 4, "source": { "path": "/v1/status/system" }, "field": "mbuf.used", "maxField": "mbuf.total", "format": "compact", "every": 5 } },
+		{ "name": "Large, no label", "width": "sm", "config": { "size": "lg", "value": 42 } },
+		{ "name": "Long label", "width": "sm", "config": { "label": "Captive portal concurrent user sessions on the guest network zone", "value": 312, "max": 500, "format": "num" } },
+		{ "name": "Loading", "width": "sm", "config": { "label": "Slow", "source": { "path": "/v1/gallery/slow" }, "field": "value" } },
+		{ "name": "Empty", "width": "sm", "config": { "label": "Empty", "source": { "path": "/v1/gallery/empty" }, "field": "value" } },
+		{ "name": "Error", "width": "sm", "config": { "label": "Error", "source": { "path": "/v1/gallery/fail" }, "field": "value" } },
+		{ "name": "Stale", "width": "sm", "config": { "label": "Stale", "source": { "path": "/v1/gallery/viz-stale", "query": { "id": "meter" } }, "field": "value", "every": 2 } }
+	]
+}
