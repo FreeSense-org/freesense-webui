@@ -11,7 +11,7 @@
  *
  *   FS.states.loading($box, { lines: 3 })                 skeleton
  *   FS.states.empty($box, { icon, title, text, action })  action = {label, href | onClick}
- *   FS.states.error($box, { message, retry })             retry = () => void
+ *   FS.states.error($box, { message, retry, compact })    retry = () => void; compact for small elements
  *   FS.states.stale($root, true|false)                    dims + marks data as out of date
  *   FS.states.load(ctx, $box, fetch, render, opts)        wires the above to a live task
  */
@@ -38,7 +38,13 @@ export const states = {
 		}
 		$box.empty().append($s);
 	},
-	error($box, { message = 'Could not load this data.', retry = null } = {}) {
+	error($box, { message = 'Could not load this data.', retry = null, compact = false } = {}) {
+		if (compact) {
+			const $c = $('<div class="fs-state-compact" role="alert">').append(icon('triangle-exclamation'), $('<span>').text(message));
+			if (retry) $c.append($('<button type="button" class="fs-state-retry" aria-label="Try again" title="Try again">').append(icon('rotate-right')).on('click', retry));
+			$box.empty().append($c);
+			return;
+		}
 		const $s = $('<div class="fs-state fs-state-error" role="alert">').append(
 			$('<span class="fs-state-icon">').append(icon('triangle-exclamation')),
 			$('<p class="fs-state-title">').text('Something went wrong'),
@@ -72,7 +78,7 @@ export const states = {
 			run,
 			onState(s, info) {
 				ctx.state(s);
-				if (s === 'error' && !loaded) states.error($box, { message: info.error, retry: () => { states.loading($box, { lines: opts.lines || 3 }); run().catch((e) => states.error($box, { message: e.message })); } });
+				if (s === 'error' && !loaded) states.error($box, { message: info.error, compact: opts.compact, retry: () => { states.loading($box, { lines: opts.lines || 3 }); run().catch((e) => states.error($box, { message: e.message, compact: opts.compact })); } });
 				if (s === 'stale' || (s === 'error' && loaded)) states.stale($root, true);
 			}
 		});

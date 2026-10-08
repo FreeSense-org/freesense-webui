@@ -197,6 +197,10 @@ export function themeMeta(theme) {
 		defaultMode: theme.defaultMode || 'auto', defaultAccent: theme.defaultAccent,
 		accents: Object.fromEntries(Object.entries(theme.accents).map(([k, a]) => [k, { title: a.title, light: a.light.fill, dark: a.dark.fill }])),
 		skin: { ...DEFAULTS.skin, ...theme.skin },
-		preview: { light: theme.modes.light.surface.page, dark: theme.modes.dark.surface.page }
+		preview: { light: theme.modes.light.surface.page, dark: theme.modes.dark.surface.page },
+		swatches: Object.fromEntries(['light', 'dark'].map((m) => {
+			const md = theme.modes[m];
+			return [m, { page: md.surface.page, raised: md.surface.raised, sunken: md.surface.sunken, topbar: md.surface.topbar, text: md.text.default, strong: md.text.strong, muted: md.text.muted, border: md.border.default, accent: theme.accents[theme.defaultAccent][m].fill }];
+		}))
 	};
 }

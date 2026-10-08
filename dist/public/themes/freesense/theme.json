@@ -45,5 +45,29 @@
 	"preview": {
 		"light": "#f4f5f7",
 		"dark": "#111214"
+	},
+	"swatches": {
+		"light": {
+			"page": "#f4f5f7",
+			"raised": "#ffffff",
+			"sunken": "#f1f3f5",
+			"topbar": "#ffffff",
+			"text": "#272c34",
+			"strong": "#101318",
+			"muted": "#5c6470",
+			"border": "#e4e7eb",
+			"accent": "#d63f1c"
+		},
+		"dark": {
+			"page": "#111214",
+			"raised": "#191b1e",
+			"sunken": "#141518",
+			"topbar": "#16181b",
+			"text": "#d4d8de",
+			"strong": "#f4f5f7",
+			"muted": "#959ca7",
+			"border": "#26292e",
+			"accent": "#ff7350"
+		}
 	}
 }

@@ -30,7 +30,17 @@ const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, '..', '..');
 const args = process.argv.slice(2);
 const check = args.includes('--check');
-const src = resolve(args.find((a) => !a.startsWith('--')) || join(repo, '..', 'freesense'));
+/* Default: a sibling 'freesense' checkout of this repo or of any parent (works from git worktrees too). */
+function findFreesense() {
+	let dir = repo;
+	for (let i = 0; i < 8; i++) {
+		const candidate = join(dir, '..', 'freesense');
+		if (existsSync(join(candidate, 'src', 'usr', 'local', 'www'))) return candidate;
+		dir = join(dir, '..');
+	}
+	return join(repo, '..', 'freesense');
+}
+const src = resolve(args.find((a) => !a.startsWith('--')) || process.env.FREESENSE_SRC || findFreesense());
 const www = join(src, 'src', 'usr', 'local', 'www');
 const outDir = join(repo, 'docs', 'inventory');
 
