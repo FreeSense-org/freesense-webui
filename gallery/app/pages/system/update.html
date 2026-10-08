@@ -1,0 +1,18 @@
+<!-- Gallery page body for /gallery/app/system/update (the PHP Update Center page will emit the same containers). -->
+<div>
+	<div data-fs-el="page-header" data-fs-config='{"breadcrumb":[{"label":"System","href":"/gallery/app/system/general"},{"label":"Update Center"}],"title":"Update Center","subtitle":"Install updates, follow their progress and roll back with boot environments.","help":{"href":"https://docs.freesense.org/system/update"}}'></div>
+	<div class="row g-3 mt-0">
+		<div class="col-12" id="release">
+			<div data-fs-el="release-card" data-fs-config='{"title":"FreeSense version","schedule":"Daily at 06:00 UTC","gate":"#update-preflight","channel":"update"}'></div>
+		</div>
+		<div class="col-12" id="update-job">
+			<div data-fs-el="job" data-fs-config='{"hideIdle":true,"channel":"update","urlParam":"job","title":"Update","successLabel":"Update installed","failureLabel":"Update failed","successAction":{"label":"View boot environments","href":"#boot-environments","icon":"hard-drive"},"retryAction":{"method":"POST","path":"/v1/system/update"}}'></div>
+		</div>
+		<div class="col-12 col-lg-5" id="checks">
+			<div id="update-preflight" data-fs-el="preflight" data-fs-config='{"title":"Before you update","subtitle":"Checked again before every update.","source":{"path":"/v1/system/update/preflight"}}'></div>
+		</div>
+		<div class="col-12 col-lg-7" id="boot-environments">
+			<div data-fs-el="be-timeline" data-fs-config='{"reloadOn":"fs:job-done"}'></div>
+		</div>
+	</div>
+</div>

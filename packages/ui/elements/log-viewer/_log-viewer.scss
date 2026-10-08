@@ -1,0 +1,247 @@
+/*
+ * _log-viewer.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/*
+ * Table skin (html[data-fs-skin-tables]): lines (default) draws hairlines
+ * between rows, stripes tints every other row, plain draws neither.
+ */
+@layer elements {
+	.fs-log-viewer {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		width: 100%;
+		min-width: 0;
+		container-type: inline-size;
+	}
+	.fs-log-viewer-bar {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.5rem var(--fs-gap);
+	}
+	.fs-log-viewer-tools {
+		flex: 1 1 auto;
+		min-width: 0;
+		&:empty { display: none; }
+	}
+	.fs-log-viewer-live {
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: var(--fs-control-h);
+		margin-left: auto;
+	}
+	.fs-log-viewer-live-dot {
+		width: 0.5rem;
+		height: 0.5rem;
+		border-radius: 50%;
+		background: var(--fs-status-ok);
+		&[data-state='live'] { animation: fs-log-pulse 1.8s ease-in-out infinite; }
+		&[data-state='paused'] { background: var(--fs-status-neutral); }
+		&[data-state='error'] { background: var(--fs-status-warn); }
+	}
+
+	/* summary strip */
+	.fs-log-viewer-summary {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 2fr);
+		gap: 0.5rem 1rem;
+		padding: 0.75rem 1rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+		&[hidden] { display: none; }
+		p { margin: 0; }
+	}
+	.fs-log-viewer-top { min-width: 0; }
+	.fs-log-viewer-top-label { color: var(--fs-text-muted); font-size: 0.8125rem; }
+	.fs-log-viewer-top-list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+		margin: 0.375rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.fs-log-viewer-top-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		max-width: 100%;
+		padding: 0.1875rem 0.625rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: 999px;
+		background: var(--fs-surface-raised);
+		color: var(--fs-text-default);
+		font-size: 0.8125rem;
+		transition: background-color var(--fs-dur-fast);
+		&:hover { background: var(--fs-surface-sunken); }
+		&:focus-visible { outline: var(--fs-focus-width) solid var(--fs-border-focus); outline-offset: var(--fs-border-width); }
+		.fs-mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+	}
+	.fs-log-viewer-top-n { color: var(--fs-text-muted); }
+
+	/* the scroll frame */
+	.fs-log-viewer-frame {
+		position: relative;
+		min-width: 0;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+	}
+	[data-fs-skin-cards='raised'] .fs-log-viewer-frame { box-shadow: var(--fs-shadow-sm); }
+	.fs-log-viewer.is-stale .fs-log-viewer-table { opacity: 0.65; }
+	.fs-log-viewer-scroll {
+		overflow: auto;
+		border-radius: inherit;
+		overscroll-behavior: contain;
+		&:focus-visible { outline: var(--fs-focus-width) solid var(--fs-border-focus); outline-offset: var(--fs-border-width); }
+	}
+	.fs-log-viewer-state:not(:empty) { padding: var(--fs-pad); }
+	.fs-log-viewer-pill {
+		position: absolute;
+		z-index: 3;
+		top: 2.75rem;
+		left: 50%;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4375rem;
+		border-radius: 999px;
+		box-shadow: var(--fs-shadow-md);
+		transform: translateX(-50%);
+		white-space: nowrap;
+		animation: fs-log-pill-in var(--fs-dur-base) ease-out;
+		&[hidden] { display: none; }
+	}
+
+	.fs-log-viewer-table {
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0;
+		font-size: 0.8125rem;
+		&[hidden] { display: none; }
+		th {
+			position: sticky;
+			z-index: 2;
+			top: 0;
+			padding: 0.5rem 0.75rem;
+			border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+			background: var(--fs-surface-raised);
+			color: var(--fs-text-muted);
+			font-size: 0.75rem;
+			font-weight: 600;
+			text-align: left;
+			white-space: nowrap;
+		}
+		td {
+			padding: 0.375rem 0.75rem;
+			height: var(--fs-row-h);
+			color: var(--fs-text-default);
+			vertical-align: middle;
+			white-space: nowrap;
+			&.fs-mono { font-size: 0.75rem; }
+			&.is-wide { width: 100%; max-width: 0; overflow: hidden; text-overflow: ellipsis; }
+			&.is-message { white-space: pre-wrap; overflow-wrap: anywhere; max-width: none; min-width: 16rem; }
+		}
+		tbody tr {
+			cursor: pointer;
+			transition: background-color var(--fs-dur-fast);
+			&:hover { background: var(--fs-surface-sunken); }
+			&:focus-visible { outline: var(--fs-focus-width) solid var(--fs-border-focus); outline-offset: calc(var(--fs-focus-width) * -1); }
+			&.is-new td { position: relative; }
+			&.is-new td::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background: color-mix(in srgb, var(--fs-accent-fill) 16%, transparent);
+				opacity: 0;
+				pointer-events: none;
+				animation: fs-log-new 1.8s ease-out;
+			}
+		}
+	}
+	[data-fs-skin-tables='lines'] .fs-log-viewer-table tbody tr + tr td,
+	html:not([data-fs-skin-tables]) .fs-log-viewer-table tbody tr + tr td { border-top: var(--fs-border-width) solid var(--fs-border-default); }
+	[data-fs-skin-tables='stripes'] .fs-log-viewer-table tbody tr:nth-child(even) { background: color-mix(in srgb, var(--fs-surface-sunken) 60%, transparent); }
+	.fs-log-viewer-rule { display: block; overflow: hidden; text-overflow: ellipsis; }
+	.fs-log-viewer-dir {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		color: var(--fs-text-muted);
+		> i { font-size: 0.75rem; }
+	}
+	.fs-log-viewer-table .fs-status[data-variant='pill'] { font-size: 0.75rem; }
+
+	.fs-log-viewer-more {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 2.75rem;
+		padding: 0.25rem;
+		border-top: var(--fs-border-width) solid var(--fs-border-default);
+		&[hidden] { display: none; }
+		.btn { display: inline-flex; align-items: center; gap: 0.375rem; }
+		.btn[hidden], .fs-log-viewer-end[hidden] { display: none; }
+	}
+	.fs-log-viewer-end { color: var(--fs-text-muted); font-size: 0.8125rem; }
+	.fs-log-viewer-sentinel { width: 0.0625rem; height: 0.0625rem; }
+
+	/* stacked rows in narrow containers (phones, side columns) */
+	@container (max-width: 40rem) {
+		.fs-log-viewer-bar { flex-direction: column; align-items: stretch; }
+		.fs-log-viewer-live { margin-left: 0; align-self: flex-end; }
+		.fs-log-viewer-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+		.fs-log-viewer-top { grid-column: 1 / -1; }
+		.fs-log-viewer-table {
+			thead { position: absolute; width: 0.0625rem; height: 0.0625rem; overflow: hidden; clip-path: inset(50%); }
+			tbody, tr, td { display: block; }
+			tbody tr {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 0.25rem 0.625rem;
+				padding: 0.625rem 0.875rem;
+			}
+			td {
+				height: auto;
+				padding: 0;
+				border: 0 !important;
+				&.is-wide { flex: 1 1 100%; width: auto; max-width: 100%; }
+				&.is-message { min-width: 0; }
+			}
+		}
+		[data-log='firewall'] .fs-log-viewer-table {
+			td[data-col='src'], td[data-col='dst'] { font-size: 0.8125rem; }
+			td[data-col='src']::after { content: ' →'; color: var(--fs-text-muted); }
+			td[data-col='time'], td[data-col='iface'], td[data-col='proto'] { color: var(--fs-text-muted); }
+			td[data-col='rule'] { color: var(--fs-text-muted); }
+			td[data-col='dir'] { display: none; }
+		}
+		[data-log='system'] .fs-log-viewer-table {
+			td[data-col='time'], td[data-col='process'] { color: var(--fs-text-muted); }
+		}
+		.fs-log-viewer-table tbody tr + tr { border-top: var(--fs-border-width) solid var(--fs-border-default); }
+	}
+
+	@keyframes fs-log-new { from { opacity: 1; } to { opacity: 0; } }
+	@keyframes fs-log-pulse { 50% { opacity: 0.35; } }
+	@keyframes fs-log-pill-in {
+		from { opacity: 0; transform: translate(-50%, -0.5rem); }
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.fs-log-viewer-live-dot { animation: none !important; }
+		.fs-log-viewer-pill { animation: none; }
+		/* no fade: the newest batch keeps a static marker until the next batch arrives */
+		.fs-log-viewer-table tbody tr.is-new td::before { animation: none; }
+		.fs-log-viewer-table tbody tr.is-new td:first-child { box-shadow: inset calc(var(--fs-border-width) * 3) 0 0 var(--fs-accent-fill); }
+	}
+	@media (pointer: coarse) {
+		.fs-log-viewer-live, .fs-log-viewer-more .btn, .fs-log-viewer-pill, .fs-log-viewer-top-btn { min-height: 2.5rem; }
+	}
+}

@@ -1,0 +1,34 @@
+{
+	"title": "Preflight",
+	"description": "Checklist of pass / warn / fail / running checks before an operation, with an overall verdict and a gate (canProceed).",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Update checks (API, one still running)", "width": "md", "surface": "page", "config": { "title": "Before you update", "source": { "path": "/v1/system/update/preflight" } } },
+		{ "name": "Blocking failure", "width": "md", "surface": "page", "config": { "title": "Before you update", "source": { "path": "/v1/gallery/ops/preflight-fail" }, "proceed": { "label": "Update now", "icon": "download" } } },
+		{ "name": "Static, all passed, with gate button", "width": "md", "surface": "page", "config": { "title": "Restore configuration", "subtitle": "config-fw01-20261007.xml", "checks": [
+			{ "id": "parse", "label": "Backup can be read", "state": "pass", "detail": "XML valid, version 24.1" },
+			{ "id": "ifaces", "label": "Interfaces exist", "state": "pass", "detail": "igc0, igc1, igc2 found" },
+			{ "id": "pkgs", "label": "Packages available", "state": "pass" }
+		], "proceed": { "label": "Restore", "icon": "rotate-left" } } },
+		{ "name": "Warnings block (blockOnWarn)", "width": "md", "surface": "page", "config": { "title": "Factory reset", "blockOnWarn": true, "checks": [
+			{ "id": "backup", "label": "Recent backup", "state": "warn", "detail": "The last backup is 41 days old." },
+			{ "id": "remote", "label": "Console access", "state": "pass", "detail": "You can reach the serial console." }
+		], "proceed": { "label": "Reset", "icon": "eraser" } } },
+		{ "name": "Running and pending, long text", "width": "sm", "surface": "page", "config": { "title": "Checks", "checks": [
+			{ "id": "a", "label": "Optional Packages compatible with the new FreeBSD platform pin and the current System build", "state": "running", "detail": "Checking crowdsec, suricata, haproxy, acme, wireguard-tools, nut, frr, zabbix-agent and node_exporter against the repository metadata…" },
+			{ "id": "b", "label": "Signature", "state": "pending" },
+			{ "id": "c", "label": "Disk", "state": "pass", "detail": "96 GiB free" }
+		] } },
+		{ "name": "Many checks", "width": "lg", "surface": "page", "config": { "title": "Health check", "checks": [
+			{ "label": "Free disk space", "state": "pass", "detail": "96.4 GiB" }, { "label": "Memory", "state": "pass", "detail": "34% used" },
+			{ "label": "Swap", "state": "pass" }, { "label": "Clock synchronised", "state": "warn", "detail": "Offset 2.1 s" },
+			{ "label": "DNS resolver", "state": "pass" }, { "label": "Gateways", "state": "warn", "detail": "WAN2_DHCP is down" },
+			{ "label": "Certificates", "state": "pass" }, { "label": "Package repository", "state": "pass" },
+			{ "label": "Config writable", "state": "pass" }, { "label": "Boot environments", "state": "pass" },
+			{ "label": "CARP", "state": "pass", "detail": "Not configured" }, { "label": "Logs rotating", "state": "pass" }
+		] } },
+		{ "name": "Loading", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/slow" } } },
+		{ "name": "Empty", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" } } },
+		{ "name": "Error", "width": "sm", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" } } }
+	]
+}
