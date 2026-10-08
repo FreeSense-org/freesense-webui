@@ -24,10 +24,9 @@
 		<a class="fs-brand" href="/gallery/app/" data-fs-nav><span class="fs-brand-mark" aria-hidden="true">FS</span><span class="fs-brand-name">FreeSense</span></a>
 		<nav class="fs-areas" aria-label="Main">{{areas}}</nav>
 		<div class="fs-topbar-tools">
-			<button type="button" class="fs-tb-search" data-fs-palette aria-label="Search pages and settings (Ctrl+K)"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span>Search</span><kbd>Ctrl K</kbd></button>
-			<button type="button" class="fs-tb-btn" aria-label="Notifications, 3 new" title="Notifications"><i class="fa-solid fa-bell" aria-hidden="true"></i><span class="fs-tb-count" aria-hidden="true">3</span></button>
-			<button type="button" class="fs-tb-btn" data-fs-mode-toggle aria-label="Toggle light and dark" title="Toggle light and dark"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></button>
-			<a class="fs-tb-avatar" href="/gallery/app/me" data-fs-nav aria-label="Profile: Alex Morgan" title="Alex Morgan"><span aria-hidden="true">AM</span></a>
+			<div data-fs-el="command-palette" data-fs-config='{"trigger":"search","signOut":{}}'></div>
+			<div data-fs-el="notifications" data-fs-config='{"source":{"path":"/v1/notices"},"every":30}'></div>
+			<div data-fs-el="profile-menu" data-fs-config='{"modeToggle":true,"links":{"profile":"/gallery/app/me","appearance":"/gallery/app/me#appearance","sessions":"/gallery/app/me#sessions"}}'></div>
 		</div>
 	</div>
 </header>
@@ -45,9 +44,5 @@
 <script type="application/json" id="fs-nav">{{nav}}</script>
 <script src="/ui/fs-ui.js"></script>
 <!--fs-mock-->
-<script>
-	/* Gallery-only: quick mode toggle until the profile menu element exists. */
-	jQuery(document).on('click', '[data-fs-mode-toggle]', () => FS.theme.set({ mode: FS.theme.resolved() === 'dark' ? 'light' : 'dark' }));
-</script>
 </body>
 </html>
