@@ -1,0 +1,41 @@
+/*
+ * _danger-confirm.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* The dialog frame comes from .fs-dialog (confirm); only the type-to-confirm field lives here. */
+@layer elements {
+	.fs-danger-confirm {
+		.fs-dc-field {
+			margin-top: 0.75rem;
+			padding-top: 0.75rem;
+			border-top: var(--fs-border-width) solid var(--fs-border-default);
+		}
+		.fs-dc-label {
+			margin-bottom: 0.375rem;
+			font-size: 0.875em;
+			color: var(--fs-text-default);
+			overflow-wrap: anywhere;
+		}
+		.fs-dc-name {
+			padding: 0.0625rem 0.375rem;
+			border-radius: var(--fs-radius-sm);
+			background: color-mix(in srgb, var(--fs-status-crit) 10%, transparent);
+			color: var(--fs-text-strong);
+			font-weight: 600;
+			user-select: all;
+		}
+		.fs-dc-input {
+			font-family: var(--fs-font-mono);
+			&:focus { border-color: var(--fs-status-crit); box-shadow: 0 0 0 var(--fs-focus-width) color-mix(in srgb, var(--fs-status-crit) 30%, transparent); }
+			&.is-match { border-color: var(--fs-status-crit); }
+		}
+		.fs-dc-hint {
+			margin: 0.375rem 0 0;
+			font-size: 0.8125em;
+			color: var(--fs-text-muted);
+		}
+	}
+}

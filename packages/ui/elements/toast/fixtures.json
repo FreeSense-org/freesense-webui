@@ -1,0 +1,21 @@
+{
+	"title": "Toast",
+	"description": "Transient result messages, stacked bottom-right (bottom on phones). Pages call toast() / FS.toast(); the element is the host region.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Try it", "width": "full", "note": "toasts appear bottom-right; hover or focus pauses them", "config": { "demo": true } },
+		{ "name": "Levels", "width": "md", "surface": "page", "config": { "inline": true, "toasts": [
+			{ "message": "Firewall rules reloaded", "level": "ok" },
+			{ "message": "Configuration backup created", "level": "info" },
+			{ "message": "Gateway WAN2_DHCP is down", "level": "warn", "title": "Gateway alarm" },
+			{ "message": "The firewall could not be reached.", "level": "crit" }
+		] } },
+		{ "name": "With action", "width": "md", "surface": "page", "config": { "inline": true, "toasts": [
+			{ "message": "Alias WEB_SERVERS deleted", "level": "ok", "action": { "label": "Undo" } },
+			{ "message": "3 rules disabled on WAN", "level": "info", "action": { "label": "Undo" } }
+		] } },
+		{ "name": "Long text", "width": "md", "surface": "page", "config": { "inline": true, "toasts": [
+			{ "message": "Filter reload failed: /tmp/rules.debug:42: cannot define table CROWDSEC_BLOCKLIST_V6_EXTENDED_WITH_A_VERY_LONG_NAME: Cannot allocate memory. The previous ruleset is still active.", "level": "crit", "title": "Apply failed" }
+		] } }
+	]
+}

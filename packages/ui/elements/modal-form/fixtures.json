@@ -1,0 +1,23 @@
+{
+	"title": "Modal form",
+	"description": "A small form in a dialog: fields from config, submitted through FS.api, 422 errors shown at the fields; resolves with the response.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Add alias", "width": "md", "note": "try name WEB_SERVERS or entry 10.0.0.300", "config": {
+			"label": "Add alias", "icon": "plus",
+			"title": "Add alias", "method": "POST", "path": "/v1/firewall/aliases", "submitLabel": "Create alias",
+			"fields": [
+				{ "name": "name", "type": "text", "label": "Name", "required": true, "placeholder": "WEB_SERVERS", "help": "Letters, digits and underscores. Used in rules.", "mono": true },
+				{ "name": "type", "type": "select", "label": "Type", "required": true, "value": "host", "options": [{ "value": "host", "label": "Hosts" }, { "value": "network", "label": "Networks" }, { "value": "port", "label": "Ports" }] },
+				{ "name": "content", "type": "textarea", "label": "Entries", "required": true, "rows": 3, "placeholder": "172.16.40.10 172.16.40.11", "help": "Separate entries with spaces, commas or new lines.", "mono": true },
+				{ "name": "descr", "type": "text", "label": "Description", "placeholder": "DMZ web tier" },
+				{ "name": "ttl", "type": "number", "label": "Resolve interval (seconds)", "min": 60, "max": 86400, "value": 300 },
+				{ "name": "log", "type": "switch", "label": "Log matches of rules that use this alias" }
+			] } },
+		{ "name": "Prefilled, request fails", "width": "md", "note": "the server error shows in the dialog", "config": {
+			"label": "Edit description", "icon": "pen", "variant": "secondary",
+			"title": "Edit description", "text": "Rule 'Guest internet' on GUEST.", "method": "POST", "path": "/v1/gallery/feedback/fail",
+			"values": { "descr": "Guest internet" },
+			"fields": [{ "name": "descr", "type": "text", "label": "Description", "required": true, "maxlength": 52 }] } }
+	]
+}

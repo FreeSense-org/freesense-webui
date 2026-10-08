@@ -1,0 +1,104 @@
+/*
+ * _confirm.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Dialogs built by confirm(), dangerConfirm() and modalForm(): calm Bootstrap modals. */
+@layer elements {
+	.fs-dialog {
+		--bs-modal-bg: var(--fs-surface-raised);
+		--bs-modal-color: var(--fs-text-default);
+		--bs-modal-border-color: var(--fs-border-default);
+		--bs-modal-border-width: var(--fs-border-width);
+		--bs-modal-border-radius: var(--fs-radius-lg);
+		--bs-modal-inner-border-radius: var(--fs-radius-lg);
+		--bs-modal-box-shadow: var(--fs-shadow-lg);
+		--bs-modal-padding: var(--fs-pad);
+		--bs-modal-header-padding: var(--fs-pad) var(--fs-pad) 0.5rem;
+		--bs-modal-header-border-width: 0;
+		--bs-modal-footer-border-width: 0;
+		--bs-modal-footer-gap: 0.5rem;
+		--bs-modal-width: 34rem;
+		--fs-dt: var(--fs-accent-fill);
+
+		&[data-tone='danger'] { --fs-dt: var(--fs-status-crit); }
+		&[data-tone='warn'] { --fs-dt: var(--fs-status-warn); }
+
+		.modal-sm { --bs-modal-width: 28rem; }
+		.modal-content { box-shadow: var(--fs-shadow-lg); }
+		.modal-footer { padding: 0.5rem var(--fs-pad) var(--fs-pad); }
+	}
+
+	.fs-dialog-head {
+		gap: 0.75rem;
+		align-items: flex-start;
+	}
+	.fs-dialog-icon {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--fs-dt) 14%, transparent);
+		color: var(--fs-dt);
+	}
+	.fs-dialog-title {
+		flex: 1;
+		min-width: 0;
+		margin: 0;
+		padding-top: 0.375rem;
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.4;
+		color: var(--fs-text-strong);
+		overflow-wrap: anywhere;
+	}
+	.fs-dialog-x {
+		flex: none;
+		width: var(--fs-control-h);
+		margin: -0.25rem -0.5rem 0 0;
+		padding: 0;
+	}
+	.fs-dialog-body {
+		padding-top: 0.25rem;
+		padding-bottom: 0.75rem;
+		overflow-wrap: anywhere;
+	}
+	.fs-dialog-text { margin: 0 0 0.5rem; color: var(--fs-text-muted); }
+	.fs-dialog-details {
+		max-height: 10rem;
+		overflow-y: auto;
+		margin: 0;
+		padding: 0.5rem 0.75rem 0.5rem 1.75rem;
+		border-radius: var(--fs-radius-sm);
+		background: var(--fs-surface-sunken);
+		font-size: 0.875em;
+	}
+	.fs-dialog-foot .btn { min-width: 5.5rem; }
+	.btn.is-busy { cursor: progress; opacity: 0.75; }
+	.fs-busy { margin-right: 0.375rem; vertical-align: -0.125em; }
+
+	/* Destructive trigger: quiet until hovered. */
+	.btn.fs-btn-danger-quiet {
+		--bs-btn-color: var(--fs-status-crit);
+		--bs-btn-hover-color: var(--fs-status-crit);
+		--bs-btn-active-color: var(--fs-status-crit);
+		--bs-btn-hover-bg: color-mix(in srgb, var(--fs-status-crit) 8%, var(--fs-surface-raised));
+		--bs-btn-active-bg: color-mix(in srgb, var(--fs-status-crit) 14%, var(--fs-surface-raised));
+		--bs-btn-hover-border-color: color-mix(in srgb, var(--fs-status-crit) 45%, var(--fs-border-strong));
+	}
+
+	.fs-confirm { display: inline-flex; }
+
+	@media (max-width: 575.98px) {
+		.fs-dialog .modal-dialog { margin: 0.75rem; }
+		.fs-dialog-foot {
+			flex-direction: column-reverse;
+			align-items: stretch;
+			.btn { min-height: 2.5rem; margin: 0; }
+		}
+	}
+}

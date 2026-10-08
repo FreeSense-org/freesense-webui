@@ -1,0 +1,120 @@
+/*
+ * _drawer.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Root class .fs-side-drawer: the shell already owns .fs-drawer for its nav drawer. */
+@layer elements {
+	html.fs-side-drawer-lock { overflow: hidden; }
+
+	.fs-side-drawer-scrim {
+		position: fixed;
+		inset: 0;
+		z-index: 1046;
+		background: var(--fs-surface-overlay);
+		opacity: 0;
+		transition: opacity var(--fs-dur-base) ease-out;
+		&.is-open { opacity: 1; }
+	}
+
+	.fs-side-drawer {
+		position: fixed;
+		inset: 0 0 0 auto;
+		z-index: 1047;
+		display: flex;
+		flex-direction: column;
+		width: min(28rem, 100vw);
+		border-left: var(--fs-border-width) solid var(--fs-border-default);
+		background: var(--fs-surface-raised);
+		box-shadow: var(--fs-shadow-lg);
+		color: var(--fs-text-default);
+		transform: translateX(100%);
+		transition: transform var(--fs-dur-base) cubic-bezier(0.2, 0.7, 0.2, 1);
+		&.is-open { transform: none; }
+		&[data-size='lg'] { width: min(40rem, 100vw); }
+		&:focus { outline: none; }
+	}
+
+	.fs-side-drawer-head {
+		display: flex;
+		flex: none;
+		align-items: flex-start;
+		gap: 0.75rem;
+		padding: var(--fs-pad) calc(var(--fs-pad) - 0.5rem) 0.875rem var(--fs-pad);
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+	}
+	.fs-side-drawer-icon {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-accent-fill) 12%, transparent);
+		color: var(--fs-accent-text);
+	}
+	.fs-side-drawer-titles { flex: 1; min-width: 0; padding-top: 0.25rem; }
+	.fs-side-drawer-title {
+		margin: 0;
+		font-size: 1.0625rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--fs-text-strong);
+		overflow-wrap: anywhere;
+	}
+	.fs-side-drawer-subtitle {
+		margin: 0.125rem 0 0;
+		font-size: 0.8125rem;
+		color: var(--fs-text-muted);
+		overflow-wrap: anywhere;
+	}
+	.fs-side-drawer-x {
+		flex: none;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+	}
+
+	.fs-side-drawer-body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: var(--fs-gap);
+		min-height: 0;
+		padding: var(--fs-pad);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+	}
+	.fs-side-drawer-heading {
+		margin: 0.5rem 0 -0.25rem;
+		font-size: 0.6875rem;
+		font-weight: 700;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+		color: var(--fs-text-muted);
+		&:first-child { margin-top: 0; }
+	}
+	.fs-side-drawer-text { margin: 0; color: var(--fs-text-default); overflow-wrap: anywhere; }
+
+	.fs-side-drawer-foot {
+		display: flex;
+		flex: none;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.5rem;
+		padding: 0.875rem var(--fs-pad);
+		border-top: var(--fs-border-width) solid var(--fs-border-default);
+		background: var(--fs-surface-raised);
+	}
+
+	@media (max-width: 575.98px) {
+		.fs-side-drawer,
+		.fs-side-drawer[data-size='lg'] { width: 100vw; border-left: 0; }
+		.fs-side-drawer-foot {
+			flex-direction: column-reverse;
+			.btn { min-height: 2.5rem; }
+		}
+	}
+}
