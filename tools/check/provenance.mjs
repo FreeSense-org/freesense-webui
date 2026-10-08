@@ -26,6 +26,8 @@ const fix = process.argv.includes('--fix');
 /* Names assembled from parts so this file does not match its own check. */
 const FORBIDDEN = [['pf', 'sense'], ['net', 'gate'], ['rubicon', ' communications'], ['electric', ' sheep'], ['bsd', ' perimeter'], ['m0n0', 'wall']]
 	.map(([a, b]) => new RegExp(`${a}${b}`, 'i'));
+/* Personal data of contributors never goes into the repository (demo data uses invented people). */
+FORBIDDEN.push(...[['clau', 's'], ['ander', 'sen'], ['1it', '\\.dk']].map(([a, b]) => new RegExp(`\\b${a}${b}`, 'i')));
 const HEADER_EXT = /\.(js|mjs|cjs|scss|css|php)$/;
 const SKIP = /^(dist\/|\.cache\/|node_modules\/|package-lock\.json$)/;
 const MARK = 'Copyright (c) 2026 The FreeSense Project';
@@ -42,7 +44,7 @@ for (const f of files) {
 		const m = re.exec(text);
 		if (m) {
 			const line = text.slice(0, m.index).split('\n').length;
-			errors.push(`${f}:${line}: mentions "${m[0]}" (RULES R13: WebUI 2.0 is FreeSense's own work)`);
+			errors.push(`${f}:${line}: mentions "${m[0]}" (RULES R13: no upstream references or personal data)`);
 		}
 	}
 	if (HEADER_EXT.test(f) && !text.includes(MARK)) {
