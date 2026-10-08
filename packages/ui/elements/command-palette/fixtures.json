@@ -1,0 +1,38 @@
+{
+	"title": "Command palette",
+	"description": "Ctrl+K, '/' or the search button: search pages, settings and quick actions, with fuzzy matching and recent items.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Top-bar trigger (Ctrl+K opens the dialog)", "width": "md", "surface": "page", "config": { "trigger": "search", "nav": { "areas": [
+			{ "id": "dashboard", "title": "Dashboard", "icon": "gauge-high", "href": "/gallery/app/" },
+			{ "id": "vpn", "title": "VPN", "icon": "lock", "groups": [ { "title": "Tunnels", "icon": "lock", "items": [
+				{ "title": "WireGuard", "icon": "bolt", "href": "/gallery/app/vpn/wireguard", "pages": [
+					{ "title": "Tunnels", "icon": "network-wired", "href": "/gallery/app/vpn/wireguard" },
+					{ "title": "Peers", "icon": "users", "href": "/gallery/app/vpn/wireguard/peers" },
+					{ "title": "Settings", "icon": "gear", "href": "/gallery/app/vpn/wireguard/settings" } ] },
+				{ "title": "OpenVPN", "icon": "shield-halved", "href": "/gallery/app/vpn/openvpn" } ] } ] }
+		], "other": [ { "title": "Profile", "icon": "circle-user", "href": "/gallery/app/me" } ] } } },
+		{ "name": "Icon trigger", "width": "sm", "surface": "page", "config": { "trigger": "icon", "hotkeys": false, "nav": { "areas": [ { "id": "dashboard", "title": "Dashboard", "icon": "gauge-high", "href": "/gallery/app/" } ] } } },
+		{ "name": "Inline: empty query (recent and actions)", "width": "lg", "config": { "inline": true, "nav": { "areas": [
+			{ "id": "dashboard", "title": "Dashboard", "icon": "gauge-high", "href": "/gallery/app/" } ], "other": [ { "title": "Profile", "icon": "circle-user", "href": "/gallery/app/me" } ] } } },
+		{ "name": "Inline: fuzzy 'wgpe'", "width": "lg", "config": { "inline": true, "query": "wgpe", "nav": { "areas": [
+			{ "id": "vpn", "title": "VPN", "icon": "lock", "groups": [ { "title": "Tunnels", "icon": "lock", "items": [
+				{ "title": "WireGuard", "icon": "bolt", "href": "/gallery/app/vpn/wireguard", "pages": [
+					{ "title": "Tunnels", "icon": "network-wired", "href": "/gallery/app/vpn/wireguard" },
+					{ "title": "Peers", "icon": "users", "href": "/gallery/app/vpn/wireguard/peers" },
+					{ "title": "Settings", "icon": "gear", "href": "/gallery/app/vpn/wireguard/settings" } ] },
+				{ "title": "OpenVPN", "icon": "shield-halved", "href": "/gallery/app/vpn/openvpn" },
+				{ "title": "IPsec", "icon": "key", "href": "/gallery/app/vpn/ipsec" } ] } ] } ] } } },
+		{ "name": "Inline: 'rule', many items, long title", "width": "lg", "config": { "inline": true, "query": "rule", "nav": { "areas": [
+			{ "id": "security", "title": "Security", "icon": "shield-halved", "groups": [ { "title": "Firewall", "icon": "fire", "items": [
+				{ "title": "Rules", "icon": "list-check", "href": "/gallery/app/security/rules" },
+				{ "title": "NAT", "icon": "shuffle", "href": "/gallery/app/security/nat", "pages": [
+					{ "title": "Port forward", "icon": "right-left", "href": "/gallery/app/security/nat" },
+					{ "title": "Outbound rules", "icon": "arrow-right-from-bracket", "href": "/gallery/app/security/nat/outbound" },
+					{ "title": "1:1 rules", "icon": "arrows-left-right", "href": "/gallery/app/security/nat/one-to-one" },
+					{ "title": "NPt rules", "icon": "arrows-left-right-to-line", "href": "/gallery/app/security/nat/npt" } ] },
+				{ "title": "Floating rules for the traffic shaper with an extremely long title that has to be cut", "icon": "water", "href": "/gallery/app/security/floating" },
+				{ "title": "Schedules", "icon": "calendar", "href": "/gallery/app/security/schedules" } ] } ] } ] } } },
+		{ "name": "Inline: no match", "width": "lg", "config": { "inline": true, "query": "zzqx", "actions": false, "nav": { "areas": [ { "id": "dashboard", "title": "Dashboard", "icon": "gauge-high", "href": "/gallery/app/" } ] } } }
+	]
+}

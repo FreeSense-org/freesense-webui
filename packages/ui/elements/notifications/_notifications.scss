@@ -1,0 +1,128 @@
+/*
+ * _notifications.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-notifications {
+		position: relative;
+		display: inline-flex;
+	}
+	.fs-notifications-btn.has-unread > i { color: var(--fs-tb-fg, var(--fs-text-strong)); }
+	.fs-notifications-panel { width: 23rem; }
+	.fs-notifications-panel.is-stale .fs-notifications-list { opacity: 0.6; }
+
+	.fs-notifications-head {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.875rem 1rem 0.75rem;
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+		background: var(--fs-surface-raised);
+	}
+	.fs-notifications-title {
+		margin: 0;
+		font-size: 0.9375rem;
+		&:focus { outline: none; }
+	}
+	.fs-notifications-all {
+		padding: 0.25rem 0.5rem;
+		margin-right: -0.5rem;
+		border: 0;
+		border-radius: var(--fs-radius-sm);
+		background: transparent;
+		color: var(--fs-accent-text);
+		font: inherit;
+		font-size: 0.8125rem;
+		font-weight: 600;
+		&:hover { background: color-mix(in srgb, var(--fs-accent-fill) 10%, transparent); }
+		&[hidden] { display: none; }
+	}
+	.fs-notifications-body .fs-state { padding: 2rem 1.25rem; }
+	.fs-notifications-body .fs-state-loading { padding: 1rem; }
+
+	.fs-notifications-list {
+		margin: 0;
+		padding: 0.25rem 0;
+		list-style: none;
+	}
+	.fs-notifications-item {
+		--fs-nt: var(--fs-status-info);
+		position: relative;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 0.75rem;
+		padding: 0.75rem 0.625rem 0.75rem 1rem;
+		& + & { border-top: var(--fs-border-width) solid var(--fs-border-default); }
+		&:hover { background: color-mix(in srgb, var(--fs-surface-sunken) 70%, transparent); }
+		&[data-state='crit'] { --fs-nt: var(--fs-status-crit); }
+		&[data-state='warn'] { --fs-nt: var(--fs-status-warn); }
+		&[data-state='ok'] { --fs-nt: var(--fs-status-ok); }
+	}
+	.fs-notifications-icon {
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--fs-nt) 12%, transparent);
+		color: var(--fs-nt);
+		font-size: 0.875rem;
+	}
+	.fs-notifications-text { min-width: 0; }
+	.fs-notifications-item-title {
+		margin: 0;
+		color: var(--fs-text-strong);
+		font-weight: 600;
+		line-height: 1.35;
+		overflow-wrap: anywhere;
+	}
+	.fs-notifications-item-body {
+		display: -webkit-box;
+		margin: 0.125rem 0 0;
+		overflow: hidden;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		overflow-wrap: anywhere;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+	}
+	.fs-notifications-meta {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		margin: 0.375rem 0 0;
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+	}
+	.fs-notifications-link {
+		color: var(--fs-accent-text);
+		font-weight: 600;
+		text-decoration: none;
+		&:hover { text-decoration: underline; }
+	}
+	.fs-notifications-dismiss {
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border: 0;
+		border-radius: var(--fs-radius-sm);
+		background: transparent;
+		color: var(--fs-text-muted);
+		transition: background-color var(--fs-dur-fast), color var(--fs-dur-fast);
+		&:hover { background: var(--fs-surface-sunken); color: var(--fs-text-strong); }
+	}
+	@media (max-width: 575.98px) {
+		.fs-notifications-panel { width: auto; }
+		.fs-notifications-dismiss { width: 2.5rem; height: 2.5rem; }
+	}
+}

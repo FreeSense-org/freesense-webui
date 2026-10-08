@@ -1,0 +1,217 @@
+/*
+ * _command-palette.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-command-palette { display: inline-flex; align-items: center; }
+	.fs-command-palette.is-inline { display: block; }
+
+	/* top-bar trigger: follows the top-bar skin (--fs-tb-*) when inside it */
+	.fs-command-palette-trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		height: 2.25rem;
+		min-width: 12rem;
+		padding: 0 0.5rem 0 0.75rem;
+		margin-right: 0.25rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-sm);
+		background: transparent;
+		color: var(--fs-tb-muted, var(--fs-text-muted));
+		font: inherit;
+		font-size: 0.875rem;
+		transition: border-color var(--fs-dur-fast), color var(--fs-dur-fast);
+		> span { margin-right: auto; }
+		kbd {
+			padding: 0.0625rem 0.375rem;
+			border: var(--fs-border-width) solid var(--fs-border-default);
+			border-radius: var(--fs-radius-sm);
+			background: transparent;
+			color: inherit;
+			font-size: 0.6875rem;
+		}
+		&:hover { color: var(--fs-tb-fg, var(--fs-text-strong)); border-color: var(--fs-border-strong); }
+	}
+	[data-fs-skin-topbar='accent'] .fs-topbar .fs-command-palette-trigger,
+	[data-fs-skin-topbar='inverse'] .fs-topbar .fs-command-palette-trigger,
+	[data-fs-skin-topbar='accent'] .fs-topbar .fs-command-palette-trigger kbd,
+	[data-fs-skin-topbar='inverse'] .fs-topbar .fs-command-palette-trigger kbd { border-color: var(--fs-tb-hover); }
+	@media (max-width: 1279.98px) {
+		.fs-topbar .fs-command-palette-trigger {
+			justify-content: center;
+			width: 2.375rem;
+			min-width: 0;
+			padding: 0;
+			border-color: transparent;
+			> span, kbd { display: none; }
+		}
+	}
+
+	/* dialog */
+	.fs-command-palette-dialog {
+		width: min(40rem, calc(100vw - 2rem));
+		max-width: none;
+		max-height: min(34rem, calc(100vh - 6rem));
+		margin: 12vh auto auto;
+		padding: 0;
+		overflow: hidden;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+		box-shadow: var(--fs-shadow-lg);
+		color: var(--fs-text-default);
+		&[open] { display: flex; flex-direction: column; animation: fs-cp-in var(--fs-dur-base) cubic-bezier(0.2, 0.7, 0.2, 1); }
+		&::backdrop { background: var(--fs-surface-overlay); animation: fs-cp-fade var(--fs-dur-base) ease-out; }
+	}
+	@keyframes fs-cp-in { from { opacity: 0; transform: translateY(-0.5rem) scale(0.985); } }
+	@keyframes fs-cp-fade { from { opacity: 0; } }
+
+	.fs-command-palette-panel {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		max-height: inherit;
+		flex: 1 1 auto;
+	}
+	.is-inline .fs-command-palette-panel {
+		max-height: 30rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+		box-shadow: var(--fs-shadow-md);
+	}
+	.fs-command-palette-search {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0 1.125rem;
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+		> i { color: var(--fs-text-muted); }
+	}
+	.fs-command-palette-input {
+		flex: 1 1 auto;
+		min-width: 0;
+		height: 3.5rem;
+		border: 0;
+		background: transparent;
+		color: var(--fs-text-strong);
+		font: inherit;
+		font-size: 1rem;
+		&::placeholder { color: var(--fs-text-muted); }
+		&:focus { outline: none; }
+	}
+	.fs-command-palette-search:focus-within { box-shadow: inset 0 calc(-1 * var(--fs-focus-width)) 0 var(--fs-border-focus); }
+
+	.fs-command-palette-list {
+		flex: 1 1 auto;
+		min-height: 0;
+		margin: 0;
+		padding: 0.375rem;
+		overflow: auto;
+		overscroll-behavior: contain;
+		list-style: none;
+	}
+	.fs-command-palette-group {
+		padding: 0.625rem 0.75rem 0.375rem;
+		color: var(--fs-text-muted);
+		font-size: 0.6875rem;
+		font-weight: 700;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+	}
+	.fs-command-palette-item {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		min-height: 2.75rem;
+		padding: 0.375rem 0.75rem;
+		border-radius: var(--fs-radius-md);
+		cursor: pointer;
+		&.is-active {
+			background: color-mix(in srgb, var(--fs-accent-fill) 10%, transparent);
+			.fs-command-palette-icon { color: var(--fs-accent-text); border-color: color-mix(in srgb, var(--fs-accent-fill) 30%, transparent); }
+			.fs-command-palette-kind { visibility: visible; }
+		}
+	}
+	.fs-command-palette-icon {
+		display: grid;
+		place-items: center;
+		flex: none;
+		width: 2rem;
+		height: 2rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-sm);
+		background: var(--fs-surface-raised);
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+	}
+	.fs-command-palette-text {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		flex: 1 1 auto;
+	}
+	.fs-command-palette-title {
+		overflow: hidden;
+		color: var(--fs-text-strong);
+		font-weight: 500;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		mark {
+			padding: 0;
+			border-radius: 0.125rem;
+			background: color-mix(in srgb, var(--fs-accent-fill) 22%, transparent);
+			color: inherit;
+			font-weight: 650;
+		}
+	}
+	.fs-command-palette-crumbs {
+		overflow: hidden;
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.fs-command-palette-kind {
+		flex: none;
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		visibility: hidden;
+	}
+	.fs-command-palette-empty {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.625rem;
+		padding: 2rem 1rem;
+		color: var(--fs-text-muted);
+	}
+	.fs-command-palette-foot {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 0.625rem 1.125rem;
+		border-top: var(--fs-border-width) solid var(--fs-border-default);
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+		font-size: 0.75rem;
+		kbd {
+			margin-right: 0.25rem;
+			padding: 0.0625rem 0.3125rem;
+			border: var(--fs-border-width) solid var(--fs-border-default);
+			border-radius: var(--fs-radius-sm);
+			background: var(--fs-surface-raised);
+			color: var(--fs-text-default);
+			font-size: 0.6875rem;
+		}
+	}
+	@media (max-width: 575.98px) {
+		.fs-command-palette-dialog { margin-top: 0.75rem; max-height: calc(100vh - 1.5rem); }
+		.fs-command-palette-foot { display: none; }
+		.fs-command-palette-kind { display: none; }
+	}
+}

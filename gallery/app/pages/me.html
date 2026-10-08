@@ -1,0 +1,18 @@
+<!-- Gallery page body for /gallery/app/me (the PHP Profile page will emit the same containers). -->
+<div>
+	<header class="mb-3">
+		<h1>Profile</h1>
+		<p class="fs-muted">Your account, how FreeSense looks for you, and where you are signed in.</p>
+	</header>
+	<div class="row g-3">
+		<div class="col-12" id="profile">
+			<div data-fs-el="profile-card" data-fs-config='{"source":{"path":"/v1/me"}}'></div>
+		</div>
+		<div class="col-12" id="appearance">
+			<div data-fs-el="theme-picker" data-fs-config='{}'></div>
+		</div>
+		<div class="col-12" id="sessions">
+			<div data-fs-el="session-list" data-fs-config='{"source":{"path":"/v1/me/sessions"},"every":30}'></div>
+		</div>
+	</div>
+</div>
