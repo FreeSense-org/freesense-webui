@@ -1,0 +1,131 @@
+/*
+ * _job.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-job {
+		display: block;
+		min-width: 0;
+		background: var(--fs-surface-raised);
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		color: var(--fs-text-default);
+		&[hidden] { display: none; }
+	}
+	[data-fs-skin-cards='raised'] .fs-job { box-shadow: var(--fs-shadow-sm); }
+	[data-fs-skin-cards='flat'] .fs-job { border-color: transparent; }
+
+	.fs-job-body {
+		display: flex;
+		flex-direction: column;
+		gap: 0.875rem;
+		padding: var(--fs-pad);
+		&[hidden] { display: none; }
+	}
+	.fs-job-head {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+	}
+	.fs-job-icon {
+		flex: none;
+		display: grid;
+		place-items: center;
+		width: 2.25rem;
+		height: 2.25rem;
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-status-info) 12%, transparent);
+		color: var(--fs-status-info);
+		[data-state='running'] & > i.fa-gear { animation: fa-spin 2.4s linear infinite; }
+		[data-state='succeeded'] & { background: color-mix(in srgb, var(--fs-status-ok) 12%, transparent); color: var(--fs-status-ok); }
+		[data-state='failed'] &, [data-state='error'] & { background: color-mix(in srgb, var(--fs-status-crit) 12%, transparent); color: var(--fs-status-crit); }
+		[data-state='gone'] & { background: var(--fs-surface-sunken); color: var(--fs-text-muted); }
+		.is-waiting & { background: color-mix(in srgb, var(--fs-status-warn) 14%, transparent); color: var(--fs-status-warn); }
+	}
+	.fs-job-titles { flex: 1 1 auto; min-width: 0; }
+	.fs-job-title {
+		margin: 0;
+		color: var(--fs-text-strong);
+		font-size: 1.0625rem;
+		font-weight: 600;
+		overflow-wrap: anywhere;
+	}
+	.fs-job-step {
+		margin: 0.125rem 0 0;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		overflow-wrap: anywhere;
+	}
+	.fs-job-elapsed {
+		flex: none;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		white-space: nowrap;
+	}
+	.fs-job-meter[hidden] { display: none; }
+	.fs-job-wait {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.75rem;
+		padding: 0.75rem 0.875rem;
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-status-warn) 40%, transparent);
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-status-warn) 8%, transparent);
+		&[hidden] { display: none; }
+		p { margin: 0; }
+	}
+	.fs-job-wait-icon {
+		color: var(--fs-status-warn);
+		> i { animation: fa-spin 1.2s linear infinite; }
+	}
+	.fs-job-wait-title { color: var(--fs-text-strong); font-weight: 600; }
+	.fs-job-wait-text { color: var(--fs-text-muted); font-size: 0.8125rem; }
+	.fs-job-result {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		&[hidden] { display: none; }
+		.fs-status { font-weight: 600; }
+	}
+	.fs-job-result-text { margin: 0; color: var(--fs-text-muted); font-size: 0.875rem; }
+	.fs-job-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		&:empty, &[hidden] { display: none; }
+		.btn { display: inline-flex; align-items: center; gap: 0.375rem; }
+		.fs-job-logtoggle { margin-right: auto; }
+	}
+	.fs-job-log[hidden] { display: none; }
+
+	.fs-job-idle-box {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		padding: calc(var(--fs-pad) * 1.5) var(--fs-pad);
+		text-align: center;
+		p { margin: 0; }
+	}
+	.fs-job-idle-icon {
+		display: grid;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		border-radius: 50%;
+		background: var(--fs-surface-sunken);
+		color: var(--fs-text-muted);
+	}
+	.fs-job-idle-title { color: var(--fs-text-strong); font-weight: 600; }
+	.fs-job-idle-text { color: var(--fs-text-muted); font-size: 0.875rem; max-width: 32rem; }
+
+	@media (prefers-reduced-motion: reduce) {
+		.fs-job-icon > i, .fs-job-wait-icon > i { animation: none !important; }
+	}
+	@media (pointer: coarse) {
+		.fs-job-actions .btn, .fs-job-idle-box .btn { min-height: 2.5rem; }
+	}
+}

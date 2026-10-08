@@ -1,0 +1,26 @@
+{
+	"title": "Console",
+	"description": "Monospace output for tool results: live append from a cursor source, copy, wrap toggle, auto-scroll that stops when you scroll up, a line limit.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Live ping", "width": "md", "config": { "title": "ping -c 12 one.one.one.one", "source": { "path": "/v1/gallery/ops/ping", "query": { "run": "fixture-1", "count": 12 } }, "height": "16rem" } },
+		{ "name": "Static traceroute", "width": "md", "config": { "title": "traceroute 9.9.9.9", "lines": [
+			"traceroute to 9.9.9.9 (9.9.9.9), 64 hops max, 40 byte packets",
+			" 1  203.0.113.1 (203.0.113.1)  1.204 ms  0.981 ms  1.022 ms",
+			" 2  198.51.100.9 (198.51.100.9)  3.884 ms  3.501 ms  3.611 ms",
+			" 3  * * *",
+			" 4  ix-ae-12.core1.example.net (192.0.2.33)  7.120 ms  7.051 ms  6.998 ms",
+			" 5  dns9.quad9.net (9.9.9.9)  8.411 ms  8.302 ms  8.355 ms"
+		], "height": "auto" } },
+		{ "name": "Long lines, wrapped, ANSI stripped", "width": "md", "config": { "title": "pfctl -sr", "wrap": true, "lines": [
+			"\u001b[32mpass\u001b[0m in quick on igc1 inet proto tcp from 192.168.1.0/24 to any port = https flags S/SA keep state label \"USER_RULE: Allow LAN to any (HTTPS) with a very long description that keeps going\" ridentifier 1700000101",
+			"block drop in log quick on igc0 inet from <crowdsec_blacklists> to any label \"CrowdSec: block decisions\" ridentifier 1000000107",
+			{ "text": "pfctl: warning: table <bogonsv6> is empty", "level": "warn" },
+			{ "text": "pfctl: syntax error in rule 42", "level": "error" }
+		], "height": "12rem" } },
+		{ "name": "Many lines, capped at 200", "width": "md", "config": { "title": "Job log (demo job)", "maxLines": 200, "timestamps": true, "source": { "path": "/v1/gallery/ops/lines", "query": { "count": 600 } }, "every": 0, "height": "14rem" } },
+		{ "name": "Waiting for output", "width": "sm", "config": { "title": "Output", "placeholder": "Run a command to see its output here." } },
+		{ "name": "Loading", "width": "sm", "config": { "title": "Output", "source": { "path": "/v1/gallery/ops/slow" }, "every": 0 } },
+		{ "name": "Error", "width": "sm", "config": { "title": "Output", "source": { "path": "/v1/gallery/fail" }, "every": 0 } }
+	]
+}

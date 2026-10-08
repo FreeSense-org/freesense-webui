@@ -1,0 +1,13 @@
+{
+	"title": "Job",
+	"description": "Long operation runner: title, progress, current step, elapsed time, live log, final state with Retry / View log / Close. Keeps the job id in the URL and waits while the firewall restarts.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Running (starts a demo job)", "width": "lg", "surface": "page", "config": { "urlParam": false, "listen": false, "start": { "method": "POST", "path": "/v1/jobs/demo", "body": { "title": "Install package CrowdSec", "steps": ["Resolving dependencies", "Downloading packages (38 MiB)", "Verifying signatures", "Installing crowdsec-1.7.2", "Installing crowdsec-firewall-bouncer", "Starting services"] }, "auto": true, "label": "Run again" } } },
+		{ "name": "Fails at step 4 (Retry)", "width": "lg", "surface": "page", "config": { "urlParam": false, "listen": false, "start": { "method": "POST", "path": "/v1/jobs/demo", "body": { "title": "Update to 1.1.0-DEVELOPMENT 20261009-0100", "fail": true, "per": 1.5 }, "auto": true, "label": "Run again" } } },
+		{ "name": "Reboot: connection lost for 10 s", "width": "lg", "surface": "page", "config": { "urlParam": false, "listen": false, "start": { "method": "POST", "path": "/v1/jobs/demo", "body": { "title": "Restore configuration and reboot", "steps": ["Validating backup", "Writing configuration", "Rebooting", "Reloading services"], "per": 2, "outage": { "step": "Rebooting", "seconds": 10 } }, "auto": true, "label": "Run again" } } },
+		{ "name": "Idle with a start button (id kept in ?job=)", "width": "md", "surface": "page", "config": { "idleTitle": "No backup running", "idleText": "Create a full backup of the configuration and the RRD history.", "start": { "method": "POST", "path": "/v1/jobs/demo", "body": { "title": "Back up configuration", "steps": ["Collecting configuration", "Collecting RRD data", "Compressing", "Encrypting"], "per": 1.5 }, "label": "Back up now", "icon": "box-archive" } } },
+		{ "name": "Job not available (404)", "width": "md", "surface": "page", "config": { "id": "j-missing", "urlParam": false, "listen": false, "jobTitle": "Update to 1.1.0-DEVELOPMENT 20261001-0100" } },
+		{ "name": "Error (API refuses)", "width": "md", "surface": "page", "config": { "id": "j1", "urlParam": false, "listen": false, "source": "/v1/gallery/forbidden" } }
+	]
+}
