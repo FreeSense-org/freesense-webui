@@ -1,0 +1,19 @@
+{
+	"title": "Sparkline",
+	"description": "Tiny inline trend from a static array or a polled value.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Gateway RTT: WAN_DHCP", "width": "md", "config": { "label": "WAN_DHCP", "showLabel": true, "showValue": true, "source": { "path": "/v1/status/gateways" }, "field": "[name=WAN_DHCP].rtt", "format": "ms", "every": 2, "color": 1 } },
+		{ "name": "Gateway RTT: WAN_DHCP6", "width": "md", "config": { "label": "WAN_DHCP6", "showLabel": true, "showValue": true, "source": { "path": "/v1/status/gateways" }, "field": "[name=WAN_DHCP6].rtt", "format": "ms", "every": 2, "color": 2 } },
+		{ "name": "Gateway RTT: WG_SITE_GW", "width": "md", "config": { "label": "WG_SITE_GW", "showLabel": true, "showValue": true, "source": { "path": "/v1/status/gateways" }, "field": "[name=WG_SITE_GW].rtt", "format": "ms", "every": 2, "color": 3 } },
+		{ "name": "Area, static", "width": "md", "config": { "label": "Requests", "variant": "area", "values": [3, 5, 4, 8, 6, 9, 12, 10, 14, 11, 13, 17, 15, 19] } },
+		{ "name": "Large area (WAN in, live)", "width": "md", "config": { "label": "WAN in", "size": "lg", "variant": "area", "showValue": true, "source": { "path": "/v1/status/traffic", "query": { "if": "wan" } }, "field": "wan.in_bps", "format": "bps", "every": 1, "points": 60 } },
+		{ "name": "Inline", "width": "md", "config": { "label": "CPU", "size": "inline", "values": [12, 14, 13, 30, 22, 16, 15, 18, 14], "color": 3 } },
+		{ "name": "Gap in data", "width": "md", "config": { "label": "Loss", "values": [0, 0, 1, null, null, 2, 1, 0, 0, 4, 1], "color": "crit" } },
+		{ "name": "Long label", "width": "sm", "config": { "label": "Datacenter IPsec tunnel phase 2 round trip", "showLabel": true, "showValue": true, "values": [22, 24, 21, 23, 29, 25], "format": "ms" } },
+		{ "name": "Gateway down (empty)", "width": "sm", "config": { "label": "WAN2_DHCP", "source": { "path": "/v1/status/gateways" }, "field": "[name=WAN2_DHCP].rtt", "format": "ms", "every": 5 } },
+		{ "name": "Loading", "width": "sm", "config": { "label": "Slow", "source": { "path": "/v1/gallery/slow" }, "field": "value" } },
+		{ "name": "Error", "width": "sm", "config": { "label": "Error", "source": { "path": "/v1/gallery/fail" }, "field": "value" } },
+		{ "name": "Stale", "width": "sm", "config": { "label": "Stale", "showValue": true, "source": { "path": "/v1/gallery/viz-stale", "query": { "id": "spark" } }, "field": "value", "every": 2 } }
+	]
+}

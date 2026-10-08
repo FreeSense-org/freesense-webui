@@ -1,0 +1,21 @@
+{
+	"title": "Stat tile",
+	"description": "Big number with label, trend and sparkline. Static or live (source + field + every).",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "WAN throughput (live, trend, sparkline)", "width": "md", "surface": "page", "config": { "label": "WAN download", "icon": "arrow-down", "source": { "path": "/v1/status/traffic", "query": { "if": "wan" } }, "field": "wan.in_bps", "format": "bps", "every": 2, "trend": true, "good": "up", "spark": { "points": 40 }, "href": "#interfaces" } },
+		{ "name": "CPU with thresholds", "width": "md", "surface": "page", "config": { "label": "CPU usage", "icon": "microchip", "source": { "path": "/v1/status/system" }, "field": "cpu.usage", "format": "pct", "every": 2, "warn": 60, "crit": 85, "trend": true, "trendAs": "abs", "good": "down", "spark": { "points": 30, "variant": "line", "color": 3 } } },
+		{ "name": "State table (detail from API)", "width": "md", "surface": "page", "config": { "label": "Firewall states", "icon": "table-list", "source": { "path": "/v1/status/states" }, "field": "current", "format": "num", "detailField": "max", "every": 3 } },
+		{ "name": "Gateway RTT with API status", "width": "md", "surface": "page", "config": { "label": "WAN_DHCP latency", "source": { "path": "/v1/status/gateways" }, "field": "[name=WAN_DHCP].rtt", "format": "ms", "statusField": "[name=WAN_DHCP].status", "statusLabels": { "ok": "Online", "warn": "Degraded", "crit": "Down" }, "every": 2, "spark": { "points": 30, "variant": "line", "color": 2 } } },
+		{ "name": "Uptime (duration)", "width": "md", "surface": "page", "config": { "label": "Uptime", "icon": "clock", "source": { "path": "/v1/status/system" }, "field": "uptime", "format": "duration", "every": 10 } },
+		{ "name": "Static with previous value", "width": "md", "surface": "page", "config": { "label": "Blocked today", "icon": "ban", "value": 18342, "previous": 15210, "format": "compact", "trend": true, "good": "down", "history": [12, 15, 14, 18, 17, 21, 19, 24, 22, 26], "spark": { "variant": "line", "color": 8 } } },
+		{ "name": "Compact", "width": "sm", "surface": "page", "config": { "label": "Memory", "size": "compact", "source": { "path": "/v1/status/system" }, "field": "memory.used", "format": "num", "unit": "MiB", "detailField": "memory.total", "every": 5 } },
+		{ "name": "Compact, static status", "width": "sm", "surface": "page", "config": { "label": "DHCP leases", "size": "compact", "value": 128, "status": "ok", "statusLabels": { "ok": "Healthy" } } },
+		{ "name": "Long label", "width": "sm", "surface": "page", "config": { "label": "Outbound throughput on the site-to-site WireGuard tunnel to the Aarhus branch office", "icon": "shield-halved", "source": { "path": "/v1/status/traffic", "query": { "if": "wg0" } }, "field": "wg0.out_bps", "format": "bps", "every": 3, "href": "#vpn" } },
+		{ "name": "Plain (inside a card)", "width": "sm", "config": { "label": "LAN clients", "plain": true, "value": 42, "detail": "12 wired · 30 wireless" } },
+		{ "name": "Loading", "width": "sm", "surface": "page", "config": { "label": "Slow source", "source": { "path": "/v1/gallery/slow" }, "field": "value" } },
+		{ "name": "Empty", "width": "sm", "surface": "page", "config": { "label": "No data", "source": { "path": "/v1/gallery/empty" }, "field": "value" } },
+		{ "name": "Error", "width": "sm", "surface": "page", "config": { "label": "Broken source", "source": { "path": "/v1/gallery/fail" }, "field": "value" } },
+		{ "name": "Stale (source stops answering)", "width": "sm", "surface": "page", "config": { "label": "Throughput", "source": { "path": "/v1/gallery/viz-stale", "query": { "id": "tile" } }, "field": "in_bps", "format": "bps", "every": 2, "trend": true, "good": "up" } }
+	]
+}
