@@ -1,0 +1,536 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://raw.githubusercontent.com/FreeSense-org/freesense-webui/main/schema/theme-2.0.schema.json",
+	"title": "FreeSense WebUI theme, scheme 2.0",
+	"description": "A complete FreeSense WebUI theme in one file, written for theme scheme 2.0. This file is frozen once 2.0 is released: later schemes get their own file (theme-2.1.schema.json, …). Themes are data only; the WebUI turns them into CSS custom properties.",
+	"type": "object",
+	"additionalProperties": false,
+	"required": [
+		"scheme",
+		"name",
+		"title",
+		"version",
+		"modes",
+		"accents",
+		"defaultAccent"
+	],
+	"properties": {
+		"$schema": {
+			"type": "string"
+		},
+		"scheme": {
+			"description": "Theme scheme this file is written for. A system refuses themes with a newer minor or a different major than it supports.",
+			"const": "2.0"
+		},
+		"name": {
+			"description": "Folder and package name. Lowercase letters, digits and hyphens.",
+			"type": "string",
+			"pattern": "^[a-z][a-z0-9-]{1,39}$"
+		},
+		"title": {
+			"description": "Name shown in the theme picker.",
+			"type": "string",
+			"minLength": 1,
+			"maxLength": 40
+		},
+		"description": {
+			"type": "string",
+			"maxLength": 200
+		},
+		"version": {
+			"description": "Theme version (semver).",
+			"$ref": "#/$defs/semver"
+		},
+		"author": {
+			"type": "string",
+			"maxLength": 80
+		},
+		"license": {
+			"type": "string",
+			"maxLength": 40
+		},
+		"homepage": {
+			"type": "string",
+			"format": "uri",
+			"pattern": "^https://"
+		},
+		"defaultMode": {
+			"enum": [
+				"light",
+				"dark",
+				"auto"
+			],
+			"default": "auto"
+		},
+		"defaultAccent": {
+			"description": "Key of the accent new users get.",
+			"$ref": "#/$defs/key"
+		},
+		"modes": {
+			"description": "Both modes are required and must be complete.",
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"light",
+				"dark"
+			],
+			"properties": {
+				"light": {
+					"$ref": "#/$defs/mode"
+				},
+				"dark": {
+					"$ref": "#/$defs/mode"
+				}
+			}
+		},
+		"accents": {
+			"description": "Accent colours users can choose. Each needs values for both modes.",
+			"type": "object",
+			"minProperties": 1,
+			"maxProperties": 12,
+			"propertyNames": {
+				"$ref": "#/$defs/key"
+			},
+			"additionalProperties": {
+				"$ref": "#/$defs/accent"
+			}
+		},
+		"shape": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"radiusSm": {
+					"$ref": "#/$defs/length"
+				},
+				"radiusMd": {
+					"$ref": "#/$defs/length"
+				},
+				"radiusLg": {
+					"$ref": "#/$defs/length"
+				},
+				"borderWidth": {
+					"$ref": "#/$defs/length"
+				},
+				"focusWidth": {
+					"$ref": "#/$defs/length"
+				}
+			}
+		},
+		"densities": {
+			"description": "Optional overrides of the engine's comfortable and compact sizes.",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"comfortable": {
+					"$ref": "#/$defs/density"
+				},
+				"compact": {
+					"$ref": "#/$defs/density"
+				}
+			}
+		},
+		"fonts": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"ui": {
+					"$ref": "#/$defs/font"
+				},
+				"mono": {
+					"$ref": "#/$defs/font"
+				}
+			}
+		},
+		"motion": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"fast": {
+					"$ref": "#/$defs/duration"
+				},
+				"base": {
+					"$ref": "#/$defs/duration"
+				},
+				"slow": {
+					"$ref": "#/$defs/duration"
+				}
+			}
+		},
+		"skin": {
+			"description": "Optional element-level choices from a fixed list (no free CSS).",
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"topbar": {
+					"enum": [
+						"surface",
+						"accent",
+						"inverse"
+					],
+					"description": "Top bar background style"
+				},
+				"sectionMenu": {
+					"enum": [
+						"surface",
+						"sunken",
+						"glass"
+					]
+				},
+				"cards": {
+					"enum": [
+						"flat",
+						"outlined",
+						"raised"
+					]
+				},
+				"tables": {
+					"enum": [
+						"lines",
+						"zebra",
+						"minimal"
+					]
+				},
+				"buttons": {
+					"enum": [
+						"rounded",
+						"pill",
+						"square"
+					]
+				}
+			}
+		}
+	},
+	"$defs": {
+		"key": {
+			"type": "string",
+			"pattern": "^[a-z][a-z0-9-]{0,23}$"
+		},
+		"semver": {
+			"type": "string",
+			"pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?$"
+		},
+		"color": {
+			"description": "Hex colour, #rrggbb or #rrggbbaa.",
+			"type": "string",
+			"pattern": "^#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?$"
+		},
+		"length": {
+			"type": "string",
+			"pattern": "^(0|[0-9]{1,2}(\\.[0-9]+)?(px|rem))$"
+		},
+		"duration": {
+			"type": "string",
+			"pattern": "^[0-9]{1,4}ms$"
+		},
+		"shadow": {
+			"description": "Box shadow made of lengths and a hex colour, e.g. '0 1px 2px #0000001a'. Up to three layers.",
+			"type": "string",
+			"pattern": "^(none|(-?[0-9.]+(px|rem)? ){2,4}#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?(, (-?[0-9.]+(px|rem)? ){2,4}#[0-9a-fA-F]{6}([0-9a-fA-F]{2})?){0,2})$"
+		},
+		"font": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"family"
+			],
+			"properties": {
+				"family": {
+					"description": "One of the fonts bundled with the WebUI, or a font shipped in the theme package.",
+					"type": "string",
+					"pattern": "^[A-Za-z0-9 ]{1,40}$"
+				},
+				"files": {
+					"description": "woff2 files shipped in the theme package (relative paths).",
+					"type": "array",
+					"items": {
+						"type": "string",
+						"pattern": "^fonts/[A-Za-z0-9._-]+\\.woff2$"
+					}
+				}
+			}
+		},
+		"density": {
+			"type": "object",
+			"additionalProperties": false,
+			"properties": {
+				"base": {
+					"$ref": "#/$defs/length",
+					"description": "Base font size"
+				},
+				"control": {
+					"$ref": "#/$defs/length",
+					"description": "Control height"
+				},
+				"row": {
+					"$ref": "#/$defs/length",
+					"description": "Table row height"
+				},
+				"gap": {
+					"$ref": "#/$defs/length",
+					"description": "Grid gap"
+				},
+				"pad": {
+					"$ref": "#/$defs/length",
+					"description": "Card padding"
+				}
+			}
+		},
+		"accent": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"title",
+				"light",
+				"dark"
+			],
+			"properties": {
+				"title": {
+					"type": "string",
+					"maxLength": 24
+				},
+				"light": {
+					"$ref": "#/$defs/accentMode"
+				},
+				"dark": {
+					"$ref": "#/$defs/accentMode"
+				}
+			}
+		},
+		"accentMode": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"fill",
+				"text",
+				"on"
+			],
+			"properties": {
+				"fill": {
+					"$ref": "#/$defs/color",
+					"description": "Buttons, active states, marks"
+				},
+				"text": {
+					"$ref": "#/$defs/color",
+					"description": "Accent-coloured text and links on surfaces (>= 4.5:1)"
+				},
+				"on": {
+					"$ref": "#/$defs/color",
+					"description": "Text on the fill (>= 4.5:1)"
+				}
+			}
+		},
+		"mode": {
+			"type": "object",
+			"additionalProperties": false,
+			"required": [
+				"surface",
+				"text",
+				"border",
+				"status",
+				"action",
+				"series",
+				"chart",
+				"shadow"
+			],
+			"properties": {
+				"surface": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"page",
+						"raised",
+						"sunken",
+						"overlay",
+						"topbar",
+						"section"
+					],
+					"properties": {
+						"page": {
+							"$ref": "#/$defs/color",
+							"description": "Page background"
+						},
+						"raised": {
+							"$ref": "#/$defs/color",
+							"description": "Cards, tables, dialogs"
+						},
+						"sunken": {
+							"$ref": "#/$defs/color",
+							"description": "Inputs, wells, track of meters"
+						},
+						"overlay": {
+							"$ref": "#/$defs/color",
+							"description": "Backdrop behind dialogs (with alpha)"
+						},
+						"topbar": {
+							"$ref": "#/$defs/color",
+							"description": "Top bar background"
+						},
+						"section": {
+							"$ref": "#/$defs/color",
+							"description": "Section menu background"
+						}
+					}
+				},
+				"text": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"strong",
+						"default",
+						"muted",
+						"topbar"
+					],
+					"properties": {
+						"strong": {
+							"$ref": "#/$defs/color"
+						},
+						"default": {
+							"$ref": "#/$defs/color"
+						},
+						"muted": {
+							"$ref": "#/$defs/color",
+							"description": "Secondary text (>= 4.5:1 on raised and page)"
+						},
+						"topbar": {
+							"$ref": "#/$defs/color",
+							"description": "Text on the top bar"
+						}
+					}
+				},
+				"border": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"default",
+						"strong",
+						"focus"
+					],
+					"properties": {
+						"default": {
+							"$ref": "#/$defs/color"
+						},
+						"strong": {
+							"$ref": "#/$defs/color",
+							"description": "Input borders (>= 3:1)"
+						},
+						"focus": {
+							"$ref": "#/$defs/color",
+							"description": "Focus ring (>= 3:1)"
+						}
+					}
+				},
+				"status": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"ok",
+						"warn",
+						"crit",
+						"info",
+						"neutral"
+					],
+					"properties": {
+						"ok": {
+							"$ref": "#/$defs/color"
+						},
+						"warn": {
+							"$ref": "#/$defs/color"
+						},
+						"crit": {
+							"$ref": "#/$defs/color"
+						},
+						"info": {
+							"$ref": "#/$defs/color"
+						},
+						"neutral": {
+							"$ref": "#/$defs/color"
+						}
+					}
+				},
+				"action": {
+					"description": "Firewall rule actions.",
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"pass",
+						"block",
+						"reject",
+						"match"
+					],
+					"properties": {
+						"pass": {
+							"$ref": "#/$defs/color"
+						},
+						"block": {
+							"$ref": "#/$defs/color"
+						},
+						"reject": {
+							"$ref": "#/$defs/color"
+						},
+						"match": {
+							"$ref": "#/$defs/color"
+						}
+					}
+				},
+				"series": {
+					"description": "Chart series colours in assignment order, plus 'other'.",
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"colors",
+						"other"
+					],
+					"properties": {
+						"colors": {
+							"type": "array",
+							"minItems": 8,
+							"maxItems": 8,
+							"items": {
+								"$ref": "#/$defs/color"
+							}
+						},
+						"other": {
+							"$ref": "#/$defs/color"
+						}
+					}
+				},
+				"chart": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"grid",
+						"text"
+					],
+					"properties": {
+						"grid": {
+							"$ref": "#/$defs/color"
+						},
+						"text": {
+							"$ref": "#/$defs/color"
+						}
+					}
+				},
+				"shadow": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": [
+						"sm",
+						"md",
+						"lg"
+					],
+					"properties": {
+						"sm": {
+							"$ref": "#/$defs/shadow"
+						},
+						"md": {
+							"$ref": "#/$defs/shadow"
+						},
+						"lg": {
+							"$ref": "#/$defs/shadow"
+						}
+					}
+				}
+			}
+		}
+	}
+}

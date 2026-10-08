@@ -1,0 +1,9 @@
+{
+	"name": "@freesense/theme-freesense",
+	"version": "2.0.0-alpha.0",
+	"description": "The default FreeSense WebUI theme",
+	"license": "Apache-2.0",
+	"repository": { "type": "git", "url": "https://github.com/FreeSense-org/freesense-webui.git", "directory": "packages/theme-freesense" },
+	"files": ["freesense.theme.json"],
+	"peerDependencies": { "@freesense/ui": "^2.0.0-alpha.0" }
+}

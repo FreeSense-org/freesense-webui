@@ -1,0 +1,26 @@
+/* Gallery chrome only (not shipped). Uses tokens like everything else. */
+@layer page {
+	.g-head {
+		position: sticky; top: 0; z-index: 10;
+		display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+		padding: 12px 24px; background: var(--fs-surface-topbar); color: var(--fs-text-topbar);
+		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
+	}
+	.g-brand { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+	.g-brand i { color: var(--fs-accent-fill); }
+	.g-controls { display: flex; flex-wrap: wrap; gap: 12px; }
+	.g-controls label { display: flex; align-items: center; gap: 6px; font-size: 0.8125rem; color: var(--fs-text-muted); }
+	.g-main { max-width: 1280px; margin: 0 auto; padding: 24px 16px 64px; }
+	.g-section { margin-bottom: 40px; }
+	.g-section > h2 { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fs-text-muted); margin-bottom: 12px; }
+	.g-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+	.g-sw { border: var(--fs-border-width) solid var(--fs-border-default); border-radius: var(--fs-radius-sm); overflow: hidden; background: var(--fs-surface-raised); font-size: 0.75rem; }
+	.g-sw span { display: block; height: 36px; }
+	.g-sw div { padding: 6px 8px; display: flex; justify-content: space-between; gap: 6px; }
+	.g-sw code { color: var(--fs-text-default); }
+	.g-sw b { font-family: var(--fs-font-mono); font-weight: 600; }
+	.g-sw b.g-fail { color: var(--fs-status-crit); }
+	.g-pass { color: var(--fs-action-pass); }
+	.g-block { color: var(--fs-action-block); }
+	.g-reject { color: var(--fs-action-reject); }
+}

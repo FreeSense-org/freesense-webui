@@ -1,0 +1,21 @@
+{
+	"name": "@freesense/ui",
+	"version": "2.0.0-alpha.0",
+	"themeScheme": "2.0",
+	"themes": [
+		"freesense"
+	],
+	"files": {
+		"themes/freesense/theme.css": "1945f47fb971f9b15120a5fd2c6b2d0815d529d877a34d9627f1ee73abbb23a9",
+		"themes/freesense/theme.json": "5f8ac7efe1350e4b3337981fb28f666746d59be2ad2caaf39f1b3c698a55bce1",
+		"ui/fonts/fa-solid-900.woff2": "24e5fae26b41c08b2df81c91669f5aaae71d81a84a4713fc56b5c621b78dd456",
+		"ui/fonts/inter-latin-ext-wght-normal.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
+		"ui/fonts/inter-latin-wght-normal.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+		"ui/fonts/jetbrains-mono-latin-400-normal.woff2": "14425ba9c695763c1547f48a206b7aa60350a33ae23de09f0407877f3fcd89eb",
+		"ui/fonts/jetbrains-mono-latin-600-normal.woff2": "400c6bfda18d5d14acad1c15d6dcb9f8e13c015e7286317e0b9a482539bef147",
+		"ui/fonts/jetbrains-mono-latin-ext-400-normal.woff2": "505dfba8ecbe77e82765f36d317ed7ef4ac42719dc5f4ae68d1c483fd22d0d14",
+		"ui/fonts/jetbrains-mono-latin-ext-600-normal.woff2": "90899aac1c15552c028fd205376bb537a2a5205164fe8626efabad77d7260c20",
+		"ui/fs-ui.css": "550600941be466d0ed093504814f916196abdd3c13d0774f7cf0c5b4649d1f6b",
+		"ui/fs-ui.js": "02c1fe528bdea7754b32b8daf1a812ee8623c2d9fb921bff4e1d9af1e874ed75"
+	}
+}

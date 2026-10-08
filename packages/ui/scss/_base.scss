@@ -1,0 +1,32 @@
+/* Base: typography, focus, motion. */
+@layer base {
+	html { -webkit-text-size-adjust: 100%; }
+
+	body {
+		font-family: var(--fs-font-ui);
+		font-size: var(--fs-size-base);
+		background: var(--fs-surface-page);
+		color: var(--fs-text-default);
+		transition: background-color var(--fs-dur-base), color var(--fs-dur-base);
+	}
+
+	code, kbd, samp, pre, .fs-mono { font-family: var(--fs-font-mono); }
+	.fs-num, .fs-mono { font-variant-numeric: tabular-nums; }
+	.fs-muted { color: var(--fs-text-muted); }
+
+	:focus-visible {
+		outline: var(--fs-focus-width) solid var(--fs-border-focus);
+		outline-offset: 2px;
+	}
+
+	::selection { background: color-mix(in srgb, var(--fs-accent-fill) 30%, transparent); }
+
+	@media (prefers-reduced-motion: reduce) {
+		*, *::before, *::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+	}
+}

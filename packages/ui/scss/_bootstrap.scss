@@ -1,0 +1,11 @@
+/*
+ * Bootstrap 5.3 from Sass source, inside the `bootstrap` layer.
+ * Only the parts the element library builds on are included. Colours compiled
+ * here are placeholders: the bridge layer re-points Bootstrap's --bs-* custom
+ * properties at FreeSense tokens, so light/dark and themes switch at runtime.
+ */
+@use 'sass:meta';
+
+@layer bootstrap {
+	@include meta.load-css('bootstrap-config');
+}

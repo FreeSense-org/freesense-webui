@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build, checks and dist up to date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (no dependency install scripts)
+        run: npm ci --ignore-scripts
+      - name: Unit tests
+        run: npm test
+      - name: Theme checks (scheme, schema, contrast)
+        run: npm run check:themes
+      - name: Build
+        run: npm run build
+      - name: dist/ matches the sources
+        run: |
+          if ! git diff --exit-code --stat -- dist; then
+            echo "::error::dist/ is out of date. Run 'npm run build' and commit the result."
+            exit 1
+          fi
+          if [ -n "$(git status --porcelain -- dist)" ]; then
+            git status --porcelain -- dist
+            echo "::error::dist/ has untracked build output. Run 'npm run build' and commit the result."
+            exit 1
+          fi
+      - name: Released theme schemes are frozen
+        run: node tools/theme/frozen.mjs
+
+  inventory:
+    name: 1.x inventory matches the baseline
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/checkout@v5
+        with:
+          repository: FreeSense-org/freesense
+          ref: webui-1.x-baseline
+          path: .baseline/freesense
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - run: node tools/inventory/build-inventory.mjs .baseline/freesense --check

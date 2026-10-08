@@ -1,0 +1,74 @@
+/*
+ * FS.batch — collect GET requests made in the same tick and send them as one
+ * POST /api/v1/batch, because php-fpm has only a few workers on small boxes.
+ *
+ *   batch.get('/status/gateways') -> Promise<{data, meta}>
+ *
+ * Requests queue for one animation frame, then go out as one call
+ * ([{id, method, path}] → [{id, status, body}]). If the backend has no
+ * batch route yet (404/405), FS.batch switches to plain parallel requests
+ * for the rest of the session. At most `maxInFlight` requests run at once.
+ */
+import { api, url } from './api.js';
+
+const state = { queue: [], scheduled: false, supported: true, inFlight: 0, waiting: [] };
+const maxInFlight = 2;
+
+function slot() {
+	if (state.inFlight < maxInFlight) { state.inFlight++; return Promise.resolve(); }
+	return new Promise((resolve) => state.waiting.push(resolve)).then(() => { state.inFlight++; });
+}
+function release() {
+	state.inFlight--;
+	const next = state.waiting.shift();
+	if (next) next();
+}
+
+function settle(item, res) {
+	if (res.status >= 200 && res.status < 300) item.resolve(res.body || {});
+	else {
+		const e = (res.body && res.body.error) || {};
+		item.reject({ status: res.status, code: e.code || 'error', message: e.message || 'The request failed.', fields: (e.details && e.details.fields) || null });
+	}
+}
+
+async function flush() {
+	state.scheduled = false;
+	const items = state.queue.splice(0);
+	if (!items.length) return;
+	if (!state.supported || items.length === 1) {
+		await Promise.all(items.map(async (it) => {
+			await slot();
+			try { it.resolve(await api.get(it.path, it.query)); } catch (e) { it.reject(e); } finally { release(); }
+		}));
+		return;
+	}
+	await slot();
+	try {
+		const res = await api.post('/batch', { requests: items.map((it, i) => ({ id: String(i), method: 'GET', path: url(it.path, it.query) })) });
+		const byId = Object.fromEntries((res.data || []).map((r) => [r.id, r]));
+		items.forEach((it, i) => settle(it, byId[String(i)] || { status: 502, body: { error: { message: 'Missing batch result.' } } }));
+	} catch (e) {
+		if (e.status === 404 || e.status === 405) {
+			state.supported = false;
+			state.queue.unshift(...items);
+			schedule();
+		} else items.forEach((it) => it.reject(e));
+	} finally { release(); }
+}
+
+function schedule() {
+	if (state.scheduled) return;
+	state.scheduled = true;
+	(typeof requestAnimationFrame === 'function' && !document.hidden ? requestAnimationFrame : (f) => setTimeout(f, 0))(flush);
+}
+
+export const batch = {
+	get(path, query) {
+		return new Promise((resolve, reject) => {
+			state.queue.push({ path, query, resolve, reject });
+			schedule();
+		});
+	},
+	get supported() { return state.supported; }
+};

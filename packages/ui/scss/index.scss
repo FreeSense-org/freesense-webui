@@ -1,0 +1,18 @@
+/*
+ * @freesense/ui — engine stylesheet.
+ *
+ * Everything here is theme-agnostic: colours, radii, fonts and sizes are CSS
+ * custom properties (--fs-*) whose values come from the active theme
+ * (themes/<name>/theme.css, generated from <name>.theme.json).
+ *
+ * Cascade layers, lowest to highest priority:
+ *   reset → bootstrap → bridge → base → elements → shell → theme → page
+ */
+
+
+@use 'layers';
+@use 'fonts';
+@use 'icons';
+@use 'bootstrap';
+@use 'bridge';
+@use 'base';

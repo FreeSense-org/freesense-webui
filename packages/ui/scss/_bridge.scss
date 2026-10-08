@@ -1,0 +1,157 @@
+/*
+ * Bridge: point Bootstrap's runtime custom properties at FreeSense tokens.
+ * Selectors match Bootstrap's own (:root and [data-bs-theme]) so the bridge
+ * wins by layer order, in both colour modes, for every theme.
+ */
+@layer bridge {
+	:root,
+	[data-bs-theme] {
+		--bs-body-font-family: var(--fs-font-ui);
+		--bs-font-monospace: var(--fs-font-mono);
+		--bs-body-font-size: var(--fs-size-base);
+		--bs-body-bg: var(--fs-surface-page);
+		--bs-body-color: var(--fs-text-default);
+		--bs-emphasis-color: var(--fs-text-strong);
+		--bs-secondary-color: var(--fs-text-muted);
+		--bs-tertiary-color: var(--fs-text-muted);
+		--bs-secondary-bg: var(--fs-surface-sunken);
+		--bs-tertiary-bg: var(--fs-surface-sunken);
+		--bs-heading-color: var(--fs-text-strong);
+		--bs-border-color: var(--fs-border-default);
+		--bs-border-color-translucent: var(--fs-border-default);
+		--bs-border-width: var(--fs-border-width);
+		--bs-border-radius: var(--fs-radius-md);
+		--bs-border-radius-sm: var(--fs-radius-sm);
+		--bs-border-radius-lg: var(--fs-radius-lg);
+		--bs-border-radius-xl: var(--fs-radius-lg);
+		--bs-link-color: var(--fs-accent-text);
+		--bs-link-hover-color: var(--fs-accent-text);
+		--bs-focus-ring-color: color-mix(in srgb, var(--fs-border-focus) 40%, transparent);
+		--bs-focus-ring-width: var(--fs-focus-width);
+		--bs-box-shadow: var(--fs-shadow-md);
+		--bs-box-shadow-sm: var(--fs-shadow-sm);
+		--bs-box-shadow-lg: var(--fs-shadow-lg);
+
+		--bs-primary: var(--fs-accent-fill);
+		--bs-success: var(--fs-status-ok);
+		--bs-warning: var(--fs-status-warn);
+		--bs-danger: var(--fs-status-crit);
+		--bs-info: var(--fs-status-info);
+		--bs-secondary: var(--fs-status-neutral);
+		--bs-primary-text-emphasis: var(--fs-accent-text);
+		--bs-success-text-emphasis: var(--fs-status-ok);
+		--bs-warning-text-emphasis: var(--fs-status-warn);
+		--bs-danger-text-emphasis: var(--fs-status-crit);
+		--bs-info-text-emphasis: var(--fs-status-info);
+		--bs-primary-bg-subtle: color-mix(in srgb, var(--fs-accent-fill) 12%, var(--fs-surface-raised));
+		--bs-success-bg-subtle: color-mix(in srgb, var(--fs-status-ok) 12%, var(--fs-surface-raised));
+		--bs-warning-bg-subtle: color-mix(in srgb, var(--fs-status-warn) 12%, var(--fs-surface-raised));
+		--bs-danger-bg-subtle: color-mix(in srgb, var(--fs-status-crit) 12%, var(--fs-surface-raised));
+		--bs-info-bg-subtle: color-mix(in srgb, var(--fs-status-info) 12%, var(--fs-surface-raised));
+		--bs-primary-border-subtle: color-mix(in srgb, var(--fs-accent-fill) 35%, var(--fs-surface-raised));
+		--bs-success-border-subtle: color-mix(in srgb, var(--fs-status-ok) 35%, var(--fs-surface-raised));
+		--bs-warning-border-subtle: color-mix(in srgb, var(--fs-status-warn) 35%, var(--fs-surface-raised));
+		--bs-danger-border-subtle: color-mix(in srgb, var(--fs-status-crit) 35%, var(--fs-surface-raised));
+		--bs-info-border-subtle: color-mix(in srgb, var(--fs-status-info) 35%, var(--fs-surface-raised));
+		--bs-form-valid-color: var(--fs-status-ok);
+		--bs-form-valid-border-color: var(--fs-status-ok);
+		--bs-form-invalid-color: var(--fs-status-crit);
+		--bs-form-invalid-border-color: var(--fs-status-crit);
+	}
+
+	/* Buttons: primary follows the user's accent; hover/active mix toward text. */
+	.btn {
+		--bs-btn-font-weight: 600;
+		--bs-btn-border-radius: var(--fs-radius-sm);
+		--bs-btn-focus-box-shadow: 0 0 0 var(--fs-focus-width) color-mix(in srgb, var(--fs-border-focus) 45%, transparent);
+		min-height: var(--fs-control-h);
+	}
+	.btn-primary {
+		--bs-btn-color: var(--fs-accent-on);
+		--bs-btn-bg: var(--fs-accent-fill);
+		--bs-btn-border-color: var(--fs-accent-fill);
+		--bs-btn-hover-color: var(--fs-accent-on);
+		--bs-btn-hover-bg: color-mix(in srgb, var(--fs-accent-fill) 88%, var(--fs-text-strong));
+		--bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+		--bs-btn-active-color: var(--fs-accent-on);
+		--bs-btn-active-bg: color-mix(in srgb, var(--fs-accent-fill) 78%, var(--fs-text-strong));
+		--bs-btn-active-border-color: var(--bs-btn-active-bg);
+		--bs-btn-disabled-color: var(--fs-accent-on);
+		--bs-btn-disabled-bg: var(--fs-accent-fill);
+		--bs-btn-disabled-border-color: var(--fs-accent-fill);
+	}
+	.btn-secondary,
+	.btn-outline-secondary {
+		--bs-btn-color: var(--fs-text-default);
+		--bs-btn-bg: var(--fs-surface-raised);
+		--bs-btn-border-color: var(--fs-border-strong);
+		--bs-btn-hover-color: var(--fs-text-strong);
+		--bs-btn-hover-bg: var(--fs-surface-sunken);
+		--bs-btn-hover-border-color: var(--fs-border-strong);
+		--bs-btn-active-color: var(--fs-text-strong);
+		--bs-btn-active-bg: var(--fs-surface-sunken);
+		--bs-btn-active-border-color: var(--fs-text-muted);
+	}
+	.btn-danger {
+		--bs-btn-color: var(--fs-surface-raised);
+		--bs-btn-bg: var(--fs-status-crit);
+		--bs-btn-border-color: var(--fs-status-crit);
+		--bs-btn-hover-color: var(--fs-surface-raised);
+		--bs-btn-hover-bg: color-mix(in srgb, var(--fs-status-crit) 88%, var(--fs-text-strong));
+		--bs-btn-hover-border-color: var(--bs-btn-hover-bg);
+		--bs-btn-active-bg: color-mix(in srgb, var(--fs-status-crit) 78%, var(--fs-text-strong));
+	}
+	.btn-link {
+		--bs-btn-color: var(--fs-accent-text);
+		--bs-btn-hover-color: var(--fs-accent-text);
+	}
+	.btn-ghost {
+		--bs-btn-color: var(--fs-text-muted);
+		--bs-btn-hover-color: var(--fs-text-strong);
+		--bs-btn-hover-bg: var(--fs-surface-sunken);
+		--bs-btn-active-bg: var(--fs-surface-sunken);
+		--bs-btn-border-color: transparent;
+	}
+
+	.form-control,
+	.form-select {
+		min-height: var(--fs-control-h);
+		background-color: var(--fs-surface-raised);
+		border-color: var(--fs-border-strong);
+		color: var(--fs-text-default);
+	}
+	.form-control::placeholder { color: var(--fs-text-muted); }
+	.form-check-input:checked {
+		background-color: var(--fs-accent-fill);
+		border-color: var(--fs-accent-fill);
+	}
+	.card,
+	.modal,
+	.offcanvas,
+	.dropdown-menu,
+	.toast,
+	.popover {
+		--bs-card-bg: var(--fs-surface-raised);
+		--bs-modal-bg: var(--fs-surface-raised);
+		--bs-offcanvas-bg: var(--fs-surface-raised);
+		--bs-dropdown-bg: var(--fs-surface-raised);
+		--bs-dropdown-link-color: var(--fs-text-default);
+		--bs-dropdown-link-hover-bg: var(--fs-surface-sunken);
+		--bs-dropdown-link-active-bg: var(--fs-accent-fill);
+		--bs-dropdown-link-active-color: var(--fs-accent-on);
+		--bs-dropdown-box-shadow: var(--fs-shadow-lg);
+		--bs-toast-bg: var(--fs-surface-raised);
+		--bs-popover-bg: var(--fs-surface-raised);
+	}
+	.modal-backdrop {
+		--bs-backdrop-bg: var(--fs-surface-overlay);
+		--bs-backdrop-opacity: 1;
+	}
+	.table {
+		--bs-table-bg: transparent;
+		--bs-table-color: var(--fs-text-default);
+		--bs-table-border-color: var(--fs-border-default);
+		--bs-table-hover-bg: var(--fs-surface-sunken);
+		--bs-table-hover-color: var(--fs-text-strong);
+	}
+}

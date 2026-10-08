@@ -10,6 +10,11 @@ A rule changes only through a pull request that edits this file.
 - No HTML strings, `echo`/`print` of markup, `style=` attributes, `<style>` or `<script>` tags. **[CI]**
 - If a page needs something the catalogue lacks, the element is added to `@freesense/ui` first: spec, fixtures, gallery entry and tests. Then the page uses it. Elements are never created inside a page.
 
+## R1a. Use a page pattern when one fits
+
+- A page uses `ResourcePage`, `SettingsPage`, `StatusPage`, `LogPage` or `ToolPage` when it fits (docs/PAGES.md). A plain `Page` with its own `build()` needs a reason in the PR.
+- Patterns change only in `@freesense/ui`, never by copying one into a page.
+
 ## R2. All data goes through the API
 
 - Pages never read `config.xml`, run shell commands or call backend `.inc` functions. They declare API sources. **[CI]**
@@ -55,7 +60,8 @@ A rule changes only through a pull request that edits this file.
 ## R9. Versioning is a contract
 
 - `@freesense/ui` follows semver. Adding an element or an option is a minor release; removing or changing one is a major release.
-- Themes declare `"ui": "^2.0"`. Pages and package plugins declare the minimum version they need.
+- Themes declare the theme scheme they are written for (`"scheme": "2.0"`). A system refuses a theme with a newer scheme minor or another major (docs/THEMES.md). Pages and package plugins declare the minimum `@freesense/ui` version they need. **[CI]**
+- Released theme scheme files (`schema/theme-X.Y.schema.json`) are frozen. **[CI]**
 - Every element change updates its spec and fixtures, and gets a changelog entry.
 
 ## R10. No legacy

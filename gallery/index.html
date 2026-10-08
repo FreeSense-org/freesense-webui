@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en" data-fs-theme="freesense" data-fs-mode="auto" data-bs-theme="light" data-fs-accent="coral" data-fs-density="comfortable">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="fs-themes" content="/themes">
+<title>Element Gallery · FreeSense UI</title>
+<link rel="stylesheet" href="/ui/fs-ui.css">
+<link rel="stylesheet" id="fs-theme-freesense" href="/themes/freesense/theme.css">
+<link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+<header class="g-head">
+	<div class="g-brand"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> FreeSense UI <span class="badge text-bg-secondary" id="g-version"></span></div>
+	<form class="g-controls" aria-label="Appearance">
+		<label>Theme <select class="form-select form-select-sm" id="g-theme"></select></label>
+		<label>Mode
+			<select class="form-select form-select-sm" id="g-mode">
+				<option value="auto">Auto</option><option value="light">Light</option><option value="dark">Dark</option>
+			</select>
+		</label>
+		<label>Accent <select class="form-select form-select-sm" id="g-accent"></select></label>
+		<label>Density
+			<select class="form-select form-select-sm" id="g-density">
+				<option value="comfortable">Comfortable</option><option value="compact">Compact</option>
+			</select>
+		</label>
+	</form>
+</header>
+
+<main class="g-main">
+	<section class="g-section" aria-labelledby="s-tokens">
+		<h2 id="s-tokens">Tokens</h2>
+		<p class="fs-muted">Live values of the active theme, mode and accent. Contrast is measured against <code>surface.raised</code>.</p>
+		<div class="g-swatches" id="g-swatches"></div>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-type">
+		<h2 id="s-type">Typography</h2>
+		<h1>Firewall rules</h1>
+		<h3>Section heading</h3>
+		<p>Body text in the UI font. <a href="#">Links use the accent text colour.</a> <span class="fs-muted">Muted secondary text.</span></p>
+		<p class="fs-mono">203.0.113.24:443 → 172.16.40.10 · 1,983,221 hits · 98.4 Mbps</p>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-buttons">
+		<h2 id="s-buttons">Buttons</h2>
+		<div class="d-flex flex-wrap gap-2">
+			<button class="btn btn-primary" type="button"><i class="fa-solid fa-plus" aria-hidden="true"></i> Add rule</button>
+			<button class="btn btn-secondary" type="button">Cancel</button>
+			<button class="btn btn-ghost" type="button"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Refresh</button>
+			<button class="btn btn-danger" type="button"><i class="fa-solid fa-trash" aria-hidden="true"></i> Delete</button>
+			<button class="btn btn-link" type="button">Learn more</button>
+			<button class="btn btn-primary" type="button" disabled>Disabled</button>
+		</div>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-forms">
+		<h2 id="s-forms">Forms</h2>
+		<div class="row g-3" style="max-width: 760px">
+			<div class="col-md-6"><label class="form-label" for="f1">Description</label><input class="form-control" id="f1" placeholder="Allow LAN to any"></div>
+			<div class="col-md-6"><label class="form-label" for="f2">Interface</label><select class="form-select" id="f2"><option>WAN</option><option>LAN</option></select></div>
+			<div class="col-md-6"><label class="form-label" for="f3">Destination port</label><input class="form-control is-invalid" id="f3" value="8100:8000"><div class="invalid-feedback">The range start must be lower than the end.</div></div>
+			<div class="col-md-6 d-flex align-items-end gap-4">
+				<div class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="f4" checked><label class="form-check-label" for="f4">Log packets</label></div>
+				<div class="form-check"><input class="form-check-input" type="checkbox" id="f5"><label class="form-check-label" for="f5">Quick</label></div>
+			</div>
+		</div>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-surfaces">
+		<h2 id="s-surfaces">Surfaces and feedback</h2>
+		<div class="row g-3">
+			<div class="col-md-4"><div class="card"><div class="card-body"><h5 class="card-title">Card</h5><p class="card-text">Raised surface with the theme's radius and border.</p></div></div></div>
+			<div class="col-md-8">
+				<div class="alert alert-info" role="alert"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> An update to 1.1.0-DEV-20261008 is available.</div>
+				<div class="alert alert-warning" role="alert"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Gateway WAN2_DHCP is down.</div>
+				<div class="d-flex flex-wrap gap-2">
+					<span class="badge text-bg-primary">Accent</span><span class="badge bg-success-subtle text-success-emphasis">Online</span>
+					<span class="badge bg-warning-subtle text-warning-emphasis">Degraded</span><span class="badge bg-danger-subtle text-danger-emphasis">Down</span>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-table">
+		<h2 id="s-table">Table</h2>
+		<div class="card"><div class="table-responsive"><table class="table table-hover mb-0">
+			<caption class="visually-hidden">Sample rules</caption>
+			<thead><tr><th scope="col">Action</th><th scope="col">Protocol</th><th scope="col">Source</th><th scope="col">Destination</th><th scope="col" class="text-end">Hits</th></tr></thead>
+			<tbody>
+				<tr><td class="g-pass"><i class="fa-solid fa-circle-check" aria-hidden="true"></i> Pass</td><td>TCP</td><td class="fs-mono">LAN net</td><td class="fs-mono">any</td><td class="text-end fs-num">1,983,221</td></tr>
+				<tr><td class="g-block"><i class="fa-solid fa-ban" aria-hidden="true"></i> Block</td><td>any</td><td class="fs-mono">CROWDSEC_BLOCKLIST</td><td class="fs-mono">any</td><td class="text-end fs-num">55,120</td></tr>
+				<tr><td class="g-reject"><i class="fa-solid fa-circle-xmark" aria-hidden="true"></i> Reject</td><td>TCP</td><td class="fs-mono">any</td><td class="fs-mono">WAN address:22</td><td class="text-end fs-num">0</td></tr>
+			</tbody>
+		</table></div></div>
+	</section>
+
+	<section class="g-section" aria-labelledby="s-elements">
+		<h2 id="s-elements">Elements</h2>
+		<p class="fs-muted" id="g-elements"></p>
+	</section>
+</main>
+
+<script src="/ui/fs-ui.js"></script>
+<script src="gallery.js"></script>
+</body>
+</html>

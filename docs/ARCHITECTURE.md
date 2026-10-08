@@ -65,8 +65,9 @@ Each element has:
 
 ### Themes (`packages/theme-*`)
 
-Tokens for both modes, optional skin maps, and a `manifest.json`. They compile
-to `dist/public/themes/<name>/theme.css`. See THEMES.md.
+One `<name>.theme.json` per theme (both modes, accents, shape, fonts, skin
+choices), validated by its theme scheme. It compiles to
+`dist/public/themes/<name>/{theme.css, theme.json}`. See THEMES.md.
 
 ### PHP app (`app/`)
 
@@ -102,5 +103,6 @@ to `dist/public/themes/<name>/theme.css`. See THEMES.md.
 | Thing | Version | Declared where |
 |---|---|---|
 | WebUI / element contract | 2.x (semver) | `packages/ui/package.json` |
-| Themes | own semver, `ui: "^2.0"` | `manifest.json` |
+| Theme scheme | 2.x (minor = additive only) | `scheme` in each theme; supported scheme in `packages/ui/package.json` → `freesense.themeScheme` |
+| Themes | own semver | `version` in `<name>.theme.json` |
 | API level | integer | `GET /api/v1/meta`; minimum in `app/config.php` |

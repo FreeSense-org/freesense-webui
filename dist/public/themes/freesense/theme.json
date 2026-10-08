@@ -1,0 +1,49 @@
+{
+	"scheme": "2.0",
+	"name": "freesense",
+	"title": "FreeSense",
+	"version": "2.0.0-alpha.0",
+	"description": "The default FreeSense look: calm neutral surfaces, crisp type and a coral accent.",
+	"author": "The FreeSense Project",
+	"license": "Apache-2.0",
+	"defaultMode": "auto",
+	"defaultAccent": "coral",
+	"accents": {
+		"coral": {
+			"title": "Coral",
+			"light": "#d63f1c",
+			"dark": "#ff7350"
+		},
+		"blue": {
+			"title": "Blue",
+			"light": "#2563eb",
+			"dark": "#60a5fa"
+		},
+		"teal": {
+			"title": "Teal",
+			"light": "#0f766e",
+			"dark": "#2dd4bf"
+		},
+		"violet": {
+			"title": "Violet",
+			"light": "#7c3aed",
+			"dark": "#a78bfa"
+		},
+		"graphite": {
+			"title": "Graphite",
+			"light": "#1f2937",
+			"dark": "#e5e7eb"
+		}
+	},
+	"skin": {
+		"topbar": "surface",
+		"sectionMenu": "surface",
+		"cards": "outlined",
+		"tables": "lines",
+		"buttons": "rounded"
+	},
+	"preview": {
+		"light": "#f3f5f8",
+		"dark": "#0e1116"
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"name": "freesense-webui",
+	"private": true,
+	"version": "2.0.0-alpha.0",
+	"description": "FreeSense WebUI 2.0 workspace",
+	"license": "Apache-2.0",
+	"type": "module",
+	"engines": {
+		"node": ">=24"
+	},
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"build": "node tools/build/build.mjs",
+		"check": "node tools/theme/check.mjs && node tools/theme/frozen.mjs && node tools/inventory/build-inventory.mjs --check",
+		"check:themes": "node tools/theme/check.mjs",
+		"gallery": "node tools/build/serve.mjs",
+		"inventory": "node tools/inventory/build-inventory.mjs",
+		"test": "node --test \"tools/**/*.test.mjs\""
+	},
+	"devDependencies": {
+		"ajv": "8.20.0",
+		"ajv-formats": "3.0.1",
+		"esbuild": "0.28.2",
+		"lightningcss": "1.33.0",
+		"sass": "1.104.1"
+	},
+	"allowScripts": {
+		"esbuild": false,
+		"@parcel/watcher": false
+	}
+}

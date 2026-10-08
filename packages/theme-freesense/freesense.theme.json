@@ -1,0 +1,154 @@
+{
+	"$schema": "../../schema/theme-2.0.schema.json",
+	"scheme": "2.0",
+	"name": "freesense",
+	"title": "FreeSense",
+	"description": "The default FreeSense look: calm neutral surfaces, crisp type and a coral accent.",
+	"version": "2.0.0-alpha.0",
+	"author": "The FreeSense Project",
+	"license": "Apache-2.0",
+	"homepage": "https://www.freesense.org",
+	"defaultMode": "auto",
+	"defaultAccent": "coral",
+	"accents": {
+		"coral": {
+			"title": "Coral",
+			"light": { "fill": "#d63f1c", "text": "#b8371f", "on": "#ffffff" },
+			"dark": { "fill": "#ff7350", "text": "#ff9478", "on": "#1f0a04" }
+		},
+		"blue": {
+			"title": "Blue",
+			"light": { "fill": "#2563eb", "text": "#1d4ed8", "on": "#ffffff" },
+			"dark": { "fill": "#60a5fa", "text": "#93c5fd", "on": "#06152d" }
+		},
+		"teal": {
+			"title": "Teal",
+			"light": { "fill": "#0f766e", "text": "#0f766e", "on": "#ffffff" },
+			"dark": { "fill": "#2dd4bf", "text": "#5eead4", "on": "#03201c" }
+		},
+		"violet": {
+			"title": "Violet",
+			"light": { "fill": "#7c3aed", "text": "#6d28d9", "on": "#ffffff" },
+			"dark": { "fill": "#a78bfa", "text": "#c4b5fd", "on": "#160a33" }
+		},
+		"graphite": {
+			"title": "Graphite",
+			"light": { "fill": "#1f2937", "text": "#1f2937", "on": "#ffffff" },
+			"dark": { "fill": "#e5e7eb", "text": "#f3f4f6", "on": "#111827" }
+		}
+	},
+	"modes": {
+		"light": {
+			"surface": {
+				"page": "#f3f5f8",
+				"raised": "#ffffff",
+				"sunken": "#eef1f5",
+				"overlay": "#0f172a66",
+				"topbar": "#ffffff",
+				"section": "#f8f9fb"
+			},
+			"text": {
+				"strong": "#0b1220",
+				"default": "#1e2633",
+				"muted": "#566170",
+				"topbar": "#1e2633"
+			},
+			"border": {
+				"default": "#e3e7ed",
+				"strong": "#7c8696",
+				"focus": "#2563eb"
+			},
+			"status": {
+				"ok": "#15803d",
+				"warn": "#a15c00",
+				"crit": "#c62828",
+				"info": "#1d5fd0",
+				"neutral": "#5b6573"
+			},
+			"action": {
+				"pass": "#15803d",
+				"block": "#c62828",
+				"reject": "#b4440c",
+				"match": "#6d28d9"
+			},
+			"series": {
+				"colors": ["#2a78d6", "#e05a24", "#11946a", "#c98800", "#d0558a", "#2f7d1f", "#5b46c9", "#d43c3c"],
+				"other": "#9aa3ae"
+			},
+			"chart": {
+				"grid": "#e6e9ee",
+				"text": "#5b6573"
+			},
+			"shadow": {
+				"sm": "0 1px 2px #0f172a0f",
+				"md": "0 1px 3px #0f172a14, 0 4px 12px #0f172a0d",
+				"lg": "0 8px 24px #0f172a1f, 0 2px 6px #0f172a0f"
+			}
+		},
+		"dark": {
+			"surface": {
+				"page": "#0e1116",
+				"raised": "#161a21",
+				"sunken": "#0b0d11",
+				"overlay": "#000000a6",
+				"topbar": "#12161c",
+				"section": "#12161c"
+			},
+			"text": {
+				"strong": "#f5f7fa",
+				"default": "#d7dce4",
+				"muted": "#98a2b1",
+				"topbar": "#e6eaf0"
+			},
+			"border": {
+				"default": "#262c36",
+				"strong": "#5d6878",
+				"focus": "#60a5fa"
+			},
+			"status": {
+				"ok": "#4ade80",
+				"warn": "#fbbf24",
+				"crit": "#f87171",
+				"info": "#60a5fa",
+				"neutral": "#9aa4b2"
+			},
+			"action": {
+				"pass": "#4ade80",
+				"block": "#f87171",
+				"reject": "#fb923c",
+				"match": "#c4b5fd"
+			},
+			"series": {
+				"colors": ["#5aa2f2", "#ff8a57", "#34d399", "#f5c04a", "#f28bb6", "#7fd36a", "#a594f9", "#ff6b6b"],
+				"other": "#7d8794"
+			},
+			"chart": {
+				"grid": "#232933",
+				"text": "#98a2b1"
+			},
+			"shadow": {
+				"sm": "0 1px 2px #00000066",
+				"md": "0 1px 3px #00000080, 0 4px 12px #00000059",
+				"lg": "0 8px 24px #00000099, 0 2px 6px #00000066"
+			}
+		}
+	},
+	"shape": {
+		"radiusSm": "6px",
+		"radiusMd": "10px",
+		"radiusLg": "16px",
+		"borderWidth": "1px",
+		"focusWidth": "2px"
+	},
+	"fonts": {
+		"ui": { "family": "Inter" },
+		"mono": { "family": "JetBrains Mono" }
+	},
+	"skin": {
+		"topbar": "surface",
+		"sectionMenu": "surface",
+		"cards": "outlined",
+		"tables": "lines",
+		"buttons": "rounded"
+	}
+}

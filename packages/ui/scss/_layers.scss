@@ -1,0 +1,2 @@
+/* Cascade layer order: declared first so every later rule lands in a known layer. */
+@layer reset, bootstrap, bridge, base, elements, shell, theme, page;
