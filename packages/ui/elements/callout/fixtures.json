@@ -1,0 +1,14 @@
+{
+	"title": "Callout",
+	"description": "Inline info, warning, danger or success message with icon, title, text and an optional action. Dismissible callouts with an id stay dismissed.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Info", "width": "md", "config": { "level": "info", "title": "Rules are evaluated top to bottom", "text": "The first matching rule wins. Drag rules to change their order." } },
+		{ "name": "Warning with action", "width": "md", "config": { "level": "warn", "title": "Gateway WAN2_DHCP is down", "text": "Gateway group FAILOVER is running on one link.", "action": { "label": "Open gateways", "href": "#gateways" } } },
+		{ "name": "Danger", "width": "md", "config": { "level": "danger", "title": "Suricata (WAN) is not running", "text": "Inbound traffic on WAN is not being inspected." } },
+		{ "name": "Success", "width": "md", "config": { "level": "success", "text": "Configuration backup created: config-fw01-20261008-0612.xml" } },
+		{ "name": "Dismissible", "width": "md", "note": "remembered per id", "config": { "level": "info", "id": "gallery-tip-aliases", "dismissible": true, "title": "Tip", "text": "Use aliases for groups of hosts or ports; rules stay short and readable." } },
+		{ "name": "Compact", "width": "sm", "config": { "level": "warn", "compact": true, "text": "Changing the LAN address disconnects this session." } },
+		{ "name": "Long text", "width": "sm", "config": { "level": "danger", "title": "Certificate webConfigurator_default_6a3f9c1e2b7d4e8f expires in 2 days", "text": "Browsers will show a warning on https://fw01.home.arpa:443/ after 2026-10-10 00:00 UTC. Renew it in System › Certificates or switch the WebUI to another certificate before then." } }
+	]
+}

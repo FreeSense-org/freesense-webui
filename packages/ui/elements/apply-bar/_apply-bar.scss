@@ -1,0 +1,81 @@
+/*
+ * _apply-bar.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	.fs-apply-bar {
+		position: sticky;
+		container-type: inline-size;
+		top: calc(var(--fs-topbar-h, 0rem) + 0.75rem);
+		z-index: 1020;
+		margin-bottom: var(--fs-gap);
+		&[data-position='bottom'] { top: auto; bottom: 0.75rem; margin: var(--fs-gap) 0 0; }
+		&[hidden] { display: none; }
+	}
+
+	.fs-apply-bar-inner {
+		display: flex;
+		align-items: center;
+		gap: 0.875rem;
+		padding: 0.625rem 0.75rem 0.625rem 0.875rem;
+		border: var(--fs-border-width) solid color-mix(in srgb, var(--fs-status-warn) 45%, var(--fs-border-default));
+		border-radius: var(--fs-radius-md);
+		background: color-mix(in srgb, var(--fs-status-warn) 9%, var(--fs-surface-raised));
+		box-shadow: var(--fs-shadow-md);
+		opacity: 0;
+		transform: translateY(-0.375rem);
+		transition: opacity var(--fs-dur-base) ease-out, transform var(--fs-dur-base) ease-out;
+		.is-shown > & { opacity: 1; transform: none; }
+		[data-position='bottom'] > & { transform: translateY(0.375rem); }
+		[data-position='bottom'].is-shown > & { transform: none; }
+	}
+
+	.fs-apply-bar-icon {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		border-radius: 50%;
+		background: color-mix(in srgb, var(--fs-status-warn) 18%, transparent);
+		color: var(--fs-status-warn);
+		font-size: 0.875rem;
+	}
+	.fs-apply-bar-copy { flex: 1; min-width: 0; }
+	.fs-apply-bar-text {
+		margin: 0;
+		font-weight: 600;
+		color: var(--fs-text-strong);
+		overflow-wrap: anywhere;
+	}
+	.fs-apply-bar-detail {
+		margin: 0;
+		font-size: 0.8125em;
+		color: var(--fs-text-muted);
+		overflow-wrap: anywhere;
+		&[hidden] { display: none; }
+	}
+	.fs-apply-bar-actions {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 0.375rem;
+		.btn { white-space: nowrap; }
+	}
+
+	/* Narrow containers (cards, phones): actions move under the text. */
+	@container (max-width: 36rem) {
+		.fs-apply-bar-inner { flex-wrap: wrap; }
+		.fs-apply-bar-copy { flex-basis: calc(100% - 3rem); }
+		.fs-apply-bar-actions {
+			flex: 1 1 100%;
+			justify-content: flex-end;
+		}
+	}
+	@media (pointer: coarse) {
+		.fs-apply-bar-actions .btn { min-height: 2.5rem; }
+	}
+}

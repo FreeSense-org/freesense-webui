@@ -1,0 +1,25 @@
+{
+	"title": "Chip",
+	"description": "Small rounded labels for filters: toggle chips (aria-pressed) and removable chips.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Quick filters (toggle)", "width": "md", "config": { "label": "Action", "items": [
+			{ "label": "Pass", "value": "pass", "toggle": true, "pressed": true, "count": 1288 },
+			{ "label": "Block", "value": "block", "toggle": true, "count": 310 },
+			{ "label": "Reject", "value": "reject", "toggle": true, "count": 12 }
+		] } },
+		{ "name": "Active filters (removable)", "width": "md", "config": { "label": "Active filters", "clearAll": true, "items": [
+			{ "name": "Interface", "label": "WAN", "value": "iface:wan", "removable": true },
+			{ "name": "Action", "label": "Block", "value": "action:block", "removable": true },
+			{ "name": "Port", "label": "443", "value": "port:443", "removable": true }
+		] } },
+		{ "name": "Single", "width": "sm", "config": { "label": "Logged only", "icon": "file-lines", "toggle": true } },
+		{ "name": "Toggle and removable", "width": "sm", "config": { "label": "IOT", "toggle": true, "pressed": true, "removable": true } },
+		{ "name": "Many / long", "width": "md", "config": { "label": "Interfaces", "items": [
+			{ "label": "WAN", "toggle": true }, { "label": "LAN", "toggle": true, "pressed": true }, { "label": "GUEST", "toggle": true },
+			{ "label": "IOT", "toggle": true }, { "label": "DMZ", "toggle": true }, { "label": "WG_SITE", "toggle": true },
+			{ "label": "WAN2", "toggle": true, "disabled": true }, { "label": "OpenVPN RoadWarrior server (UDP 1194)", "toggle": true },
+			{ "label": "IPsec Branch Aarhus (con2)", "toggle": true }, { "label": "Floating", "toggle": true }
+		] } }
+	]
+}

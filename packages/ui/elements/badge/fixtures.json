@@ -1,0 +1,22 @@
+{
+	"title": "Badge",
+	"description": "Small static labels: tags, types, counts. The text carries the meaning; tone only supports it.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Tones", "width": "md", "config": { "items": [
+			{ "label": "Default" }, { "label": "New", "tone": "accent" }, { "label": "Enabled", "tone": "ok" },
+			{ "label": "Degraded", "tone": "warn" }, { "label": "Failed", "tone": "crit" }, { "label": "Beta", "tone": "info" }
+		] } },
+		{ "name": "Solid and outline", "width": "md", "config": { "items": [
+			{ "label": "Development", "tone": "accent", "variant": "solid" }, { "label": "Down", "tone": "crit", "variant": "solid" },
+			{ "label": "Warning", "tone": "warn", "variant": "solid" }, { "label": "urltable", "variant": "outline", "mono": true }, { "label": "IPv6", "tone": "info", "variant": "outline" }
+		] } },
+		{ "name": "Icon and count", "width": "md", "config": { "items": [
+			{ "label": "Entries", "count": 92112, "icon": "list" }, { "label": "Rules", "count": 9, "tone": "accent" }, { "count": 3, "tone": "crit", "icon": "bell", "title": "3 alarms" }
+		] } },
+		{ "name": "Single", "width": "sm", "config": { "label": "1.1.0-DEV", "tone": "accent", "mono": true } },
+		{ "name": "Many / long", "width": "sm", "config": { "items": [
+			{ "label": "CROWDSEC_BLOCKLIST_EXTENDED_COMMUNITY_FEED" }, { "label": "LAN" }, { "label": "GUEST" }, { "label": "IOT" }, { "label": "DMZ" }, { "label": "WG_SITE" }, { "label": "WAN2" }, { "label": "OpenVPN" }
+		] } }
+	]
+}

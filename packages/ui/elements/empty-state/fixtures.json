@@ -1,0 +1,11 @@
+{
+	"title": "Empty state",
+	"description": "Standalone empty state with icon, title, text and one primary action, rendered through FS.states.empty.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "No aliases", "width": "md", "config": { "icon": "tags", "title": "No aliases yet", "text": "Aliases group hosts, networks or ports so rules stay short.", "action": { "label": "Add alias", "icon": "plus", "event": "fs:add" } } },
+		{ "name": "Large with secondary link", "width": "lg", "config": { "size": "lg", "icon": "shield-halved", "title": "No VPN tunnels", "text": "Connect sites and remote users with WireGuard, OpenVPN or IPsec.", "action": { "label": "Add WireGuard tunnel", "icon": "plus", "href": "#wireguard" }, "secondary": { "label": "Compare VPN types", "href": "#vpn-help" } } },
+		{ "name": "Small, no action", "width": "sm", "config": { "size": "sm", "icon": "filter", "title": "No matching log entries", "text": "Try a wider time range or remove a filter." } },
+		{ "name": "Long text", "width": "sm", "config": { "icon": "box-open", "title": "No optional packages are installed on this firewall at the moment", "text": "Optional Packages add services such as Suricata, CrowdSec, HAProxy and ntopng. They are published separately from System builds and follow the same release channel.", "action": { "label": "Browse packages", "href": "#packages" } } }
+	]
+}
