@@ -1,0 +1,150 @@
+/*
+ * _chart.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+@layer elements {
+	/* The few uPlot rules the chart needs, with tokens (uPlot's own CSS is not loaded). */
+	.fs-chart {
+		.uplot, .uplot *, .uplot *::before, .uplot *::after { box-sizing: border-box; }
+		.uplot { width: 100%; font-family: var(--fs-font-ui); line-height: 1.5; }
+		.u-wrap { position: relative; user-select: none; }
+		.u-over, .u-under { position: absolute; }
+		.u-under { overflow: hidden; }
+		.uplot canvas { display: block; position: relative; width: 100%; height: 100%; }
+		.u-axis { position: absolute; }
+		.u-select { position: absolute; pointer-events: none; background: color-mix(in srgb, var(--fs-text-default) 7%, transparent); }
+		.u-cursor-x, .u-cursor-y { position: absolute; top: 0; left: 0; pointer-events: none; will-change: transform; }
+		.u-hz .u-cursor-x { height: 100%; border-right: var(--fs-border-width) solid var(--fs-border-strong); }
+		.u-hz .u-cursor-y { width: 100%; border-bottom: var(--fs-border-width) dashed var(--fs-border-strong); }
+		.u-cursor-pt {
+			position: absolute;
+			top: 0;
+			left: 0;
+			border: 0 solid;
+			border-radius: 50%;
+			pointer-events: none;
+			will-change: transform;
+			background-clip: padding-box !important;
+		}
+		.u-axis.u-off, .u-select.u-off, .u-cursor-x.u-off, .u-cursor-y.u-off, .u-cursor-pt.u-off { display: none; }
+	}
+
+	.fs-chart {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		min-width: 0;
+		&.is-switching .fs-chart-plot { opacity: 0.5; }
+		.fs-state { min-height: 10rem; }
+	}
+	.fs-chart-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.5rem 1rem;
+	}
+	.fs-chart-title { color: var(--fs-text-strong); font-weight: 600; }
+	.fs-chart-ranges {
+		display: inline-flex;
+		margin-left: auto;
+		padding: 0.125rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-sunken);
+	}
+	.fs-chart-range {
+		min-width: 2.5rem;
+		min-height: 1.75rem;
+		padding: 0 0.625rem;
+		border: 0;
+		border-radius: calc(var(--fs-radius-md) - 0.125rem);
+		background: transparent;
+		color: var(--fs-text-muted);
+		font-size: 0.8125rem;
+		font-weight: 500;
+		font-variant-numeric: tabular-nums;
+		transition: background-color var(--fs-dur-fast), color var(--fs-dur-fast);
+		&:hover { color: var(--fs-text-strong); }
+		&[aria-pressed='true'] {
+			background: var(--fs-surface-raised);
+			box-shadow: var(--fs-shadow-sm), inset 0 0 0 var(--fs-border-width) var(--fs-border-default);
+			color: var(--fs-text-strong);
+		}
+	}
+	[data-fs-skin-buttons='pill'] .fs-chart-ranges,
+	[data-fs-skin-buttons='pill'] .fs-chart-range { border-radius: 999px; }
+	[data-fs-skin-buttons='square'] .fs-chart-ranges,
+	[data-fs-skin-buttons='square'] .fs-chart-range { border-radius: var(--fs-radius-sm); }
+
+	.fs-chart-content { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+	.fs-chart-plot {
+		position: relative;
+		min-width: 0;
+		overflow: hidden;
+		transition: opacity var(--fs-dur-base);
+	}
+	.fs-chart-tip {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		min-width: 9rem;
+		padding: 0.5rem 0.625rem;
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-md);
+		background: var(--fs-surface-raised);
+		box-shadow: var(--fs-shadow-md);
+		color: var(--fs-text-default);
+		font-size: 0.8125rem;
+		pointer-events: none;
+	}
+	.fs-chart-tip-time { margin-bottom: 0.25rem; color: var(--fs-text-muted); font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+	.fs-chart-tip-row { display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; }
+	.fs-chart-tip-label { flex: 1 1 auto; }
+	.fs-chart-tip-value { color: var(--fs-text-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+	.fs-chart-swatch {
+		flex: none;
+		display: inline-block;
+		width: 0.625rem;
+		height: 0.625rem;
+		border-radius: 0.1875rem;
+		background: var(--fs-key-c, currentColor);
+	}
+
+	.fs-chart-legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.fs-chart-key {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 2rem;
+		padding: 0.25rem 0.5rem;
+		border: 0;
+		border-radius: var(--fs-radius-sm);
+		background: transparent;
+		color: var(--fs-text-default);
+		font-size: 0.8125rem;
+		transition: background-color var(--fs-dur-fast);
+		&:hover { background: var(--fs-surface-sunken); }
+		&[aria-pressed='false'] {
+			color: var(--fs-text-muted);
+			.fs-chart-swatch { background: transparent; box-shadow: inset 0 0 0 0.125rem var(--fs-key-c); }
+			.fs-chart-key-label { text-decoration: line-through; }
+		}
+	}
+	.fs-chart-key-value { color: var(--fs-text-strong); font-weight: 600; font-variant-numeric: tabular-nums; }
+	@media (max-width: 575.98px) {
+		.fs-chart-range { min-height: 2.5rem; }
+		.fs-chart-key { min-height: 2.5rem; }
+	}
+}

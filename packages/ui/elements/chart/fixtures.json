@@ -1,0 +1,16 @@
+{
+	"title": "Chart",
+	"description": "uPlot time series: history for the selected range, then live samples on short ranges. Hover for a readout; click a legend entry to hide a series.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "WAN traffic with range picker (live on 10m)", "width": "full", "config": { "title": "WAN traffic", "unit": "bps", "range": "10m", "ranges": ["10m", "1h", "24h", "7d"], "history": { "path": "/v1/status/traffic/history", "query": { "if": "wan" } }, "live": { "path": "/v1/status/traffic", "query": { "if": "wan" }, "every": 2 }, "series": [{ "field": "in_bps", "live": "wan.in_bps", "label": "In", "color": 1, "fill": true }, { "field": "out_bps", "live": "wan.out_bps", "label": "Out", "color": 2 }] } },
+		{ "name": "LAN traffic, stacked (24h)", "width": "lg", "config": { "title": "LAN traffic", "unit": "bps", "range": "24h", "stacked": true, "history": { "path": "/v1/status/traffic/history", "query": { "if": "lan" } }, "series": [{ "field": "in_bps", "label": "In", "color": 1 }, { "field": "out_bps", "label": "Out", "color": 3 }] } },
+		{ "name": "CPU and memory (pct)", "width": "lg", "config": { "title": "CPU and memory", "unit": "pct", "min": 0, "max": 100, "range": "1h", "ranges": ["1h", "24h", "7d"], "history": { "path": "/v1/status/system/history" }, "series": [{ "field": "cpu", "label": "CPU", "color": 1, "fill": true }, { "field": "mem", "label": "Memory", "color": 5 }] } },
+		{ "name": "Gateway latency (ms, three series)", "width": "lg", "config": { "title": "Gateway latency", "unit": "ms", "range": "1h", "height": 180, "history": { "path": "/v1/status/gateways/history" }, "series": [{ "field": "WAN_DHCP", "label": "WAN_DHCP", "color": 1 }, { "field": "WAN_DHCP6", "label": "WAN_DHCP6", "color": 2 }, { "field": "WG_SITE_GW", "label": "WG_SITE_GW (site-to-site tunnel)", "color": 3 }] } },
+		{ "name": "Live only (no history)", "width": "lg", "config": { "title": "GUEST traffic", "unit": "bps", "range": "10m", "height": 180, "area": true, "live": { "path": "/v1/status/traffic", "query": { "if": "opt1" }, "every": 1 }, "series": [{ "live": "opt1.in_bps", "label": "In" }, { "live": "opt1.out_bps", "label": "Out" }] } },
+		{ "name": "Interface down (all zero)", "width": "lg", "config": { "title": "WAN2 traffic", "unit": "bps", "range": "1h", "height": 160, "history": { "path": "/v1/status/traffic/history", "query": { "if": "opt4" } }, "series": [{ "field": "in_bps", "label": "In" }, { "field": "out_bps", "label": "Out" }] } },
+		{ "name": "Loading", "width": "md", "config": { "title": "Slow", "unit": "bps", "history": { "path": "/v1/gallery/slow" }, "series": [{ "field": "in_bps", "label": "In" }] } },
+		{ "name": "Empty", "width": "md", "config": { "title": "Empty", "unit": "bps", "history": { "path": "/v1/gallery/empty" }, "series": [{ "field": "in_bps", "label": "In" }] } },
+		{ "name": "Error", "width": "md", "config": { "title": "Error", "unit": "bps", "history": { "path": "/v1/gallery/fail" }, "series": [{ "field": "in_bps", "label": "In" }] } }
+	]
+}
