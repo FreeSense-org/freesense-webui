@@ -52,12 +52,12 @@ export function renderAreas(nav, current) {
 }
 
 export function renderDrawer(nav, current) {
-	return `<div class="fs-drawer-head"><span class="fs-brand-mark" aria-hidden="true">FS</span><strong>FreeSense</strong><button type="button" class="fs-tb-btn" data-fs-shell="drawer-close" aria-label="Close menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>` +
+	return `<div class="fs-navdrawer-head"><span class="fs-brand-mark" aria-hidden="true">FS</span><strong>FreeSense</strong><button type="button" class="fs-tb-btn" data-fs-shell="drawer-close" aria-label="Close menu"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>` +
 		nav.areas.map((a) => {
-			if (!a.groups) return `<a class="fs-drawer-area" data-fs-nav href="${esc(a.href)}">${icon(a.icon)}<span>${esc(a.title)}</span></a>`;
+			if (!a.groups) return `<a class="fs-navdrawer-area" data-fs-nav href="${esc(a.href)}">${icon(a.icon)}<span>${esc(a.title)}</span></a>`;
 			const open = current && current.area === a;
-			return `<details class="fs-drawer-group"${open ? ' open' : ''}><summary class="fs-drawer-area">${icon(a.icon)}<span>${esc(a.title)}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>${a.groups.map((g) =>
-				`<div class="fs-drawer-sub">${esc(g.title)}</div>${g.items.map((it) => `<a class="fs-drawer-link" data-fs-nav href="${esc(it.href)}"${current && current.item === it ? ' aria-current="page"' : ''}>${esc(it.title)}</a>`).join('')}`).join('')}</details>`;
+			return `<details class="fs-navdrawer-group"${open ? ' open' : ''}><summary class="fs-navdrawer-area">${icon(a.icon)}<span>${esc(a.title)}</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i></summary>${a.groups.map((g) =>
+				`<div class="fs-navdrawer-sub">${esc(g.title)}</div>${g.items.map((it) => `<a class="fs-navdrawer-link" data-fs-nav href="${esc(it.href)}"${current && current.item === it ? ' aria-current="page"' : ''}>${esc(it.title)}</a>`).join('')}`).join('')}</details>`;
 		}).join('');
 }
 

@@ -25,6 +25,7 @@ function setState(t, s, info = {}) {
 	if (t.state === s && s !== 'ok') return;
 	t.state = s;
 	if (t.onState) t.onState(s, { lastOk: t.lastOk, failures: t.failures, ...info });
+	$(document).trigger('fs:live-state', [t.id, s]);
 }
 
 function run(t) {

@@ -35,7 +35,7 @@ el.define('app-shell', {
 	init(body) {
 		const $app = $(body);
 		const $menu = $app.find('.fs-pagemenu');
-		const $drawer = $app.find('.fs-drawer');
+		const $drawer = $app.find('.fs-navdrawer');
 		const $drawerBtn = $app.find('[data-fs-shell="drawer"]');
 		const inner = $app.find('.fs-topbar-inner')[0];
 		let model = { areas: [] };
@@ -181,7 +181,7 @@ el.define('app-shell', {
 				$(this).toggleClass('is-active', on);
 				if (this.tagName === 'A') $(this).attr('aria-current', on ? 'page' : null);
 			});
-			$app.find('.fs-mega-link, .fs-drawer-link').each(function () {
+			$app.find('.fs-mega-link, .fs-navdrawer-link').each(function () {
 				const on = !!at.item && norm(new URL(this.href, location.href).pathname) === norm(at.item.href);
 				$(this).attr('aria-current', on ? 'page' : null);
 			});

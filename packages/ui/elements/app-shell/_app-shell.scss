@@ -460,7 +460,7 @@
 
 	/* ========================================================== drawer */
 
-	.fs-drawer {
+	.fs-navdrawer {
 		position: fixed;
 		inset: 0 auto 0 0;
 		z-index: 1045;
@@ -473,7 +473,7 @@
 		transition: transform var(--fs-dur-base) var(--fs-ease);
 		&.is-open { transform: none; }
 	}
-	.fs-drawer-head {
+	.fs-navdrawer-head {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
@@ -482,7 +482,7 @@
 		border-bottom: var(--fs-border-width) solid var(--fs-border-default);
 		.fs-tb-btn { margin-left: auto; color: var(--fs-text-muted); }
 	}
-	.fs-drawer-area {
+	.fs-navdrawer-area {
 		display: flex;
 		align-items: center;
 		gap: 0.75rem;
@@ -497,9 +497,9 @@
 		> i:last-child { margin-left: auto; font-size: 0.6875rem; color: var(--fs-text-muted); transition: transform var(--fs-dur-base); }
 		&::-webkit-details-marker { display: none; }
 	}
-	.fs-drawer-group[open] > .fs-drawer-area > i:last-child { transform: rotate(180deg); }
-	.fs-drawer-sub { padding: 0.625rem 1rem 0.25rem 2.875rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--fs-text-muted); }
-	.fs-drawer-link {
+	.fs-navdrawer-group[open] > .fs-navdrawer-area > i:last-child { transform: rotate(180deg); }
+	.fs-navdrawer-sub { padding: 0.625rem 1rem 0.25rem 2.875rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--fs-text-muted); }
+	.fs-navdrawer-link {
 		display: flex;
 		align-items: center;
 		min-height: 2.75rem;
