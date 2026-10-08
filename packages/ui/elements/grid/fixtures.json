@@ -1,0 +1,44 @@
+{
+	"title": "Grid",
+	"description": "Responsive 12-column layout of nested elements, with a span per breakpoint.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Overview cards with statuses", "width": "full", "surface": "page", "config": {
+			"span": { "base": 12, "sm": 6, "lg": 3 },
+			"items": [
+				{ "el": "card", "config": { "title": "WAN", "icon": "globe", "subtitle": "igc0 · 203.0.113.24", "content": { "el": "status", "config": { "state": "ok", "label": "Online", "detail": "8.4 ms" } } } },
+				{ "el": "card", "config": { "title": "WAN2", "icon": "globe", "subtitle": "pppoe0 · 198.51.100.7", "content": { "el": "status", "config": { "state": "warn", "label": "Packet loss", "detail": "4%" } } } },
+				{ "el": "card", "config": { "title": "WireGuard", "icon": "lock", "subtitle": "wg0 · 3 peers", "content": { "el": "status", "config": { "state": "ok", "label": "2 connected" } } } },
+				{ "el": "card", "config": { "title": "Updates", "icon": "cloud-arrow-down", "subtitle": "Development channel", "content": { "el": "status", "config": { "state": "info", "label": "Update available" } } } }
+			] } },
+		{ "name": "Mixed spans (8 + 4)", "width": "full", "surface": "page", "config": {
+			"items": [
+				{ "el": "card", "span": { "base": 12, "lg": 8 }, "config": { "title": "System information", "icon": "server", "content": { "type": "kv", "columns": 2, "source": { "path": "/status/system" }, "every": 5, "fields": [
+					{ "path": "hostname", "label": "Hostname", "copyable": true }, { "path": "version", "label": "Version" },
+					{ "path": "uptime", "label": "Uptime", "format": "duration" }, { "path": "cpu.usage", "label": "CPU", "format": "pct" },
+					{ "path": "states.current", "label": "States", "format": "num" }, { "path": "last_config_change", "label": "Last change", "format": "ago" }
+				] } } },
+				{ "el": "card", "span": { "base": 12, "lg": 4 }, "config": { "title": "Gateways", "icon": "route", "content": [
+					{ "el": "status", "config": { "state": "ok", "label": "WAN_DHCP", "detail": "8.4 ms" } },
+					{ "el": "status", "config": { "state": "warn", "label": "WAN2_PPPOE", "detail": "4% loss" } },
+					{ "el": "status", "config": { "state": "ok", "label": "WG_SITE_GW", "detail": "21.8 ms" } }
+				] } }
+			] } },
+		{ "name": "Many items, small gap", "width": "full", "surface": "page", "config": {
+			"gap": "sm", "span": { "base": 6, "md": 4, "lg": 2 },
+			"items": [
+				{ "el": "card", "config": { "title": "igc0", "content": { "el": "status", "config": { "state": "ok", "label": "Up", "variant": "dot" } } } },
+				{ "el": "card", "config": { "title": "igc1", "content": { "el": "status", "config": { "state": "ok", "label": "Up", "variant": "dot" } } } },
+				{ "el": "card", "config": { "title": "igc2", "content": { "el": "status", "config": { "state": "ok", "label": "Up", "variant": "dot" } } } },
+				{ "el": "card", "config": { "title": "igc3", "content": { "el": "status", "config": { "state": "crit", "label": "No carrier", "variant": "dot" } } } },
+				{ "el": "card", "config": { "title": "wg0", "content": { "el": "status", "config": { "state": "ok", "label": "Up", "variant": "dot" } } } },
+				{ "el": "card", "config": { "title": "ovpns1", "content": { "el": "status", "config": { "state": "neutral", "label": "Disabled", "variant": "dot" } } } }
+			] } },
+		{ "name": "Align start", "width": "full", "surface": "page", "config": {
+			"align": "start", "span": { "base": 12, "md": 6 },
+			"items": [
+				{ "el": "card", "config": { "title": "Short", "content": "One line." } },
+				{ "el": "card", "config": { "title": "Tall", "content": ["First paragraph.", "Second paragraph.", "Third paragraph."] } }
+			] } }
+	]
+}

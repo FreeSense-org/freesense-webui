@@ -1,0 +1,40 @@
+/*
+ * _grid.scss
+ *
+ * part of FreeSense WebUI (https://www.freesense.org)
+ * Copyright (c) 2026 The FreeSense Project
+ * SPDX-License-Identifier: Apache-2.0
+ */
+/* Breakpoints match Bootstrap's (sm 576, md 768, lg 992 px), mobile first. */
+@layer elements {
+	.fs-grid {
+		--fs-grid-gap: var(--fs-gap);
+		display: grid;
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: var(--fs-grid-gap);
+		min-width: 0;
+		&[data-gap='none'] { --fs-grid-gap: 0; }
+		&[data-gap='sm'] { --fs-grid-gap: calc(var(--fs-gap) / 2); }
+		&[data-gap='lg'] { --fs-grid-gap: var(--fs-pad); }
+		&[data-align='start'] { align-items: start; }
+	}
+	.fs-grid-item {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		grid-column: span 12;
+		> * { flex: 1 1 auto; min-width: 0; }
+	}
+	.fs-grid[data-align='start'] > .fs-grid-item > * { flex: 0 0 auto; }
+
+	@for $i from 1 through 12 {
+		.fs-col-#{$i} { grid-column: span $i; }
+	}
+	@each $bp, $min in (sm: 576px, md: 768px, lg: 992px) {
+		@media (min-width: $min) {
+			@for $i from 1 through 12 {
+				.fs-col-#{$bp}-#{$i} { grid-column: span $i; }
+			}
+		}
+	}
+}
