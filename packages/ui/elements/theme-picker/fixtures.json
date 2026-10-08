@@ -1,0 +1,10 @@
+{
+	"title": "Theme picker",
+	"description": "Profile › Appearance: installed themes with a light and dark mini-preview, then mode, accent and density. Applies live and saves to the user's preferences.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Installed themes", "width": "full", "surface": "page", "config": {} },
+		{ "name": "Manifest unreadable (falls back to the current theme)", "width": "lg", "surface": "page", "config": { "manifest": "/gallery/missing-manifest.json", "description": "" } },
+		{ "name": "Narrow column", "width": "md", "surface": "page", "config": {} }
+	]
+}
