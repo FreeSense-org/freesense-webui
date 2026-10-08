@@ -1,0 +1,214 @@
+{
+	"title": "Data table",
+	"description": "API-backed table: search, filters, sort, paging, selection with bulk actions, row actions, inline toggle, drag and keyboard reorder, live cells, groups. Rows become cards below 48rem of container width.",
+	"status": "draft",
+	"fixtures": [
+		{ "name": "Firewall rules · WAN (full list pattern)", "width": "full", "note": "toolbar + table in one surface; switch the interface, drag the grip, toggle, select", "config": {
+			"label": "Firewall rules",
+			"source": { "path": "/v1/firewall/rules", "query": { "interface": "wan" } },
+			"every": 2,
+			"live": ["hits", "states", "bytes"],
+			"name": "descr",
+			"toolbar": {
+				"label": "Rule tools",
+				"search": { "placeholder": "Search rules" },
+				"filters": [
+					{ "id": "interface", "label": "Interface", "all": false, "value": "wan", "options": [{ "value": "wan", "label": "WAN" }, { "value": "lan", "label": "LAN" }, { "value": "opt1", "label": "GUEST" }, { "value": "opt2", "label": "IOT" }, { "value": "floating", "label": "Floating" }] },
+					{ "id": "action", "type": "chips", "label": "Action", "multiple": true, "options": [{ "value": "pass", "label": "Pass" }, { "value": "block", "label": "Block" }, { "value": "reject", "label": "Reject" }] }
+				],
+				"actions": [{ "id": "add", "label": "Add rule", "icon": "plus", "variant": "primary" }]
+			},
+			"filters": [{ "id": "interface", "query": "interface" }, { "id": "action", "field": "action" }],
+			"selectable": true,
+			"locked": { "field": "system", "label": "System rule" },
+			"toggle": { "field": "enabled", "label": "On", "path": "/v1/firewall/rules/{id}", "method": "PATCH" },
+			"reorder": { "path": "/v1/firewall/rules/order", "params": ["interface"], "field": "position" },
+			"rowLink": "#rule-{id}",
+			"count": ["{n} rule", "{n} rules"],
+			"columns": [
+				{ "field": "position", "label": "#", "format": "num", "width": "3rem", "priority": 3 },
+				{ "field": "action", "label": "Action", "format": "status", "variant": "pill", "width": "6.5rem", "statusMap": { "pass": { "state": "pass", "label": "Pass" }, "block": { "state": "block", "label": "Block" }, "reject": { "state": "reject", "label": "Reject" }, "match": { "state": "match", "label": "Match" } } },
+				{ "field": "protocol", "label": "Protocol", "format": "mono" },
+				{ "field": "source", "label": "Source" },
+				{ "field": "destination", "label": "Destination" },
+				{ "field": "destination_port", "label": "Port", "priority": 2 },
+				{ "field": "descr", "label": "Description", "primary": true },
+				{ "field": "states", "label": "States", "format": "num", "sortable": true, "priority": 3 },
+				{ "field": "hits", "label": "Hits", "format": "num", "sortable": true }
+			],
+			"rowActions": [
+				{ "id": "edit", "label": "Edit", "icon": "pen", "inline": true, "href": "#rule-{id}" },
+				{ "id": "duplicate", "label": "Duplicate", "icon": "clone", "api": { "method": "POST", "path": "/v1/firewall/rules/{id}/duplicate" } },
+				{ "id": "log", "label": "Show matching log entries", "icon": "list", "href": "#log-{tracker}" },
+				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/rules/{id}", "success": "Rule {descr} deleted", "confirm": { "title": "Delete rule {descr}?", "text": "The rule is removed when you apply the changes." } } }
+			],
+			"bulkActions": [
+				{ "id": "enable", "label": "Enable", "icon": "toggle-on", "api": { "method": "PATCH", "path": "/v1/firewall/rules/{id}", "body": { "enabled": true } }, "success": "{n} rules enabled" },
+				{ "id": "disable", "label": "Disable", "icon": "toggle-off", "api": { "method": "PATCH", "path": "/v1/firewall/rules/{id}", "body": { "enabled": false } }, "success": "{n} rules disabled" },
+				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/rules/{id}" }, "success": "{n} rules deleted", "confirm": { "title": "Delete {n} rules?", "text": "The rules are removed when you apply the changes." } }
+			],
+			"empty": { "icon": "shield-halved", "title": "No rules on this interface", "text": "Traffic is blocked by the default deny rule.", "action": { "label": "Add rule", "icon": "plus", "href": "#rule-new" } }
+		} },
+		{ "name": "DHCP leases · search, filter, client paging", "width": "full", "config": {
+			"label": "DHCP leases",
+			"source": { "path": "/v1/status/dhcp-leases" },
+			"key": "mac",
+			"toolbar": {
+				"search": { "placeholder": "Search hostname, IP or MAC" },
+				"filters": [{ "id": "type", "type": "chips", "label": "Lease type", "value": "all", "options": [{ "value": "all", "label": "All" }, { "value": "dynamic", "label": "Dynamic" }, { "value": "static", "label": "Static" }] }]
+			},
+			"filters": [{ "id": "type", "field": "type" }],
+			"selectable": true,
+			"paging": { "mode": "client", "size": 5, "sizes": [5, 10, 25] },
+			"sort": { "field": "ip", "dir": "asc" },
+			"count": ["{n} lease", "{n} leases"],
+			"columns": [
+				{ "field": "hostname", "label": "Hostname", "primary": true, "sub": "vendor", "sortable": true },
+				{ "field": "ip", "label": "IP address", "format": "mono", "sortable": true },
+				{ "field": "mac", "label": "MAC address", "format": "mono", "priority": 3 },
+				{ "field": "iface", "label": "Interface", "format": "badge", "sortable": true },
+				{ "field": "type", "label": "Type", "format": "badge", "badgeMap": { "static": { "label": "Static", "tone": "accent" }, "dynamic": { "label": "Dynamic" } } },
+				{ "field": "online", "label": "Status", "format": "status", "sortable": true, "statusMap": { "true": { "state": "ok", "label": "Online" }, "false": { "state": "neutral", "label": "Offline" } } },
+				{ "field": "expires", "label": "Expires", "format": "datetime", "priority": 3 }
+			],
+			"rowActions": [
+				{ "id": "static", "label": "Add static mapping", "icon": "thumbtack", "when": { "field": "type", "value": "dynamic" } },
+				{ "id": "wol", "label": "Send Wake-on-LAN", "icon": "power-off" }
+			],
+			"bulkActions": [
+				{ "id": "release", "label": "Release", "icon": "eject", "api": { "method": "POST", "path": "/v1/status/dhcp-leases/release", "ids": true }, "confirm": { "title": "Release {n} leases?", "text": "The clients must ask for a new address." } }
+			]
+		} },
+		{ "name": "Interfaces · live rates", "width": "full", "config": {
+			"label": "Interfaces",
+			"source": { "path": "/v1/status/interfaces" },
+			"every": 2,
+			"live": ["in_bps", "out_bps", "in_pps", "out_pps", "bytes_in", "bytes_out", "errors_in"],
+			"rowLink": "#interface-{id}",
+			"columns": [
+				{ "field": "descr", "label": "Interface", "sub": "if", "primary": true },
+				{ "field": "status", "label": "Status", "format": "status", "statusMap": { "up": { "state": "ok", "label": "Up" }, "down": { "state": "crit", "label": "Down" } } },
+				{ "field": "ipv4", "label": "IPv4", "format": "mono" },
+				{ "field": "in_bps", "label": "In", "format": "bps", "sortable": true },
+				{ "field": "out_bps", "label": "Out", "format": "bps", "sortable": true },
+				{ "field": "bytes_in", "label": "Received", "format": "bytes", "priority": 3 },
+				{ "field": "media", "label": "Media", "priority": 3 }
+			]
+		} },
+		{ "name": "Firewall aliases", "width": "lg", "config": {
+			"label": "Aliases",
+			"source": { "path": "/v1/firewall/aliases" },
+			"key": "name",
+			"toolbar": { "search": { "placeholder": "Filter aliases" }, "actions": [{ "id": "add", "label": "Add", "icon": "plus", "variant": "primary" }] },
+			"sort": { "field": "name" },
+			"count": ["{n} alias", "{n} aliases"],
+			"columns": [
+				{ "field": "name", "label": "Name", "format": "mono", "primary": true, "sub": "descr", "sortable": true },
+				{ "field": "type", "label": "Type", "format": "badge", "sortable": true, "badgeMap": { "host": { "label": "Hosts", "tone": "info" }, "network": { "label": "Networks", "tone": "accent" }, "port": { "label": "Ports" }, "urltable": { "label": "URL table", "tone": "warn" } } },
+				{ "field": "count", "label": "Entries", "format": "num", "sortable": true }
+			],
+			"rowActions": [
+				{ "id": "edit", "label": "Edit", "icon": "pen", "inline": true, "href": "#alias-{name}" },
+				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/aliases/{name}", "success": "Alias {name} deleted", "confirm": { "title": "Delete alias {name}?", "text": "Rules that use the alias stop matching.", "typed": true, "confirmLabel": "Delete alias" } } }
+			]
+		} },
+		{ "name": "Grouped by interface", "width": "lg", "config": {
+			"label": "Leases by interface",
+			"source": { "path": "/v1/status/dhcp-leases" },
+			"key": "mac",
+			"group": { "field": "iface", "label": "Interface", "order": ["LAN", "GUEST", "IOT", "DMZ"], "collapsed": ["DMZ"] },
+			"sort": { "field": "hostname" },
+			"columns": [
+				{ "field": "hostname", "label": "Hostname", "primary": true, "sortable": true },
+				{ "field": "ip", "label": "IP address", "format": "mono", "sortable": true },
+				{ "field": "online", "label": "Status", "format": "status", "statusMap": { "true": { "state": "ok", "label": "Online" }, "false": { "state": "neutral", "label": "Offline" } } }
+			]
+		} },
+		{ "name": "500 clients · live, toggle, bulk", "width": "full", "note": "all rows rendered; client 7 rejects the toggle (rollback)", "config": {
+			"id": "gallery-clients",
+			"label": "Clients",
+			"source": { "path": "/v1/gallery/table/clients" },
+			"every": 3,
+			"live": ["rate", "bytes", "last_seen"],
+			"name": "hostname",
+			"toolbar": {
+				"search": { "placeholder": "Search 500 clients" },
+				"filters": [{ "id": "iface", "label": "Interface", "options": [{ "value": "LAN", "label": "LAN" }, { "value": "GUEST", "label": "GUEST" }, { "value": "IOT", "label": "IOT" }, { "value": "DMZ", "label": "DMZ" }] }]
+			},
+			"filters": [{ "id": "iface", "field": "iface" }],
+			"selectable": true,
+			"chooser": true,
+			"toggle": { "field": "enabled", "label": "On", "path": "/v1/gallery/table/clients/{id}" },
+			"count": ["{n} client", "{n} clients"],
+			"columns": [
+				{ "field": "hostname", "label": "Hostname", "primary": true, "sortable": true, "sub": "vendor" },
+				{ "field": "ip", "label": "IP address", "format": "mono", "sortable": true },
+				{ "field": "mac", "label": "MAC address", "format": "mono", "priority": 3 },
+				{ "field": "iface", "label": "Interface", "format": "badge", "sortable": true },
+				{ "field": "tags", "label": "Tags", "format": "chips", "priority": 3 },
+				{ "field": "rate", "label": "Rate", "format": "bps", "sortable": true },
+				{ "field": "bytes", "label": "Total", "format": "bytes", "sortable": true, "priority": 2 },
+				{ "field": "last_seen", "label": "Last seen", "format": "ago", "sortable": true, "priority": 3 }
+			],
+			"rowActions": [
+				{ "id": "details", "label": "Details", "icon": "circle-info", "inline": true },
+				{ "id": "delete", "label": "Forget", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/gallery/table/clients/{id}", "success": "{hostname} forgotten", "confirm": { "title": "Forget {hostname}?" } } }
+			],
+			"bulkActions": [
+				{ "id": "delete", "label": "Forget", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/gallery/table/clients/{id}" }, "success": "{n} clients forgotten", "confirm": { "title": "Forget {n} clients?" } }
+			]
+		} },
+		{ "name": "Server paging", "width": "full", "note": "page, sort, search and filter go to the API", "config": {
+			"label": "Clients (server paging)",
+			"source": { "path": "/v1/gallery/table/clients" },
+			"toolbar": {
+				"search": { "placeholder": "Search on the server" },
+				"filters": [{ "id": "iface", "type": "chips", "label": "Interface", "multiple": true, "options": [{ "value": "LAN", "label": "LAN" }, { "value": "GUEST", "label": "GUEST" }, { "value": "IOT", "label": "IOT" }, { "value": "DMZ", "label": "DMZ" }] }]
+			},
+			"filters": [{ "id": "iface", "param": "iface" }],
+			"paging": { "mode": "server", "size": 10, "sizes": [10, 25, 50] },
+			"count": ["{n} client", "{n} clients"],
+			"columns": [
+				{ "field": "hostname", "label": "Hostname", "primary": true, "sortable": true },
+				{ "field": "ip", "label": "IP address", "format": "mono", "sortable": true },
+				{ "field": "iface", "label": "Interface", "format": "badge", "sortable": true },
+				{ "field": "vendor", "label": "Vendor", "sortable": true, "priority": 3 },
+				{ "field": "bytes", "label": "Total", "format": "bytes", "sortable": true }
+			]
+		} },
+		{ "name": "Loading (slow source)", "width": "lg", "config": {
+			"source": { "path": "/v1/gallery/table/slow" },
+			"columns": [{ "field": "descr", "label": "Interface" }, { "field": "status", "label": "Status", "format": "status", "statusMap": { "up": { "state": "ok", "label": "Up" }, "down": { "state": "crit", "label": "Down" } } }, { "field": "in_bps", "label": "In", "format": "bps" }]
+		} },
+		{ "name": "Empty", "width": "lg", "config": {
+			"source": { "path": "/v1/gallery/empty" },
+			"columns": [{ "field": "name", "label": "Name" }, { "field": "endpoint", "label": "Endpoint" }],
+			"empty": { "icon": "key", "title": "No WireGuard peers yet", "text": "Add a peer to let a device or site connect.", "action": { "label": "Add peer", "icon": "plus", "href": "#peer-new" } }
+		} },
+		{ "name": "Error", "width": "lg", "config": {
+			"source": { "path": "/v1/gallery/fail" },
+			"columns": [{ "field": "name", "label": "Name" }]
+		} },
+		{ "name": "Stale (source stopped answering)", "width": "lg", "config": {
+			"source": { "path": "/v1/gallery/table/flaky", "query": { "k": "data-table" } },
+			"every": 3,
+			"key": "name",
+			"live": ["rtt", "loss"],
+			"columns": [
+				{ "field": "name", "label": "Gateway", "primary": true },
+				{ "field": "status", "label": "Status", "format": "status", "statusMap": { "online": { "state": "ok", "label": "Online" }, "warning": { "state": "warn", "label": "Degraded" }, "down": { "state": "crit", "label": "Down" } } },
+				{ "field": "rtt", "label": "RTT (ms)", "format": "num" },
+				{ "field": "loss", "label": "Loss %", "format": "num" }
+			]
+		} },
+		{ "name": "Long text", "width": "lg", "config": {
+			"source": { "path": "/v1/gallery/table/long" },
+			"columns": [
+				{ "field": "name", "label": "Name", "format": "mono", "primary": true, "sub": "descr" },
+				{ "field": "type", "label": "Type", "format": "badge" },
+				{ "field": "count", "label": "Entries", "format": "num" }
+			],
+			"rowActions": [{ "id": "edit", "label": "Edit", "icon": "pen", "inline": true, "href": "#alias-{id}" }]
+		} }
+	]
+}
