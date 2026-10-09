@@ -26,13 +26,23 @@ function csrf() {
 	return document.querySelector('meta[name="fs-csrf"]')?.getAttribute('content') || '';
 }
 
+/**
+ * The messages of a 422 that the API could not attach to a field: details.messages
+ * holds every message, details.fields the ones it matched (several joined by a space).
+ */
+export function otherMessages(details) {
+	const used = Object.values((details && details.fields) || {}).map(String).join('\n');
+	return ((details && details.messages) || []).map(String).filter((m) => m && !used.includes(m));
+}
+
 function normalise(xhr, status) {
 	const body = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : {};
 	return {
 		status: xhr.status,
 		code: body.code || (status === 'timeout' ? 'timeout' : xhr.status === 0 ? 'network' : 'error'),
 		message: body.message || (status === 'timeout' ? 'The request timed out.' : xhr.status === 0 ? 'The firewall could not be reached.' : 'The request failed.'),
-		fields: (body.details && body.details.fields) || null
+		fields: (body.details && body.details.fields) || null,
+		messages: otherMessages(body.details)
 	};
 }
 

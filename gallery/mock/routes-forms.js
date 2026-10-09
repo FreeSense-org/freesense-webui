@@ -8,16 +8,17 @@
 /*
  * Gallery mock routes for the schema form and its field types:
  *   GET  /api/v1/schema/firewall/rules         rule editor schema
- *   GET  /api/v1/schema/firewall/aliases       alias editor schema (entries as entry-grid)
- *   GET  /api/v1/schema/services/ntp           NTP settings schema
+ *   GET  /api/v1/schema/firewall/aliases       alias schema, as the API serves it
+ *   GET  /api/v1/schema/services/ntp           NTP schema, as the API serves it (interfaces from the mock)
  *   PUT  /api/v1/firewall/rules/{id}           adds checks for the advanced fields and refuses
  *   POST /api/v1/firewall/rules                system rules, then hands over to the core routes
- *   GET  /api/v1/firewall/aliases/{name}       one alias with its entries
- *   PUT  /api/v1/firewall/aliases/{name}       save (422 per entry: entries.N.value)
- *   POST /api/v1/firewall/aliases              create when the body has an entries array
- *                                              (other bodies go to the feedback route)
- *   GET  /api/v1/services/ntp                  NTP settings
- *   PUT  /api/v1/services/ntp                  save (422 on bad servers, orphan stratum…)
+ *   GET    /api/v1/firewall/aliases           {name, type, description, entries: [{address, detail}], update_frequency?}
+ *   GET    /api/v1/firewall/aliases/{name}    one alias (404 when missing)
+ *   POST   /api/v1/firewall/aliases           create (201; 422 per entry: entries.N.address)
+ *   PUT    /api/v1/firewall/aliases/{name}    update; omitted fields keep their value, "name" renames
+ *   DELETE /api/v1/firewall/aliases/{name}    delete (409 while RFC1918_ALL is used by rules)
+ *   GET    /api/v1/services/ntp               NTP settings with the *_choices maps, as the API
+ *   PUT    /api/v1/services/ntp               save (422 on bad servers, orphan stratum…)
  *   GET  /api/v1/gallery/forms/options?set=    dynamic select options (interfaces, timezones)
  *   GET  /api/v1/gallery/forms/slow-schema     the alias schema after 8 s (loading state)
  *   POST /api/v1/gallery/forms/upload?name=    file upload (names containing "fail" fail)
@@ -33,7 +34,6 @@
 	var coreRulePut = previous('PUT', '/api/v1/firewall/rules/1');
 	var coreRulePost = previous('POST', '/api/v1/firewall/rules');
 	var coreRuleGet = previous('GET', '/api/v1/firewall/rules/1');
-	var feedbackAliasPost = previous('POST', '/api/v1/firewall/aliases');
 
 	var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
 	var V4 = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
@@ -139,73 +139,551 @@
 		]
 	};
 
+	/* The schemas exactly as GET /api/v1/schema/... returns them on a firewall. */
 	var ALIAS_SCHEMA = {
-		resource: 'firewall/aliases',
-		title: 'Alias',
-		sections: [
-			{ id: 'alias', title: 'Alias', description: 'A named list of hosts, networks, ports or URLs that rules can use.', fields: [
-				{ name: 'name', type: 'text', label: 'Name', required: true, mono: true, width: 'half', pattern: '^[A-Za-z][A-Za-z0-9_]{0,30}$',
-					patternMessage: 'Use letters, digits and underscores, starting with a letter (max. 31).', help: 'Rules refer to the alias by this name.' },
-				{ name: 'type', type: 'select', label: 'Type', required: true, width: 'half', default: 'host',
-					options: [{ value: 'host', label: 'Hosts' }, { value: 'network', label: 'Networks' }, { value: 'port', label: 'Ports' }, { value: 'url', label: 'URL table' }] },
-				{ name: 'descr', type: 'text', label: 'Description', maxLength: 64 },
-				{ name: 'update_freq', type: 'number', label: 'Refresh every', unit: 'days', min: 1, max: 365, default: 1, width: 'half', visibleWhen: { field: 'type', equals: 'url' } }
-			] },
-			{ id: 'entries', title: 'Entries', description: 'One address, network, port or URL per row. Order is kept.', fields: [
-				{ name: 'entries', type: 'entry-grid', label: 'Entries', min: 1, max: 200, addLabel: 'Add entry', fields: [
-					{ name: 'value', type: 'text', label: 'Value', required: true, mono: true, width: 'lg', placeholder: '192.0.2.10' },
-					{ name: 'descr', type: 'text', label: 'Description', width: 'lg', placeholder: 'Optional' }
-				] }
-			] }
-		]
+		"title": "Alias",
+		"summary": "{type} alias {name}[ with {entries}]",
+		"summaryIcon": "tags",
+		"sections": [
+			{
+				"id": "general",
+				"title": "General",
+				"fields": [
+					{
+						"name": "name",
+						"type": "text",
+						"label": "Name",
+						"required": true,
+						"mono": true,
+						"width": "half",
+						"maxLength": 31,
+						"pattern": "^[A-Za-z0-9_]+$",
+						"patternMessage": "Use letters, digits and underscores only.",
+						"help": "Used in rules instead of the addresses or ports it contains."
+					},
+					{
+						"name": "type",
+						"type": "select",
+						"label": "Type",
+						"required": true,
+						"width": "half",
+						"default": "host",
+						"options": [
+							{
+								"value": "host",
+								"label": "Host(s)",
+								"group": "Addresses"
+							},
+							{
+								"value": "network",
+								"label": "Network(s)",
+								"group": "Addresses"
+							},
+							{
+								"value": "port",
+								"label": "Port(s)",
+								"group": "Ports"
+							},
+							{
+								"value": "url",
+								"label": "URL (IPs)",
+								"group": "Downloaded lists"
+							},
+							{
+								"value": "url_ports",
+								"label": "URL (Ports)",
+								"group": "Downloaded lists"
+							},
+							{
+								"value": "urltable",
+								"label": "URL Table (IPs)",
+								"group": "Downloaded lists"
+							},
+							{
+								"value": "urltable_ports",
+								"label": "URL Table (Ports)",
+								"group": "Downloaded lists"
+							}
+						]
+					},
+					{
+						"name": "description",
+						"type": "text",
+						"label": "Description",
+						"maxLength": 200,
+						"help": "For your reference (not parsed)."
+					}
+				]
+			},
+			{
+				"id": "entries",
+				"title": "Entries",
+				"description": "Hosts, networks (CIDR), ranges (a-b), ports, port ranges (a:b), other aliases, or URLs for downloaded lists.",
+				"fields": [
+					{
+						"name": "entries",
+						"type": "entry-grid",
+						"label": "Entries",
+						"min": 0,
+						"max": 5000,
+						"reorder": true,
+						"addLabel": "Add entry",
+						"emptyText": "No entries yet.",
+						"fields": [
+							{
+								"name": "address",
+								"type": "text",
+								"label": "Entry",
+								"mono": true,
+								"required": true,
+								"width": "lg"
+							},
+							{
+								"name": "detail",
+								"type": "text",
+								"label": "Description",
+								"width": "lg"
+							}
+						]
+					},
+					{
+						"name": "update_frequency",
+						"type": "number",
+						"label": "Update frequency",
+						"min": 1,
+						"max": 365,
+						"unit": "days",
+						"width": "third",
+						"visibleWhen": {
+							"field": "type",
+							"in": [
+								"urltable",
+								"urltable_ports"
+							]
+						},
+						"help": "How often the list is downloaded again."
+					}
+				]
+			}
+		],
+		"resource": "firewall/aliases"
 	};
 
-	var NTP_SCHEMA = {
-		resource: 'services/ntp',
-		title: 'NTP',
-		sections: [
-			{ id: 'general', title: 'General', fields: [
-				{ name: 'enable', type: 'switch', label: 'NTP server', text: 'Serve time to clients on the selected interfaces', default: true },
-				{ name: 'interfaces', type: 'checklist', label: 'Interfaces', enabledWhen: { field: 'enable', truthy: true },
-					help: 'Clients on these interfaces can query this firewall. Choose none to listen on all.',
-					options: { source: { path: '/v1/gallery/forms/options', query: { set: 'interfaces' } }, value: 'id', label: 'descr', detail: 'detail' } },
-				{ name: 'orphan', type: 'number', label: 'Orphan mode stratum', width: 'half', min: 1, max: 15, default: 12,
-					help: 'Stratum to announce when no time server can be reached.' },
-				{ name: 'timezone', type: 'select', label: 'Time zone', width: 'half', required: true,
-					options: { source: { path: '/v1/gallery/forms/options', query: { set: 'timezones' } }, value: 'id', label: 'city', group: 'region' } }
-			] },
-			{ id: 'servers', title: 'Time servers', description: 'The firewall syncs its clock with these servers. Use at least three for a reliable time.', fields: [
-				{ name: 'servers', type: 'entry-grid', label: 'Servers', min: 1, max: 10, addLabel: 'Add server', fields: [
-					{ name: 'address', type: 'text', label: 'Server', required: true, mono: true, width: 'xl', placeholder: 'pool.ntp.org' },
-					{ name: 'pool', type: 'switch', label: 'Pool', width: 'auto' },
-					{ name: 'prefer', type: 'switch', label: 'Prefer', width: 'auto' },
-					{ name: 'noselect', type: 'switch', label: 'Monitor only', width: 'auto' }
-				] }
-			] },
-			{ id: 'logging', title: 'Logging', fields: [
-				{ name: 'log_peer', type: 'switch', label: 'Peer messages', text: 'Log messages about time servers', width: 'half' },
-				{ name: 'log_sys', type: 'switch', label: 'System messages', text: 'Log clock adjustments', width: 'half' },
-				{ name: 'stats', type: 'segmented', label: 'Statistics', default: 'off', options: [{ value: 'off', label: 'Off' }, { value: 'loop', label: 'Loop' }, { value: 'all', label: 'Loop + peers' }],
-					help: 'Statistics files are written to /var/log/ntp and rotated daily.' }
-			] },
-			{ id: 'advanced', title: 'Advanced', advanced: true, description: 'Access restrictions and the leap second file.', fields: [
-				{ name: 'restrict', type: 'checklist', label: 'Access restrictions', options: [
-					{ value: 'kod', label: 'Kiss-o\'-death', detail: 'Tell abusive clients to slow down' },
-					{ value: 'nomodify', label: 'No modify', detail: 'Refuse ntpq/ntpdc changes' },
-					{ value: 'noquery', label: 'No query', detail: 'Refuse ntpq/ntpdc status queries' },
-					{ value: 'noserve', label: 'No serve', detail: 'Refuse time requests' },
-					{ value: 'nopeer', label: 'No peer', detail: 'Refuse peer associations' },
-					{ value: 'notrap', label: 'No trap', detail: 'Refuse mode 6 trap service' }
-				] },
-				{ name: 'leapsec', type: 'textarea', label: 'Leap seconds', code: true, rows: 5, placeholder: '#$ 3676924800\n#@ 3881174400\n3692217600 37 # 1 Jan 2017',
-					help: 'Paste the contents of a leap-seconds.list file. Leave empty to use the built-in list.' }
-			] }
-		]
-	};
+	function ntpSchema() {
+		return {
+			"title": "NTP server",
+			"order": [
+				"general",
+				"servers",
+				"logging",
+				"auth",
+				"advanced"
+			],
+			"sections": [
+				{
+					"id": "general",
+					"title": "General",
+					"fields": [
+						{
+							"name": "enable",
+							"type": "switch",
+							"label": "NTP server",
+							"text": "Serve time to clients"
+						},
+						{
+							"name": "interface",
+							"type": "checklist",
+							"label": "Interfaces",
+							"options": ntpInterfaces().map(function (i) { return { value: i[0], label: i[1] }; }),
+							"help": "Listen on these interfaces. None selected: all interfaces."
+						}
+					]
+				},
+				{
+					"id": "servers",
+					"title": "Time servers",
+					"description": "Up to 10 servers, pools or peers. Without any, pool.ntp.org is used.",
+					"fields": [
+						{
+							"name": "servers",
+							"type": "entry-grid",
+							"label": "Time servers",
+							"max": 10,
+							"reorder": true,
+							"errorMatch": [
+								"time server",
+								"time servers",
+								"server names"
+							],
+							"addLabel": "Add server",
+							"fields": [
+								{
+									"name": "server",
+									"type": "text",
+									"label": "Server",
+									"mono": true,
+									"required": true,
+									"width": "lg"
+								},
+								{
+									"name": "type",
+									"type": "select",
+									"label": "Type",
+									"default": "server",
+									"width": "sm",
+									"options": [
+										{
+											"value": "server",
+											"label": "Server"
+										},
+										{
+											"value": "pool",
+											"label": "Pool"
+										},
+										{
+											"value": "peer",
+											"label": "Peer"
+										}
+									]
+								},
+								{
+									"name": "prefer",
+									"type": "switch",
+									"label": "Prefer",
+									"width": "xs"
+								},
+								{
+									"name": "noselect",
+									"type": "switch",
+									"label": "No select",
+									"width": "xs"
+								}
+							]
+						}
+					]
+				},
+				{
+					"id": "logging",
+					"title": "Logging and graphs",
+					"fields": [
+						{
+							"name": "statsgraph",
+							"type": "switch",
+							"label": "RRD graphs",
+							"text": "Graph NTP statistics"
+						},
+						{
+							"name": "logpeer",
+							"type": "switch",
+							"label": "Log peer messages"
+						},
+						{
+							"name": "logsys",
+							"type": "switch",
+							"label": "Log system messages"
+						},
+						{
+							"name": "clockstats",
+							"type": "switch",
+							"label": "Clock statistics"
+						},
+						{
+							"name": "loopstats",
+							"type": "switch",
+							"label": "Loop statistics"
+						},
+						{
+							"name": "peerstats",
+							"type": "switch",
+							"label": "Peer statistics"
+						}
+					]
+				},
+				{
+					"id": "auth",
+					"title": "Authentication",
+					"advanced": true,
+					"fields": [
+						{
+							"name": "serverauth",
+							"type": "switch",
+							"label": "Require authentication",
+							"text": "Clients must use the key"
+						},
+						{
+							"name": "serverauthkeyid",
+							"type": "number",
+							"label": "Key ID",
+							"min": 1,
+							"max": 65535,
+							"width": "third",
+							"visibleWhen": {
+								"field": "serverauth",
+								"truthy": true
+							}
+						},
+						{
+							"name": "serverauthalgo",
+							"type": "select",
+							"label": "Digest algorithm",
+							"options": [
+								{
+									"value": "md5",
+									"label": "MD5"
+								},
+								{
+									"value": "sha1",
+									"label": "SHA1"
+								},
+								{
+									"value": "sha256",
+									"label": "SHA256"
+								}
+							],
+							"width": "third",
+							"visibleWhen": {
+								"field": "serverauth",
+								"truthy": true
+							}
+						},
+						{
+							"name": "serverauthkey",
+							"type": "secret",
+							"label": "Key",
+							"mono": true,
+							"visibleWhen": {
+								"field": "serverauth",
+								"truthy": true
+							},
+							"help": "Shown as \"(set)\" when a key exists; leave it to keep the key."
+						}
+					]
+				},
+				{
+					"id": "advanced",
+					"title": "Advanced",
+					"advanced": true,
+					"fields": [
+						{
+							"name": "ntpmaxpeers",
+							"type": "number",
+							"label": "Maximum peers",
+							"min": 4,
+							"max": 25,
+							"width": "third",
+							"errorMatch": [
+								"max peers",
+								"maximum peers"
+							]
+						},
+						{
+							"name": "ntporphan",
+							"type": "number",
+							"label": "Orphan mode stratum",
+							"min": 1,
+							"max": 15,
+							"width": "third",
+							"errorMatch": [
+								"orphan mode"
+							]
+						},
+						{
+							"name": "ntpminpoll",
+							"type": "select",
+							"label": "Minimum poll interval",
+							"options": [
+								{
+									"value": "",
+									"label": "Default"
+								},
+								{
+									"value": "3",
+									"label": "3: 8 seconds (00:00:08)"
+								},
+								{
+									"value": "4",
+									"label": "4: 16 seconds (00:00:16)"
+								},
+								{
+									"value": "5",
+									"label": "5: 32 seconds (00:00:32)"
+								},
+								{
+									"value": "6",
+									"label": "6: 64 seconds (00:01:04)"
+								},
+								{
+									"value": "7",
+									"label": "7: 128 seconds (00:02:08)"
+								},
+								{
+									"value": "8",
+									"label": "8: 256 seconds (00:04:16)"
+								},
+								{
+									"value": "9",
+									"label": "9: 512 seconds (00:08:32)"
+								},
+								{
+									"value": "10",
+									"label": "10: 1,024 seconds (00:17:04)"
+								},
+								{
+									"value": "11",
+									"label": "11: 2,048 seconds (00:34:08)"
+								},
+								{
+									"value": "12",
+									"label": "12: 4,096 seconds (01:08:16)"
+								},
+								{
+									"value": "13",
+									"label": "13: 8,192 seconds (02:16:32)"
+								},
+								{
+									"value": "14",
+									"label": "14: 16,384 seconds (04:33:04)"
+								},
+								{
+									"value": "15",
+									"label": "15: 32,768 seconds (09:06:08)"
+								},
+								{
+									"value": "16",
+									"label": "16: 65,536 seconds (18:12:16)"
+								},
+								{
+									"value": "17",
+									"label": "17: 131,072 seconds (1d 12:24:32)"
+								},
+								{
+									"value": "omit",
+									"label": "Omit (Do not set)"
+								}
+							],
+							"width": "third",
+							"errorMatch": [
+								"minimum poll"
+							]
+						},
+						{
+							"name": "ntpmaxpoll",
+							"type": "select",
+							"label": "Maximum poll interval",
+							"options": [
+								{
+									"value": "",
+									"label": "Default"
+								},
+								{
+									"value": "3",
+									"label": "3: 8 seconds (00:00:08)"
+								},
+								{
+									"value": "4",
+									"label": "4: 16 seconds (00:00:16)"
+								},
+								{
+									"value": "5",
+									"label": "5: 32 seconds (00:00:32)"
+								},
+								{
+									"value": "6",
+									"label": "6: 64 seconds (00:01:04)"
+								},
+								{
+									"value": "7",
+									"label": "7: 128 seconds (00:02:08)"
+								},
+								{
+									"value": "8",
+									"label": "8: 256 seconds (00:04:16)"
+								},
+								{
+									"value": "9",
+									"label": "9: 512 seconds (00:08:32)"
+								},
+								{
+									"value": "10",
+									"label": "10: 1,024 seconds (00:17:04)"
+								},
+								{
+									"value": "11",
+									"label": "11: 2,048 seconds (00:34:08)"
+								},
+								{
+									"value": "12",
+									"label": "12: 4,096 seconds (01:08:16)"
+								},
+								{
+									"value": "13",
+									"label": "13: 8,192 seconds (02:16:32)"
+								},
+								{
+									"value": "14",
+									"label": "14: 16,384 seconds (04:33:04)"
+								},
+								{
+									"value": "15",
+									"label": "15: 32,768 seconds (09:06:08)"
+								},
+								{
+									"value": "16",
+									"label": "16: 65,536 seconds (18:12:16)"
+								},
+								{
+									"value": "17",
+									"label": "17: 131,072 seconds (1d 12:24:32)"
+								},
+								{
+									"value": "omit",
+									"label": "Omit (Do not set)"
+								}
+							],
+							"width": "third",
+							"errorMatch": [
+								"maximum poll"
+							]
+						},
+						{
+							"name": "dnsresolv",
+							"type": "segmented",
+							"label": "DNS resolution",
+							"options": [
+								{
+									"value": "auto",
+									"label": "Auto"
+								},
+								{
+									"value": "inet",
+									"label": "IPv4"
+								},
+								{
+									"value": "inet6",
+									"label": "IPv6"
+								}
+							],
+							"width": "two-thirds"
+						},
+						{
+							"name": "leaptext",
+							"type": "textarea",
+							"label": "Leap seconds",
+							"code": true,
+							"rows": 6,
+							"help": "A leap seconds file, usually not needed."
+						}
+					]
+				}
+			],
+			"resource": "services/ntp"
+		};
+	}
+	function ntpInterfaces() { return M.interfaces.map(function (i) { return [i.id, i.descr]; }).concat([['lo0', 'Localhost']]); }
 
 	M.route('GET', '/api/v1/schema/firewall/rules', function () { return M.ok(RULE_SCHEMA); });
 	M.route('GET', '/api/v1/schema/firewall/aliases', function () { return M.ok(ALIAS_SCHEMA); });
-	M.route('GET', '/api/v1/schema/services/ntp', function () { return M.ok(NTP_SCHEMA); });
+	M.route('GET', '/api/v1/schema/services/ntp', function () { return M.ok(ntpSchema()); });
 	M.route('GET', '/api/v1/gallery/forms/slow-schema', function () { return Object.assign(M.ok(ALIAS_SCHEMA), { delay: 8000 }); });
 
 	/* -------------------------------------------------------------- rules */
@@ -234,93 +712,126 @@
 
 	/* ------------------------------------------------------------ aliases */
 
-	function A(name, type, descr, entries) { return { name: name, type: type, descr: descr, entries: entries.map(function (x) { return { value: x[0], descr: x[1] || '' }; }) }; }
-	var ALIASES = {
-		ADMIN_HOSTS: A('ADMIN_HOSTS', 'host', 'Workstations allowed to administer', [['192.168.1.31', 'admin-laptop'], ['192.168.1.32', 'office-pc'], ['10.99.0.2', 'site VPN jump host']]),
-		DNS_SERVERS: A('DNS_SERVERS', 'host', 'Approved resolvers', [['192.168.1.1', 'this firewall'], ['9.9.9.9', 'Quad9']]),
-		MAIL_PORTS: A('MAIL_PORTS', 'port', 'SMTP, Submission, IMAPS', [['25', 'SMTP'], ['587', 'Submission'], ['993', 'IMAPS']]),
-		SSH_ADMIN: A('SSH_ADMIN', 'port', 'SSH on 22 and 2222', [['22', 'SSH'], ['2222', 'SSH (alternate)']]),
-		RFC1918_ALL: A('RFC1918_ALL', 'network', 'All private ranges', [['10.0.0.0/8', ''], ['172.16.0.0/12', ''], ['192.168.0.0/16', '']]),
-		WEB_SERVERS: A('WEB_SERVERS', 'host', 'DMZ web tier', [['172.16.40.10', 'web01'], ['172.16.40.12', 'web02']]),
-		CROWDSEC_BLOCKLIST: Object.assign(A('CROWDSEC_BLOCKLIST', 'url', 'Community blocklist (auto)', [['https://blocklists.example.org/crowdsec.txt', 'Refreshed by the CrowdSec bouncer']]), { update_freq: 1 }),
-		IOT_DEVICES: A('IOT_DEVICES', 'host', 'Everything on the IOT VLAN that needs Home Assistant', [])
-	};
-	for (var n = 1; n <= 36; n++) ALIASES.IOT_DEVICES.entries.push({ value: '10.30.0.' + (10 + n), descr: ['thermostat', 'doorbell', 'plug', 'bulb', 'sensor', 'camera'][n % 6] + '-' + n });
+	var URLTYPES = ['url', 'url_ports', 'urltable', 'urltable_ports'];
+	function A(name, type, description, entries, extra) {
+		return Object.assign({ name: name, type: type, description: description, entries: entries.map(function (x) { return { address: x[0], detail: x[1] || '' }; }) }, extra || {});
+	}
+	var ALIASES = [
+		A('ADMIN_HOSTS', 'host', 'Workstations allowed to administer', [['192.168.1.31', 'admin-laptop'], ['192.168.1.32', 'office-pc'], ['10.99.0.2', 'site VPN jump host']]),
+		A('DNS_SERVERS', 'host', 'Approved resolvers', [['192.168.1.1', 'this firewall'], ['9.9.9.9', 'Quad9']]),
+		A('MAIL_PORTS', 'port', 'SMTP, Submission, IMAPS', [['25', 'SMTP'], ['587', 'Submission'], ['993', 'IMAPS']]),
+		A('SSH_ADMIN', 'port', 'SSH on 22 and 2222', [['22', 'SSH'], ['2222', 'SSH (alternate)']]),
+		A('RFC1918_ALL', 'network', 'All private ranges', [['10.0.0.0/8', ''], ['172.16.0.0/12', ''], ['192.168.0.0/16', '']]),
+		A('CROWDSEC_BLOCKLIST', 'urltable', 'Community blocklist (auto)', [['https://blocklists.example.org/crowdsec.txt', 'Refreshed by the CrowdSec bouncer']], { update_frequency: 1 }),
+		A('THREAT_FEEDS', 'urltable', 'ThreatShield merged feeds', [['https://feeds.example.org/merged.txt', '']], { update_frequency: 7 }),
+		A('WEB_SERVERS', 'host', 'DMZ web tier', [['172.16.40.10', 'web01'], ['172.16.40.12', 'web02']]),
+		A('IOT_DEVICES', 'host', 'Everything on the IOT VLAN that needs Home Assistant', [])
+	];
+	for (var n = 1; n <= 36; n++) ALIASES[8].entries.push({ address: '10.30.0.' + (10 + n), detail: ['thermostat', 'doorbell', 'plug', 'bulb', 'sensor', 'camera'][n % 6] + '-' + n });
 
-	function aliasErrors(b, renameFrom) {
+	function aliasIndex(name) { for (var i = 0; i < ALIASES.length; i++) if (ALIASES[i].name === name) return i; return -1; }
+	var INVALID = 'The request failed validation.';
+
+	/* The checks of saveAlias(), keyed by schema field as the API maps them. */
+	function aliasErrors(b, origName) {
 		var e = {};
 		var name = String(b.name || '');
-		if (!/^[A-Za-z][A-Za-z0-9_]{0,30}$/.test(name)) e.name = 'Use letters, digits and underscores, starting with a letter (max. 31).';
-		else if (name.toUpperCase() !== String(renameFrom || '').toUpperCase()) {
-			var core = M.dispatch('GET', '/api/v1/firewall/aliases', new URLSearchParams(), null).body.data || [];
-			if (ALIASES[name.toUpperCase()] || core.some(function (a) { return a.name.toUpperCase() === name.toUpperCase(); })) e.name = 'An alias named ' + name + ' already exists.';
-		}
-		if (['host', 'network', 'port', 'url'].indexOf(b.type) < 0) e.type = 'Choose a type.';
-		if ((b.descr || '').length > 64) e.descr = 'Keep the description to 64 characters.';
-		var rows = Array.isArray(b.entries) ? b.entries : [];
-		if (!rows.length) e.entries = 'Add at least one entry.';
-		var seen = {};
-		rows.forEach(function (r, i) {
-			var v = String((r && r.value) || '').trim();
-			var ok = b.type === 'host' ? V4.test(v) || (HOST.test(v) && /[a-z]/i.test(v))
-				: b.type === 'network' ? V4NET.test(v) || V4.test(v)
-					: b.type === 'port' ? PORT.test(v) && v.split(':').every(function (x) { return +x >= 1 && +x <= 65535; })
-						: /^https?:\/\/\S+$/.test(v);
-			if (!v) e['entries.' + i + '.value'] = 'Enter a value or remove the row.';
-			else if (!ok) e['entries.' + i + '.value'] = { host: 'Not an IPv4 address or host name.', network: 'Not a network in CIDR form (10.0.0.0/24).', port: 'Not a port (443) or range (8000:8100).', url: 'Enter an http(s) URL.' }[b.type] || 'Not valid for this type.';
-			else if (seen[v]) e['entries.' + i + '.value'] = 'Already listed in row ' + seen[v] + '.';
-			seen[v] = seen[v] || i + 1;
-			if (r && r.descr && r.descr.length > 40) e['entries.' + i + '.descr'] = 'Keep it to 40 characters.';
+		if (!name) e.name = 'An alias name must be specified.';
+		else if (!/^[A-Za-z0-9_]{1,31}$/.test(name) || /^\d+$/.test(name) || /^_+$/.test(name)) e.name = 'The alias name must be less than 32 characters long, may not consist of only numbers, may not consist of only underscores, and may only contain the following characters: a-z, A-Z, 0-9, _';
+		else if (name !== origName && aliasIndex(name) >= 0) e.name = 'An alias with this name already exists.';
+		if (!/^(host|network|port|url|url_ports|urltable|urltable_ports)$/.test(b.type || '')) e.type = 'Alias type is invalid.';
+		if (String(b.description || '').length > 200) e.description = 'The description must be at most 200 characters.';
+		(b.entries || []).forEach(function (r, i) {
+			var v = String((r && typeof r === 'object') ? (r.address || '') : r).trim();
+			var ok = URLTYPES.indexOf(b.type) >= 0 ? /^https?:\/\/\S+$/.test(v)
+				: b.type === 'port' ? (PORT.test(v) && v.split(':').every(function (x) { return +x >= 1 && +x <= 65535; })) || aliasIndex(v) >= 0
+					: b.type === 'network' ? V4NET.test(v) || V4.test(v) || aliasIndex(v) >= 0
+						: V4.test(v) || (HOST.test(v) && /[a-z]/i.test(v)) || /^[\d.]+-[\d.]+$/.test(v);
+			if (!ok) e['entries.' + i + '.address'] = URLTYPES.indexOf(b.type) >= 0 ? 'You must provide a valid URL.' : b.type === 'port' ? v + ' is not a valid port or alias.' : v + ' is not a valid ' + b.type + ' alias.';
 		});
-		if (b.type === 'url' && !(b.update_freq >= 1 && b.update_freq <= 365)) e.update_freq = 'Use 1 to 365 days.';
+		if (/^urltable/.test(b.type) && b.update_frequency != null && !(b.update_frequency >= 1 && b.update_frequency <= 365)) e.update_frequency = 'The update frequency must be 1 to 365 days.';
 		return e;
 	}
+	function aliasStore(b) {
+		var a = { name: String(b.name), type: b.type, description: String(b.description || ''),
+			entries: (b.entries || []).map(function (r) { return typeof r === 'object' ? { address: String(r.address || ''), detail: String(r.detail || '') } : { address: String(r), detail: '' }; }) };
+		if (/^urltable/.test(a.type)) a.update_frequency = +(b.update_frequency || 7);
+		return a;
+	}
 
+	M.route('GET', '/api/v1/firewall/aliases', function () { return M.ok(clone(ALIASES)); });
 	M.route('GET', '/api/v1/firewall/aliases/{name}', function (p) {
-		var a = ALIASES[p.name.toUpperCase()];
-		return a ? M.ok(clone(a)) : M.err(404, 'Alias ' + p.name + ' does not exist.');
-	});
-	M.route('PUT', '/api/v1/firewall/aliases/{name}', function (p, q, b) {
-		var cur = ALIASES[p.name.toUpperCase()];
-		if (!cur) return M.err(404, 'Alias ' + p.name + ' does not exist.');
-		var e = aliasErrors(b || {}, p.name);
-		if (Object.keys(e).length) return M.err(422, 'Fix the highlighted fields.', e);
-		delete ALIASES[p.name.toUpperCase()];
-		ALIASES[b.name.toUpperCase()] = clone(b);
-		return M.ok(b, { message: 'Alias ' + b.name + ' saved', pending: true });
+		var i = aliasIndex(p.name);
+		return i < 0 ? M.err(404, 'No alias with that name.') : M.ok(clone(ALIASES[i]));
 	});
 	M.route('POST', '/api/v1/firewall/aliases', function (p, q, b) {
-		if (!b || !Array.isArray(b.entries)) return feedbackAliasPost(p, q, b);
+		b = b || {};
+		if (b.entries != null && !Array.isArray(b.entries)) return M.err(400, '"entries" must be a list of {address, detail}.');
 		var e = aliasErrors(b, null);
-		if (Object.keys(e).length) return M.err(422, 'Fix the highlighted fields.', e);
-		ALIASES[b.name.toUpperCase()] = clone(b);
-		return M.ok(b, { message: 'Alias ' + b.name + ' created', pending: true });
+		if (Object.keys(e).length) return M.err(422, INVALID, e);
+		ALIASES.push(aliasStore(b));
+		M.markPending('aliases');
+		return Object.assign(M.ok(clone(ALIASES[ALIASES.length - 1])), { status: 201 });
+	});
+	M.route('PUT', '/api/v1/firewall/aliases/{name}', function (p, q, b) {
+		var i = aliasIndex(p.name);
+		if (i < 0) return M.err(404, 'No alias with that name.');
+		b = Object.assign(clone(ALIASES[i]), b || {});
+		if (!Array.isArray(b.entries)) return M.err(400, '"entries" must be a list of {address, detail}.');
+		var e = aliasErrors(b, p.name);
+		if (Object.keys(e).length) return M.err(422, INVALID, e);
+		ALIASES[i] = aliasStore(b);
+		M.markPending('aliases');
+		return M.ok(clone(ALIASES[i]));
+	});
+	M.route('DELETE', '/api/v1/firewall/aliases/{name}', function (p) {
+		var i = aliasIndex(p.name);
+		if (i < 0) return M.err(404, 'No alias with that name.');
+		if (p.name === 'RFC1918_ALL') return M.err(409, 'Cannot delete alias. Currently in use by rules GUEST, IOT.');
+		ALIASES.splice(i, 1);
+		M.markPending('aliases');
+		return M.ok({ deleted: p.name, pending: M.pending() });
 	});
 
 	/* ---------------------------------------------------------------- NTP */
 
+	var POLL = { '': 'Default', omit: 'Omit (Do not set)' };
+	[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].forEach(function (x) { POLL[x] = x + ': ' + Math.pow(2, x).toLocaleString('en') + ' seconds'; });
 	var NTP = {
-		enable: true, interfaces: ['lan', 'opt2'], orphan: 12, timezone: 'Europe/Copenhagen',
-		servers: [{ address: '0.freesense.pool.ntp.org', pool: true, prefer: false, noselect: false }, { address: 'time.cloudflare.com', pool: false, prefer: true, noselect: false }, { address: '192.0.2.123', pool: false, prefer: false, noselect: true }],
-		log_peer: false, log_sys: true, stats: 'off', restrict: ['kod', 'nomodify', 'noquery', 'nopeer', 'notrap'], leapsec: ''
+		enable: true, interface: ['lan', 'opt2'],
+		servers: [{ server: '0.freesense.pool.ntp.org', prefer: false, noselect: false, auth: false, type: 'pool' },
+			{ server: 'time.cloudflare.com', prefer: true, noselect: false, auth: false, type: 'server' },
+			{ server: '192.0.2.123', prefer: false, noselect: true, auth: false, type: 'server' }],
+		ntpmaxpeers: '', ntporphan: '12', ntpminpoll: '', ntpmaxpoll: '',
+		statsgraph: false, logpeer: false, logsys: true, clockstats: false, loopstats: false, peerstats: false,
+		leaptext: '', dnsresolv: 'auto', serverauth: false, serverauthkeyid: '', serverauthkey: '', serverauthalgo: 'md5'
 	};
-	M.route('GET', '/api/v1/services/ntp', function () { return M.ok(clone(NTP)); });
+	function ntpOut() {
+		var ifs = {};
+		ntpInterfaces().forEach(function (i) { ifs[i[0]] = i[1]; });
+		return Object.assign(clone(NTP), { serverauthkey: NTP.serverauthkey ? '(set)' : '', running: NTP.enable, interface_choices: ifs, poll_choices: POLL,
+			dnsresolv_choices: { auto: 'Auto', inet: 'IPv4', inet6: 'IPv6' }, serverauthalgo_choices: { md5: 'MD5', sha1: 'SHA1', sha256: 'SHA256' } });
+	}
+	M.route('GET', '/api/v1/services/ntp', function () { return M.ok(ntpOut()); });
 	M.route('PUT', '/api/v1/services/ntp', function (p, q, b) {
-		b = b || {};
+		b = Object.assign(clone(NTP), b || {});
 		var e = {};
 		var servers = Array.isArray(b.servers) ? b.servers : [];
-		if (!servers.length) e.servers = 'Add at least one time server.';
+		if (servers.length > 10) e.servers = 'Too many time servers: at most 10.';
 		servers.forEach(function (s, i) {
-			var v = String((s && s.address) || '');
-			if (!(V4.test(v) || (HOST.test(v) && /[a-z]/i.test(v)))) e['servers.' + i + '.address'] = 'Enter a host name or an IPv4 address.';
-			if (s && s.pool && V4.test(v)) e['servers.' + i + '.pool'] = 'A pool needs a host name, not an address.';
+			var v = String((s && s.server) || '');
+			if (!(V4.test(v) || (HOST.test(v) && /[a-z]/i.test(v)))) e['servers.' + i + '.server'] = 'The following input is not a valid hostname or IP address: ' + v;
 		});
-		if (servers.filter(function (s) { return s && s.prefer; }).length > 1) e.servers = 'Prefer only one server.';
-		if (b.orphan != null && !(b.orphan >= 1 && b.orphan <= 15)) e.orphan = 'Use a stratum from 1 to 15.';
-		if (b.leapsec && !/^(\s*(#.*|\d+\s+\d+.*)?\s*\n?)*$/.test(b.leapsec)) e.leapsec = 'This does not look like a leap-seconds.list file.';
-		if (Object.keys(e).length) return M.err(422, 'Fix the highlighted fields.', e);
+		var num = function (k, lo, hi, msg) { if (b[k] !== '' && b[k] != null && !(+b[k] >= lo && +b[k] <= hi && Math.floor(+b[k]) === +b[k])) e[k] = msg; };
+		num('ntporphan', 1, 15, 'The supplied value for NTP Orphan Mode is invalid.');
+		num('ntpmaxpeers', 4, 25, 'Max Peers must be a number between 4 and 25.');
+		if (b.ntpminpoll && b.ntpmaxpoll && b.ntpminpoll !== 'omit' && b.ntpmaxpoll !== 'omit' && +b.ntpminpoll > +b.ntpmaxpoll) e.ntpmaxpoll = 'The maximum poll value must be greater than or equal to the minimum poll value.';
+		if (b.serverauth && !(b.serverauthkeyid >= 1 && b.serverauthkeyid <= 65535)) e.serverauthkeyid = 'The supplied value for NTP Authentication key ID is invalid.';
+		if (Object.keys(e).length) return M.err(422, INVALID, e);
+		if (b.serverauthkey === '(set)') b.serverauthkey = NTP.serverauthkey;
+		['running', 'interface_choices', 'poll_choices', 'dnsresolv_choices', 'serverauthalgo_choices'].forEach(function (k) { delete b[k]; });
 		Object.assign(NTP, b);
-		return M.ok(clone(NTP), { message: 'NTP settings saved; ntpd restarted' });
+		return M.ok(ntpOut());
 	});
 
 	/* --------------------------------------------------- uploads and demo */

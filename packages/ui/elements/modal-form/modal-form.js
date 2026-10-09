@@ -68,6 +68,7 @@ function readValue(x) {
 	if (x.f.type === 'switch') return x.$input.prop('checked');
 	const v = x.$input.val();
 	if (x.f.type === 'number') return v === '' ? null : Number(v);
+	if (x.f.list) return String(v).split(/[\s,]+/).filter(Boolean);
 	return typeof v === 'string' && x.f.trim !== false ? v.trim() : v;
 }
 
@@ -139,15 +140,18 @@ export function modalForm(o = {}) {
 			if (meta.pending) $(document).trigger('fs:pending', [{ path: o.path }]);
 			d.close(res);
 		} catch (err) {
-			if (err.fields) {
+			if (err.fields || (err.messages && err.messages.length)) {
+				const map = err.fields || {};
 				let focus = null;
+				/* A field's own message, plus those of its items for a list (entries.2.address). */
+				const own = (name) => Object.keys(map).filter((k) => k === name || k.startsWith(`${name}.`)).map((k) => map[k]).join(' ');
 				for (const x of fields) {
-					const m = err.fields[x.f.name];
+					const m = own(x.f.name);
 					setError(x, m || null);
 					if (m && !focus) focus = x;
 				}
-				const unknown = Object.keys(err.fields).filter((k) => !fields.some((x) => x.f.name === k));
-				showAlert(unknown.length ? `${err.message} ${unknown.map((k) => err.fields[k]).join(' ')}` : err.message);
+				const extra = Object.keys(map).filter((k) => !fields.some((x) => k === x.f.name || k.startsWith(`${x.f.name}.`))).map((k) => map[k]).concat(err.messages || []);
+				showAlert([err.message].concat(extra).join(' '));
 				(focus ? focus.$input : $alert).trigger('focus');
 			} else {
 				showAlert(err.message || t('The request failed.'));

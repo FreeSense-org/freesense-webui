@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "Alias editor",
-			"note": "try 300.1.1.1 or a duplicate entry",
+			"note": "try 300.1.1.1 as an entry, or the name ADMIN_HOSTS",
 			"width": "lg",
 			"surface": "page",
 			"config": {
@@ -58,7 +58,7 @@
 			"surface": "page",
 			"config": {
 				"schemaSource": { "path": "/v1/schema/firewall/aliases" },
-				"values": { "type": "network", "entries": [{ "value": "", "descr": "" }] },
+				"values": { "type": "network", "entries": [{ "address": "", "detail": "" }] },
 				"save": { "method": "POST", "path": "/v1/firewall/aliases" },
 				"submitLabel": "Create alias"
 			}
@@ -75,7 +75,7 @@
 		},
 		{
 			"name": "NTP settings",
-			"note": "try a pool with an IP address, or two preferred servers",
+			"note": "try the server bad_host! or orphan stratum 20",
 			"width": "full",
 			"surface": "page",
 			"config": {

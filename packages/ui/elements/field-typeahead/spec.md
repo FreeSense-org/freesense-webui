@@ -26,7 +26,7 @@ one field on its own (config = the field schema plus `value` and `error`).
 ## Builder (PHP, P4)
 
 ```php
-$ui->fieldTypeahead('alias', gettext('Alias'))->source('/v1/firewall/aliases', value: 'name', detail: 'descr');
+$ui->fieldTypeahead('alias', gettext('Alias'))->source('/v1/firewall/aliases', value: 'name', detail: 'description');
 ```
 
 ## Instance API

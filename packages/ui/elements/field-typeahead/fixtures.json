@@ -13,7 +13,7 @@
 				"source": {
 					"path": "/v1/firewall/aliases",
 					"value": "name",
-					"detail": "descr"
+					"detail": "description"
 				},
 				"help": "Type to search the aliases."
 			}

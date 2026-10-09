@@ -184,17 +184,6 @@
 		return out;
 	}
 
-	var ALIASES = [
-		{ name: 'ADMIN_HOSTS', type: 'host', descr: 'Workstations allowed to administer', count: 3 },
-		{ name: 'DNS_SERVERS', type: 'host', descr: 'Approved resolvers', count: 2 },
-		{ name: 'MAIL_PORTS', type: 'port', descr: 'SMTP, Submission, IMAPS', count: 3 },
-		{ name: 'SSH_ADMIN', type: 'port', descr: 'SSH on 22 and 2222', count: 2 },
-		{ name: 'RFC1918_ALL', type: 'network', descr: 'All private ranges', count: 3 },
-		{ name: 'CROWDSEC_BLOCKLIST', type: 'urltable', descr: 'Community blocklist (auto)', count: 18211 },
-		{ name: 'THREAT_FEEDS', type: 'urltable', descr: 'ThreatShield merged feeds', count: 92112 },
-		{ name: 'WEB_SERVERS', type: 'host', descr: 'DMZ web tier', count: 2 }
-	];
-
 	/* ------------------------------------------------------------------- logs */
 
 	var logSeq = 50000;
@@ -359,9 +348,15 @@
 		ROUTES.push({ method: method, re: re, keys: keys, handler: handler });
 	}
 	function ok(data, meta) { return { status: 200, body: { data: data, meta: $.extend({ time: new Date().toISOString() }, meta || {}) } }; }
-	function err(status, message, fields) {
+	/* As the API: a 422 lists every message in details.messages and the ones tied to a field in details.fields. */
+	function err(status, message, fields, others) {
 		var code = { 400: 'bad_request', 401: 'unauthenticated', 403: 'forbidden', 404: 'not_found', 409: 'conflict', 422: 'validation_failed', 503: 'unavailable' }[status] || 'error';
-		return { status: status, body: { error: { code: code, message: message, details: fields ? { fields: fields } : undefined } } };
+		var details;
+		if (fields || others) {
+			details = { messages: Object.keys(fields || {}).map(function (k) { return String(fields[k]); }).concat(others || []) };
+			if (fields && Object.keys(fields).length) details.fields = fields;
+		}
+		return { status: status, body: { error: { code: code, message: message, details: details } } };
 	}
 
 	route('GET', '/api/v1/status/system', function () { return ok(sysPayload()); });
@@ -463,13 +458,11 @@
 		return ok(null, { pending: true });
 	});
 	/* The API's shape: pending is the list of areas with unapplied changes. */
-	route('GET', '/api/v1/firewall/pending', function () { return ok({ pending: pendingChanges ? ['rules'] : [] }); });
-	route('POST', '/api/v1/firewall/apply', function () { pendingChanges = false; return ok({ applied: true, pending: [] }); });
-	route('GET', '/api/v1/firewall/aliases', function (p, q) {
-		var s = (q.get('q') || '').toLowerCase();
-		return ok(ALIASES.filter(function (a) { return !s || a.name.toLowerCase().indexOf(s) >= 0 || a.descr.toLowerCase().indexOf(s) >= 0; }));
-	});
-
+	/* Areas with unapplied changes besides the rules (aliases, nat, virtual_ips), set by the other mock files. */
+	var pendingAreas = {};
+	function pendingList() { return (pendingChanges ? ['rules'] : []).concat(Object.keys(pendingAreas)); }
+	route('GET', '/api/v1/firewall/pending', function () { return ok({ pending: pendingList() }); });
+	route('POST', '/api/v1/firewall/apply', function () { pendingChanges = false; pendingAreas = {}; return ok({ applied: true, pending: [] }); });
 	function saveRule(id, b) {
 		b = b || {};
 		var e = {};
@@ -605,6 +598,7 @@
 
 	window.FSMock = {
 		routes: ROUTES, interfaces: IFACES, ok: ok, err: err, dispatch: dispatch,
+		markPending: function (area) { pendingAreas[area] = true; }, pending: pendingList,
 		route: function (method, pattern, handler) { route(method, pattern, handler); ROUTES.unshift(ROUTES.pop()); }
 	};
 })(jQuery);

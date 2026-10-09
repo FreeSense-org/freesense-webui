@@ -9,10 +9,8 @@
 			"fields": [
 				{ "name": "name", "type": "text", "label": "Name", "required": true, "placeholder": "WEB_SERVERS", "help": "Letters, digits and underscores. Used in rules.", "mono": true },
 				{ "name": "type", "type": "select", "label": "Type", "required": true, "value": "host", "options": [{ "value": "host", "label": "Hosts" }, { "value": "network", "label": "Networks" }, { "value": "port", "label": "Ports" }] },
-				{ "name": "content", "type": "textarea", "label": "Entries", "required": true, "rows": 3, "placeholder": "172.16.40.10 172.16.40.11", "help": "Separate entries with spaces, commas or new lines.", "mono": true },
-				{ "name": "descr", "type": "text", "label": "Description", "placeholder": "DMZ web tier" },
-				{ "name": "ttl", "type": "number", "label": "Resolve interval (seconds)", "min": 60, "max": 86400, "value": 300 },
-				{ "name": "log", "type": "switch", "label": "Log matches of rules that use this alias" }
+				{ "name": "entries", "type": "textarea", "list": true, "label": "Entries", "required": true, "rows": 3, "placeholder": "172.16.40.10 172.16.40.11", "help": "Separate entries with spaces, commas or new lines.", "mono": true },
+				{ "name": "description", "type": "text", "label": "Description", "placeholder": "DMZ web tier" }
 			] } },
 		{ "name": "Prefilled, request fails", "width": "md", "note": "the server error shows in the dialog", "config": {
 			"label": "Edit description", "icon": "pen", "variant": "secondary",

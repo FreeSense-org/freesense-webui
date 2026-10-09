@@ -18,7 +18,7 @@
  * Identical GETs in one tick share a request, and a tick with more than
  * `maxBatch` (the server's limit) goes out as several batch calls.
  */
-import { api, url } from './api.js';
+import { api, url, otherMessages } from './api.js';
 
 const state = { queue: [], scheduled: false, supported: true, inFlight: 0, waiting: [] };
 const maxInFlight = 2;
@@ -38,7 +38,8 @@ function settle(item, res) {
 	if (res.status >= 200 && res.status < 300) item.resolve(res.body || {});
 	else {
 		const e = (res.body && res.body.error) || {};
-		item.reject({ status: res.status, code: e.code || 'error', message: e.message || 'The request failed.', fields: (e.details && e.details.fields) || null });
+		item.reject({ status: res.status, code: e.code || 'error', message: e.message || 'The request failed.', fields: (e.details && e.details.fields) || null,
+			messages: otherMessages(e.details) });
 	}
 }
 

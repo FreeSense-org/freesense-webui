@@ -39,7 +39,7 @@ if (res) table.reload();       // res = {data, meta}; null when cancelled
 | `number` | `min`, `max`, `step` | number or `null` |
 | `select` | `options: [{value, label}]` or `['a','b']` | string |
 | `switch` | — | boolean |
-| `textarea` | `rows`, `mono` | trimmed string |
+| `textarea` | `rows`, `mono`, `list` | trimmed string; with `list: true` an array of the items separated by spaces, commas or new lines (errors for `name.N…` show at the field) |
 
 The client checks only `required`; every other rule belongs to the API. On a
 422 each `fields[name]` message is shown under its input, the first invalid

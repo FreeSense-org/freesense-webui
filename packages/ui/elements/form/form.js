@@ -364,9 +364,9 @@ el.define('form', {
 					if (config.successHref) go(fill(config.successHref, saved, body));
 					return res;
 				} catch (err) {
-					if (err.status === 422 && err.fields) {
+					if (err.status === 422 && (err.fields || (err.messages && err.messages.length))) {
 						const { entries: e2, general } = applyFieldErrors(err.fields);
-						showErrors(e2, { message: err.message, general });
+						showErrors(e2, { message: err.message, general: general.concat(err.messages || []) });
 					} else {
 						showErrors([], { message: err.message || t('The changes could not be saved.') });
 					}

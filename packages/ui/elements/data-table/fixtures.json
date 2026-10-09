@@ -103,9 +103,9 @@
 			"sort": { "field": "name" },
 			"count": ["{n} alias", "{n} aliases"],
 			"columns": [
-				{ "field": "name", "label": "Name", "format": "mono", "primary": true, "sub": "descr", "sortable": true },
+				{ "field": "name", "label": "Name", "format": "mono", "primary": true, "sub": "description", "sortable": true },
 				{ "field": "type", "label": "Type", "format": "badge", "sortable": true, "badgeMap": { "host": { "label": "Hosts", "tone": "info" }, "network": { "label": "Networks", "tone": "accent" }, "port": { "label": "Ports" }, "urltable": { "label": "URL table", "tone": "warn" } } },
-				{ "field": "count", "label": "Entries", "format": "num", "sortable": true }
+				{ "field": "entries", "label": "Entries", "format": "chips", "itemField": "address", "max": 3, "mono": true }
 			],
 			"rowActions": [
 				{ "id": "edit", "label": "Edit", "icon": "pen", "inline": true, "href": "#alias-{name}" },
