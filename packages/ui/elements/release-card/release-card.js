@@ -124,7 +124,10 @@ el.define('release-card', {
 				const d = r.data || {};
 				const nodes = notesNodes(typeof d === 'string' ? d : d.notes);
 				if (!nodes.length) { $box.empty().append($('<p class="fs-release-card-notes-p fs-muted">').text(t('No release notes for this build.'))); return; }
-				$box.empty().append(nodes);
+				$box.empty();
+				/* The notes say which build they describe (on development channels they can trail the offered update). */
+				if (d.version) $box.append($('<p class="fs-release-card-notes-for fs-muted">').text(d.date ? t('Notes for {v}, published {d}', { v: d.version, d: fmt.datetime(d.date) }) : t('Notes for {v}', { v: d.version })));
+				$box.append(nodes);
 				if (d.url) $box.append($('<a class="fs-release-card-more" target="_blank" rel="noopener">').attr('href', d.url).append(document.createTextNode(`${t('Full release notes')} `), icon('arrow-up-right-from-square')));
 			}, (e) => states.error($box, { message: e.message, compact: true, retry: () => loadNotes($box) }));
 		}
