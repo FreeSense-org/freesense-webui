@@ -227,6 +227,12 @@ el.define('app-shell', {
 			applyMenu(prev);
 		});
 
+		/* An expired session (FS.api got a 401): sign in again and come back here. The gallery has no sign-in page. */
+		$(document).on(`fs:session-expired${ns}`, () => {
+			const signin = document.querySelector('meta[name="fs-login"]')?.getAttribute('content');
+			if (signin) location.href = `${signin}?next=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
+		});
+
 		markAreas();
 		return {
 			destroy() { $app.off(ns); $(document).off(ns); $(window).off(ns); },

@@ -50,8 +50,9 @@ The shell and its behaviour are specified in `packages/ui/elements/app-shell/spe
 | **Tools** | *Diagnostics:* Ping, Traceroute, DNS lookup, Test port, Packet capture · *Maintenance:* Backup & restore (3), Command prompt, Factory reset |
 | **System** | *Setup:* General, Appearance, Advanced (6) · *Access:* Users & groups (4), Certificates (3), REST API · *Maintenance:* Update Center, Packages, High availability |
 
-The profile lives under the avatar (`/me`), not in System. The gallery's
-`gallery/app/nav.json` is the working model of this table.
+The profile lives under the avatar (`/me`), not in System.
+`app/nav.json` is the model of this table: menus, card menus and the privilege
+(1.x id) of every page come from it, on the firewall and in the gallery.
 
 ## URLs
 

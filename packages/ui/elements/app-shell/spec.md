@@ -49,6 +49,7 @@ gets `"full"`.
 | Navigate to another multi-page feature | The card menu content cross-fades |
 | Navigate to a single page / dashboard | The card menu fades out and the content takes the full width |
 | Phone menu button | Drawer with every area as an accordion; Escape or the scrim closes it; focus is trapped while open |
+| The session expires (`fs:session-expired` from FS.api) | Goes to the sign-in page in `<meta name="fs-login">` with `next` set to the current page; without that meta (gallery) nothing happens |
 
 Transitions use `--fs-dur-*` and are off under `prefers-reduced-motion`.
 

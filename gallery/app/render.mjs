@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 /*
- * Gallery-only renderer for /gallery/app/*: fills shell.html from nav.json the
+ * Gallery-only renderer for /gallery/app/*: fills shell.html from app/nav.json the
  * same way the PHP Shell will. The markup helpers here are mirrored by the JS
  * in app-shell.js (which re-renders the card menu after partial navigation).
  */
@@ -19,6 +19,17 @@ const here = dirname(fileURLToPath(import.meta.url));
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const norm = (p) => p.replace(/\/+$/, '') || '/';
 const icon = (name) => `<i class="fa-solid fa-${esc(name)}" aria-hidden="true"></i>`;
+
+/** app/nav.json (the product navigation) with every href under a base path, as the PHP Nav does. */
+export function withBase(nav, base) {
+	const fix = (o) => { if (o.href) o.href = base + (o.href === '/' ? '/' : o.href); };
+	for (const a of nav.areas) {
+		fix(a);
+		for (const g of a.groups || []) for (const it of g.items) { fix(it); (it.pages || []).forEach(fix); }
+	}
+	(nav.other || []).forEach(fix);
+	return nav;
+}
 
 /** Find where a path lives in the model: {area, item, page}. */
 export function locate(nav, path) {
@@ -68,7 +79,7 @@ export function renderMenu(item, page) {
 }
 
 export async function renderApp(urlPath) {
-	const nav = JSON.parse(await readFile(join(here, 'nav.json'), 'utf8'));
+	const nav = withBase(JSON.parse(await readFile(join(here, '..', '..', 'app', 'nav.json'), 'utf8')), '/gallery/app');
 	const shell = await readFile(join(here, 'shell.html'), 'utf8');
 	const path = norm(urlPath) === '/gallery/app' ? '/gallery/app/' : urlPath;
 	const at = locate(nav, path);

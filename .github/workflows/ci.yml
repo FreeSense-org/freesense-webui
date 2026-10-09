@@ -42,6 +42,17 @@ jobs:
       - name: Released theme schemes are frozen
         run: node tools/theme/frozen.mjs
 
+  app:
+    name: PHP app (lint and tests)
+    runs-on: ubuntu-latest
+    container: php:8.5-cli
+    steps:
+      - uses: actions/checkout@v5
+      - name: Lint
+        run: find app tests -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: Tests (against the committed dist/)
+        run: php -d error_reporting=E_ALL tests/app/AppTest.php
+
   inventory:
     name: 1.x inventory matches the baseline
     runs-on: ubuntu-latest

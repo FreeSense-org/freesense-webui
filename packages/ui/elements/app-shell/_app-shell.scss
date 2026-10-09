@@ -573,4 +573,36 @@
 	}
 	.fs-app.is-navigating .fs-progress { width: 70%; opacity: 1; }
 	.fs-app.is-navigating .fs-main { opacity: 0.6; transition: opacity var(--fs-dur-fast); }
+
+	/* page elements stack with the standard gap */
+	.fs-main > [data-fs-el] + [data-fs-el] { margin-top: var(--fs-gap); }
+
+	/* ------------------------------------------------------ sign-in page */
+	.fs-signin {
+		display: grid;
+		place-items: center;
+		min-height: 100vh;
+		min-height: 100dvh;
+		padding: var(--fs-pad);
+		background: var(--fs-surface-sunken);
+	}
+	.fs-signin-card {
+		width: 100%;
+		max-width: 24rem;
+		padding: calc(var(--fs-pad) * 1.5);
+		border: var(--fs-border-width) solid var(--fs-border-default);
+		border-radius: var(--fs-radius-lg);
+		background: var(--fs-surface-raised);
+		box-shadow: var(--fs-shadow-sm);
+	}
+	.fs-signin-brand {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		margin-bottom: var(--fs-pad);
+		font-weight: 700;
+		color: var(--fs-text-strong);
+	}
+	.fs-signin-title { margin: 0; font-size: 1.375rem; color: var(--fs-text-strong); }
+	.fs-signin-host { margin: 0.25rem 0 var(--fs-pad); color: var(--fs-text-muted); overflow-wrap: anywhere; }
 }

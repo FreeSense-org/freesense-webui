@@ -39,6 +39,7 @@ docs/                      architecture and the rules everyone follows
 | [docs/ELEMENTS.md](docs/ELEMENTS.md) | The element catalogue and the versioning contract |
 | [docs/ELEMENT-GUIDE.md](docs/ELEMENT-GUIDE.md) | How to write an element: files, rendering, data, look, fixtures, accessibility |
 | [docs/PAGES.md](docs/PAGES.md) | Page patterns: how a page is a few lines, not a template |
+| [docs/APP.md](docs/APP.md) | The PHP app on the firewall: URLs, sessions, privileges, the builder |
 | [docs/THEMES.md](docs/THEMES.md) | Theme manifest, tokens, modes, accents, densities, distribution |
 | [docs/NAVIGATION.md](docs/NAVIGATION.md) | Areas, mega dropdowns, card menus, URLs |
 | [docs/PACKAGES.md](docs/PACKAGES.md) | How optional packages get an API side and a UI side |

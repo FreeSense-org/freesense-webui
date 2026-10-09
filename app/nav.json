@@ -1,10 +1,12 @@
 {
+	"$comment": "Navigation of WebUI 2.0 (docs/NAVIGATION.md). hrefs are relative to the WebUI base; priv is the 1.x privilege id that opens the page (null: every signed-in user); package hides the entry unless that package is installed.",
 	"areas": [
 		{
 			"id": "dashboard",
 			"title": "Dashboard",
 			"icon": "gauge-high",
-			"href": "/gallery/app/"
+			"href": "/",
+			"priv": "page-system-login-logout"
 		},
 		{
 			"id": "network",
@@ -18,54 +20,64 @@
 						{
 							"title": "Interfaces",
 							"icon": "ethernet",
-							"href": "/gallery/app/network/interfaces"
+							"href": "/network/interfaces",
+							"priv": "page-interfaces"
 						},
 						{
 							"title": "Assignments",
 							"icon": "right-left",
-							"href": "/gallery/app/network/assignments",
+							"href": "/network/assignments",
 							"pages": [
 								{
 									"title": "Assignments",
 									"icon": "right-left",
-									"href": "/gallery/app/network/assignments"
+									"href": "/network/assignments",
+									"priv": "page-interfaces-assignnetworkports"
 								},
 								{
 									"title": "VLANs",
 									"icon": "layer-group",
-									"href": "/gallery/app/network/vlans"
+									"href": "/network/vlans",
+									"priv": "page-interfaces-vlan"
 								},
 								{
 									"title": "QinQ",
 									"icon": "layer-group",
-									"href": "/gallery/app/network/qinq"
+									"href": "/network/qinq",
+									"priv": "page-interfaces-qinq"
 								},
 								{
 									"title": "Bridges",
 									"icon": "bridge",
-									"href": "/gallery/app/network/bridges"
+									"href": "/network/bridges",
+									"priv": "page-interfaces-bridge"
 								},
 								{
 									"title": "LAGG",
 									"icon": "link",
-									"href": "/gallery/app/network/lagg"
+									"href": "/network/lagg",
+									"priv": "page-interfaces-lagg"
 								},
 								{
 									"title": "GIF / GRE",
 									"icon": "road",
-									"href": "/gallery/app/network/tunnels"
+									"href": "/network/tunnels",
+									"priv": "page-interfaces-gif"
 								},
 								{
 									"title": "Interface groups",
 									"icon": "object-group",
-									"href": "/gallery/app/network/groups"
+									"href": "/network/groups",
+									"priv": "page-interfaces-groups"
 								}
-							]
+							],
+							"priv": "page-interfaces-assignnetworkports"
 						},
 						{
 							"title": "Wireless",
 							"icon": "wifi",
-							"href": "/gallery/app/network/wireless"
+							"href": "/network/wireless",
+							"priv": "page-interfaces-wireless"
 						}
 					]
 				},
@@ -76,24 +88,28 @@
 						{
 							"title": "Gateways",
 							"icon": "route",
-							"href": "/gallery/app/network/gateways",
+							"href": "/network/gateways",
 							"pages": [
 								{
 									"title": "Gateways",
 									"icon": "route",
-									"href": "/gallery/app/network/gateways"
+									"href": "/network/gateways",
+									"priv": "page-system-gateways"
 								},
 								{
 									"title": "Gateway groups",
 									"icon": "sitemap",
-									"href": "/gallery/app/network/gateway-groups"
+									"href": "/network/gateway-groups",
+									"priv": "page-system-gatewaygroups"
 								},
 								{
 									"title": "Static routes",
 									"icon": "signs-post",
-									"href": "/gallery/app/network/routes"
+									"href": "/network/routes",
+									"priv": "page-system-staticroutes"
 								}
-							]
+							],
+							"priv": "page-system-gateways"
 						}
 					]
 				},
@@ -104,76 +120,90 @@
 						{
 							"title": "DHCP server",
 							"icon": "address-book",
-							"href": "/gallery/app/network/dhcp",
+							"href": "/network/dhcp",
 							"pages": [
 								{
 									"title": "LAN",
 									"icon": "ethernet",
-									"href": "/gallery/app/network/dhcp"
+									"href": "/network/dhcp",
+									"priv": "page-services-dhcpserver"
 								},
 								{
 									"title": "GUEST",
 									"icon": "ethernet",
-									"href": "/gallery/app/network/dhcp-opt1"
+									"href": "/network/dhcp-opt1",
+									"priv": "page-services-dhcpserver"
 								},
 								{
 									"title": "IOT",
 									"icon": "ethernet",
-									"href": "/gallery/app/network/dhcp-opt2"
+									"href": "/network/dhcp-opt2",
+									"priv": "page-services-dhcpserver"
 								},
 								{
 									"title": "Relay",
 									"icon": "arrow-right-arrow-left",
-									"href": "/gallery/app/network/dhcp-relay"
+									"href": "/network/dhcp-relay",
+									"priv": "page-services-dhcprelay"
 								},
 								{
 									"title": "Settings",
 									"icon": "gear",
-									"href": "/gallery/app/network/dhcp-settings"
+									"href": "/network/dhcp-settings",
+									"priv": "page-services-dhcpserver-settings"
 								}
-							]
+							],
+							"priv": "page-services-dhcpserver"
 						},
 						{
 							"title": "DNS resolver",
 							"icon": "globe",
-							"href": "/gallery/app/network/dns-resolver",
+							"href": "/network/dns-resolver",
 							"pages": [
 								{
 									"title": "General",
 									"icon": "gear",
-									"href": "/gallery/app/network/dns-resolver"
+									"href": "/network/dns-resolver",
+									"priv": "page-services-dnsresolver"
 								},
 								{
 									"title": "Host overrides",
 									"icon": "server",
-									"href": "/gallery/app/network/dns-hosts"
+									"href": "/network/dns-hosts",
+									"priv": "page-services-dnsresolver-edithost"
 								},
 								{
 									"title": "Domain overrides",
 									"icon": "sitemap",
-									"href": "/gallery/app/network/dns-domains"
+									"href": "/network/dns-domains",
+									"priv": "page-services-dnsresolver-editdomainoverride"
 								},
 								{
 									"title": "Access lists",
 									"icon": "list-check",
-									"href": "/gallery/app/network/dns-acls"
+									"href": "/network/dns-acls",
+									"priv": "page-services-dnsresolver-acls"
 								},
 								{
 									"title": "Advanced",
 									"icon": "sliders",
-									"href": "/gallery/app/network/dns-advanced"
+									"href": "/network/dns-advanced",
+									"priv": "page-services-dnsresolver-advanced"
 								}
-							]
+							],
+							"priv": "page-services-dnsresolver"
 						},
 						{
 							"title": "Dynamic DNS",
 							"icon": "arrows-rotate",
-							"href": "/gallery/app/network/ddns"
+							"href": "/network/ddns",
+							"priv": "page-services-dynamicdnsclients"
 						},
 						{
 							"title": "Router advertisements",
 							"icon": "tower-broadcast",
-							"href": "/gallery/app/network/radvd"
+							"href": "/network/radvd",
+							"priv": "page-services-router-advertisement"
 						}
 					]
 				}
@@ -191,49 +221,58 @@
 						{
 							"title": "Rules",
 							"icon": "list-check",
-							"href": "/gallery/app/security/rules"
+							"href": "/security/rules",
+							"priv": "page-firewall-rules"
 						},
 						{
 							"title": "NAT",
 							"icon": "shuffle",
-							"href": "/gallery/app/security/nat",
+							"href": "/security/nat",
 							"pages": [
 								{
 									"title": "Port forward",
 									"icon": "arrow-right-to-bracket",
-									"href": "/gallery/app/security/nat"
+									"href": "/security/nat",
+									"priv": "page-firewall-nat-portforward"
 								},
 								{
 									"title": "Outbound",
 									"icon": "arrow-right-from-bracket",
-									"href": "/gallery/app/security/nat-outbound"
+									"href": "/security/nat-outbound",
+									"priv": "page-firewall-nat-outbound"
 								},
 								{
 									"title": "1:1",
 									"icon": "arrows-left-right",
-									"href": "/gallery/app/security/nat-1to1"
+									"href": "/security/nat-1to1",
+									"priv": "page-firewall-nat-1-1"
 								},
 								{
 									"title": "NPt",
 									"icon": "arrows-left-right-to-line",
-									"href": "/gallery/app/security/nat-npt"
+									"href": "/security/nat-npt",
+									"priv": "page-firewall-nat-npt"
 								}
-							]
+							],
+							"priv": "page-firewall-nat-portforward"
 						},
 						{
 							"title": "Aliases",
 							"icon": "tags",
-							"href": "/gallery/app/security/aliases"
+							"href": "/security/aliases",
+							"priv": "page-firewall-aliases"
 						},
 						{
 							"title": "Schedules",
 							"icon": "calendar-days",
-							"href": "/gallery/app/security/schedules"
+							"href": "/security/schedules",
+							"priv": "page-firewall-schedules"
 						},
 						{
 							"title": "Virtual IPs",
 							"icon": "clone",
-							"href": "/gallery/app/security/virtual-ips"
+							"href": "/security/virtual-ips",
+							"priv": "page-firewall-virtualipaddresses"
 						}
 					]
 				},
@@ -244,29 +283,34 @@
 						{
 							"title": "Traffic shaper",
 							"icon": "sliders",
-							"href": "/gallery/app/security/shaper",
+							"href": "/security/shaper",
 							"pages": [
 								{
 									"title": "By interface",
 									"icon": "ethernet",
-									"href": "/gallery/app/security/shaper"
+									"href": "/security/shaper",
+									"priv": "page-firewall-trafficshaper"
 								},
 								{
 									"title": "By queue",
 									"icon": "layer-group",
-									"href": "/gallery/app/security/shaper-queues"
+									"href": "/security/shaper-queues",
+									"priv": "page-firewall-trafficshaper-queues"
 								},
 								{
 									"title": "Limiters",
 									"icon": "gauge",
-									"href": "/gallery/app/security/limiters"
+									"href": "/security/limiters",
+									"priv": "page-firewall-trafficshaper-limiter"
 								},
 								{
 									"title": "Wizards",
 									"icon": "wand-magic-sparkles",
-									"href": "/gallery/app/security/shaper-wizards"
+									"href": "/security/shaper-wizards",
+									"priv": "page-firewall-trafficshaper-wizard"
 								}
-							]
+							],
+							"priv": "page-firewall-trafficshaper"
 						}
 					]
 				},
@@ -277,17 +321,23 @@
 						{
 							"title": "IDS / IPS",
 							"icon": "user-shield",
-							"href": "/gallery/app/security/ids"
+							"href": "/security/ids",
+							"package": "suricata",
+							"priv": "page-all"
 						},
 						{
 							"title": "Threat feeds",
 							"icon": "rss",
-							"href": "/gallery/app/security/feeds"
+							"href": "/security/feeds",
+							"package": "pfblockerng",
+							"priv": "page-all"
 						},
 						{
 							"title": "CrowdSec",
 							"icon": "users-viewfinder",
-							"href": "/gallery/app/security/crowdsec"
+							"href": "/security/crowdsec",
+							"package": "crowdsec",
+							"priv": "page-all"
 						}
 					]
 				}
@@ -305,88 +355,110 @@
 						{
 							"title": "WireGuard",
 							"icon": "bolt",
-							"href": "/gallery/app/vpn/wireguard",
+							"href": "/vpn/wireguard",
 							"pages": [
 								{
 									"title": "Tunnels",
 									"icon": "network-wired",
-									"href": "/gallery/app/vpn/wireguard"
+									"href": "/vpn/wireguard",
+									"package": "wireguard",
+									"priv": "page-all"
 								},
 								{
 									"title": "Peers",
 									"icon": "users",
-									"href": "/gallery/app/vpn/wireguard-peers"
+									"href": "/vpn/wireguard-peers",
+									"package": "wireguard",
+									"priv": "page-all"
 								},
 								{
 									"title": "Settings",
 									"icon": "gear",
-									"href": "/gallery/app/vpn/wireguard-settings"
+									"href": "/vpn/wireguard-settings",
+									"package": "wireguard",
+									"priv": "page-all"
 								},
 								{
 									"title": "Status",
 									"icon": "heart-pulse",
-									"href": "/gallery/app/vpn/wireguard-status"
+									"href": "/vpn/wireguard-status",
+									"package": "wireguard",
+									"priv": "page-all"
 								}
-							]
+							],
+							"package": "wireguard",
+							"priv": "page-all"
 						},
 						{
 							"title": "OpenVPN",
 							"icon": "key",
-							"href": "/gallery/app/vpn/openvpn",
+							"href": "/vpn/openvpn",
 							"pages": [
 								{
 									"title": "Servers",
 									"icon": "server",
-									"href": "/gallery/app/vpn/openvpn"
+									"href": "/vpn/openvpn",
+									"priv": "page-openvpn-server"
 								},
 								{
 									"title": "Clients",
 									"icon": "laptop",
-									"href": "/gallery/app/vpn/openvpn-clients"
+									"href": "/vpn/openvpn-clients",
+									"priv": "page-openvpn-client"
 								},
 								{
 									"title": "Client overrides",
 									"icon": "user-gear",
-									"href": "/gallery/app/vpn/openvpn-csc"
+									"href": "/vpn/openvpn-csc",
+									"priv": "page-openvpn-csc"
 								},
 								{
 									"title": "Client export",
 									"icon": "file-export",
-									"href": "/gallery/app/vpn/openvpn-export"
+									"href": "/vpn/openvpn-export",
+									"package": "OpenVPN Client Export",
+									"priv": "page-all"
 								}
-							]
+							],
+							"priv": "page-openvpn-server"
 						},
 						{
 							"title": "IPsec",
 							"icon": "shield",
-							"href": "/gallery/app/vpn/ipsec",
+							"href": "/vpn/ipsec",
 							"pages": [
 								{
 									"title": "Tunnels",
 									"icon": "network-wired",
-									"href": "/gallery/app/vpn/ipsec"
+									"href": "/vpn/ipsec",
+									"priv": "page-vpn-ipsec"
 								},
 								{
 									"title": "Mobile clients",
 									"icon": "mobile-screen",
-									"href": "/gallery/app/vpn/ipsec-mobile"
+									"href": "/vpn/ipsec-mobile",
+									"priv": "page-vpn-ipsec-mobile"
 								},
 								{
 									"title": "Pre-shared keys",
 									"icon": "key",
-									"href": "/gallery/app/vpn/ipsec-keys"
+									"href": "/vpn/ipsec-keys",
+									"priv": "page-vpn-ipsec-listkeys"
 								},
 								{
 									"title": "Advanced",
 									"icon": "sliders",
-									"href": "/gallery/app/vpn/ipsec-advanced"
+									"href": "/vpn/ipsec-advanced",
+									"priv": "page-vpn-ipsec-settings"
 								}
-							]
+							],
+							"priv": "page-vpn-ipsec"
 						},
 						{
 							"title": "L2TP",
 							"icon": "plug",
-							"href": "/gallery/app/vpn/l2tp"
+							"href": "/vpn/l2tp",
+							"priv": "page-vpn-vpnl2tp"
 						}
 					]
 				}
@@ -404,17 +476,21 @@
 						{
 							"title": "NTP",
 							"icon": "clock",
-							"href": "/gallery/app/services/ntp"
+							"href": "/services/ntp",
+							"priv": "page-services-ntpd"
 						},
 						{
 							"title": "UPnP & NAT-PMP",
 							"icon": "tower-broadcast",
-							"href": "/gallery/app/services/upnp"
+							"href": "/services/upnp",
+							"package": "miniupnpd",
+							"priv": "page-all"
 						},
 						{
 							"title": "IGMP proxy",
 							"icon": "diagram-project",
-							"href": "/gallery/app/services/igmp"
+							"href": "/services/igmp",
+							"priv": "page-services-igmpproxy"
 						}
 					]
 				},
@@ -425,12 +501,15 @@
 						{
 							"title": "Captive portal",
 							"icon": "door-open",
-							"href": "/gallery/app/services/captive-portal"
+							"href": "/services/captive-portal",
+							"priv": "page-services-captiveportal"
 						},
 						{
 							"title": "ACME certificates",
 							"icon": "certificate",
-							"href": "/gallery/app/services/acme"
+							"href": "/services/acme",
+							"package": "acme",
+							"priv": "page-all"
 						}
 					]
 				},
@@ -441,7 +520,8 @@
 						{
 							"title": "SNMP",
 							"icon": "chart-simple",
-							"href": "/gallery/app/services/snmp"
+							"href": "/services/snmp",
+							"priv": "page-services-snmp"
 						}
 					]
 				},
@@ -452,12 +532,14 @@
 						{
 							"title": "Wake-on-LAN",
 							"icon": "power-off",
-							"href": "/gallery/app/services/wol"
+							"href": "/services/wol",
+							"priv": "page-services-wakeonlan"
 						},
 						{
 							"title": "PPPoE server",
 							"icon": "plug",
-							"href": "/gallery/app/services/pppoe"
+							"href": "/services/pppoe",
+							"priv": "page-services-pppoeserver"
 						}
 					]
 				}
@@ -475,49 +557,58 @@
 						{
 							"title": "Logs",
 							"icon": "scroll",
-							"href": "/gallery/app/insights/logs",
+							"href": "/insights/logs",
 							"pages": [
 								{
 									"title": "Firewall",
 									"icon": "shield-halved",
-									"href": "/gallery/app/insights/logs"
+									"href": "/insights/logs",
+									"priv": "page-diagnostics-logs-firewall"
 								},
 								{
 									"title": "System",
 									"icon": "server",
-									"href": "/gallery/app/insights/logs-system"
+									"href": "/insights/logs-system",
+									"priv": "page-diagnostics-logs-system"
 								},
 								{
 									"title": "DHCP",
 									"icon": "address-book",
-									"href": "/gallery/app/insights/logs-dhcp"
+									"href": "/insights/logs-dhcp",
+									"priv": "page-diagnostics-logs-system"
 								},
 								{
 									"title": "DNS",
 									"icon": "globe",
-									"href": "/gallery/app/insights/logs-dns"
+									"href": "/insights/logs-dns",
+									"priv": "page-diagnostics-logs-system"
 								},
 								{
 									"title": "VPN",
 									"icon": "lock",
-									"href": "/gallery/app/insights/logs-vpn"
+									"href": "/insights/logs-vpn",
+									"priv": "page-diagnostics-logs-pptpvpn"
 								},
 								{
 									"title": "Settings",
 									"icon": "gear",
-									"href": "/gallery/app/insights/logs-settings"
+									"href": "/insights/logs-settings",
+									"priv": "page-diagnostics-logs-settings"
 								}
-							]
+							],
+							"priv": "page-diagnostics-logs-firewall"
 						},
 						{
 							"title": "Traffic",
 							"icon": "chart-area",
-							"href": "/gallery/app/insights/traffic"
+							"href": "/insights/traffic",
+							"priv": "page-status-trafficgraph"
 						},
 						{
 							"title": "States",
 							"icon": "table-cells",
-							"href": "/gallery/app/insights/states"
+							"href": "/insights/states",
+							"priv": "page-diagnostics-showstates"
 						}
 					]
 				},
@@ -528,22 +619,26 @@
 						{
 							"title": "Gateways",
 							"icon": "route",
-							"href": "/gallery/app/insights/gateways"
+							"href": "/insights/gateways",
+							"priv": "page-status-gateways"
 						},
 						{
 							"title": "Services",
 							"icon": "server",
-							"href": "/gallery/app/insights/services"
+							"href": "/insights/services",
+							"priv": "page-status-services"
 						},
 						{
 							"title": "DHCP leases",
 							"icon": "address-card",
-							"href": "/gallery/app/insights/leases"
+							"href": "/insights/leases",
+							"priv": "page-status-dhcpleases"
 						},
 						{
 							"title": "ARP / NDP",
 							"icon": "table-list",
-							"href": "/gallery/app/insights/arp"
+							"href": "/insights/arp",
+							"priv": "page-diagnostics-arptable"
 						}
 					]
 				}
@@ -561,27 +656,32 @@
 						{
 							"title": "Ping",
 							"icon": "satellite-dish",
-							"href": "/gallery/app/tools/ping"
+							"href": "/tools/ping",
+							"priv": "page-diagnostics-ping"
 						},
 						{
 							"title": "Traceroute",
 							"icon": "diagram-project",
-							"href": "/gallery/app/tools/traceroute"
+							"href": "/tools/traceroute",
+							"priv": "page-diagnostics-traceroute"
 						},
 						{
 							"title": "DNS lookup",
 							"icon": "magnifying-glass",
-							"href": "/gallery/app/tools/dns"
+							"href": "/tools/dns",
+							"priv": "page-diagnostics-dns"
 						},
 						{
 							"title": "Test port",
 							"icon": "plug-circle-check",
-							"href": "/gallery/app/tools/test-port"
+							"href": "/tools/test-port",
+							"priv": "page-diagnostics-testport"
 						},
 						{
 							"title": "Packet capture",
 							"icon": "file-waveform",
-							"href": "/gallery/app/tools/capture"
+							"href": "/tools/capture",
+							"priv": "page-diagnostics-packetcapture"
 						}
 					]
 				},
@@ -592,34 +692,40 @@
 						{
 							"title": "Backup & restore",
 							"icon": "floppy-disk",
-							"href": "/gallery/app/tools/backup",
+							"href": "/tools/backup",
 							"pages": [
 								{
 									"title": "Backup & restore",
 									"icon": "floppy-disk",
-									"href": "/gallery/app/tools/backup"
+									"href": "/tools/backup",
+									"priv": "page-diagnostics-backup-restore"
 								},
 								{
 									"title": "Remote backup",
 									"icon": "cloud-arrow-up",
-									"href": "/gallery/app/tools/backup-remote"
+									"href": "/tools/backup-remote",
+									"priv": "page-diagnostics-backup-restore-remote"
 								},
 								{
 									"title": "Config history",
 									"icon": "clock-rotate-left",
-									"href": "/gallery/app/tools/history"
+									"href": "/tools/history",
+									"priv": "page-diagnostics-configurationhistory"
 								}
-							]
+							],
+							"priv": "page-diagnostics-backup-restore"
 						},
 						{
 							"title": "Command prompt",
 							"icon": "terminal",
-							"href": "/gallery/app/tools/command"
+							"href": "/tools/command",
+							"priv": "page-diagnostics-command"
 						},
 						{
 							"title": "Factory reset",
 							"icon": "rotate-left",
-							"href": "/gallery/app/tools/reset"
+							"href": "/tools/reset",
+							"priv": "page-diagnostics-factorydefaults"
 						}
 					]
 				}
@@ -637,49 +743,58 @@
 						{
 							"title": "General",
 							"icon": "gear",
-							"href": "/gallery/app/system/general"
+							"href": "/system/general",
+							"priv": "page-system-generalsetup"
 						},
 						{
 							"title": "Appearance",
 							"icon": "palette",
-							"href": "/gallery/app/system/appearance"
+							"href": "/system/appearance",
+							"priv": "page-system-generalsetup"
 						},
 						{
 							"title": "Advanced",
 							"icon": "sliders",
-							"href": "/gallery/app/system/advanced",
+							"href": "/system/advanced",
 							"pages": [
 								{
 									"title": "Admin access",
 									"icon": "user-lock",
-									"href": "/gallery/app/system/advanced"
+									"href": "/system/advanced",
+									"priv": "page-system-advanced-admin"
 								},
 								{
 									"title": "Firewall & NAT",
 									"icon": "shield-halved",
-									"href": "/gallery/app/system/advanced-firewall"
+									"href": "/system/advanced-firewall",
+									"priv": "page-system-advanced-firewall"
 								},
 								{
 									"title": "Networking",
 									"icon": "network-wired",
-									"href": "/gallery/app/system/advanced-network"
+									"href": "/system/advanced-network",
+									"priv": "page-system-advanced-network"
 								},
 								{
 									"title": "Miscellaneous",
 									"icon": "ellipsis",
-									"href": "/gallery/app/system/advanced-misc"
+									"href": "/system/advanced-misc",
+									"priv": "page-system-advanced-misc"
 								},
 								{
 									"title": "Notifications",
 									"icon": "bell",
-									"href": "/gallery/app/system/notifications"
+									"href": "/system/notifications",
+									"priv": "page-system-advanced-notifications"
 								},
 								{
 									"title": "Tunables",
 									"icon": "sliders",
-									"href": "/gallery/app/system/tunables"
+									"href": "/system/tunables",
+									"priv": "page-system-advanced-sysctl"
 								}
-							]
+							],
+							"priv": "page-system-advanced-admin"
 						}
 					]
 				},
@@ -690,56 +805,66 @@
 						{
 							"title": "Users & groups",
 							"icon": "users",
-							"href": "/gallery/app/system/users",
+							"href": "/system/users",
 							"pages": [
 								{
 									"title": "Users",
 									"icon": "user",
-									"href": "/gallery/app/system/users"
+									"href": "/system/users",
+									"priv": "page-system-usermanager"
 								},
 								{
 									"title": "Groups",
 									"icon": "users",
-									"href": "/gallery/app/system/groups"
+									"href": "/system/groups",
+									"priv": "page-system-groupmanager"
 								},
 								{
 									"title": "Authentication servers",
 									"icon": "id-card",
-									"href": "/gallery/app/system/auth-servers"
+									"href": "/system/auth-servers",
+									"priv": "page-system-authservers"
 								},
 								{
 									"title": "Settings",
 									"icon": "gear",
-									"href": "/gallery/app/system/user-settings"
+									"href": "/system/user-settings",
+									"priv": "page-system-usermanager-settings"
 								}
-							]
+							],
+							"priv": "page-system-usermanager"
 						},
 						{
 							"title": "Certificates",
 							"icon": "certificate",
-							"href": "/gallery/app/system/certificates",
+							"href": "/system/certificates",
 							"pages": [
 								{
 									"title": "Authorities",
 									"icon": "building-shield",
-									"href": "/gallery/app/system/cas"
+									"href": "/system/cas",
+									"priv": "page-system-camanager"
 								},
 								{
 									"title": "Certificates",
 									"icon": "certificate",
-									"href": "/gallery/app/system/certificates"
+									"href": "/system/certificates",
+									"priv": "page-system-certmanager"
 								},
 								{
 									"title": "Revocation",
 									"icon": "ban",
-									"href": "/gallery/app/system/crls"
+									"href": "/system/crls",
+									"priv": "page-system-crlmanager"
 								}
-							]
+							],
+							"priv": "page-system-certmanager"
 						},
 						{
 							"title": "REST API",
 							"icon": "code",
-							"href": "/gallery/app/system/api"
+							"href": "/system/api",
+							"priv": "page-system-restapi"
 						}
 					]
 				},
@@ -750,17 +875,20 @@
 						{
 							"title": "Update Center",
 							"icon": "cloud-arrow-down",
-							"href": "/gallery/app/system/update"
+							"href": "/system/update",
+							"priv": "page-system-packagemanager-installpackage"
 						},
 						{
 							"title": "Packages",
 							"icon": "boxes-stacked",
-							"href": "/gallery/app/system/packages"
+							"href": "/system/packages",
+							"priv": "page-system-packagemanager-installed"
 						},
 						{
 							"title": "High availability",
 							"icon": "server",
-							"href": "/gallery/app/system/ha"
+							"href": "/system/ha",
+							"priv": "page-system-hasync"
 						}
 					]
 				}
@@ -771,7 +899,8 @@
 		{
 			"title": "Profile",
 			"icon": "circle-user",
-			"href": "/gallery/app/me"
+			"href": "/me",
+			"priv": null
 		}
 	]
 }

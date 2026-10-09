@@ -12,7 +12,7 @@
  *   dist/public/ui/fs-ui.css        engine CSS (Bootstrap + bridge + elements), theme-agnostic
  *   dist/public/ui/fs-ui.js         runtime (jQuery 4 + Bootstrap 5 + FS)
  *   dist/public/ui/fonts/*.woff2    Inter, JetBrains Mono, Font Awesome Solid
- *   dist/public/ui/manifest.json    versions + sha256 of every file (cache busting)
+ *   dist/public/ui/manifest.json    versions, element catalogue (app/ Ui checks it), sha256 of every file
  *   dist/public/themes/<name>/      theme.css + theme.json for every packages/theme-NAME/NAME.theme.json
  *
  * Output is deterministic: CI rebuilds and fails on any difference.
@@ -144,6 +144,6 @@ function walk(dir) {
 	return readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walk(join(dir, d.name)) : [join(dir, d.name)]));
 }
 const files = Object.fromEntries(walk(pub).sort().map((f) => [relative(pub, f).split('\\').join('/'), sha(readFileSync(f))]));
-writeFileSync(join(uiOut, 'manifest.json'), JSON.stringify({ name: ui.name, version: ui.version, themeScheme: ui.freesense.themeScheme, themes, files }, null, '\t') + '\n');
+writeFileSync(join(uiOut, 'manifest.json'), JSON.stringify({ name: ui.name, version: ui.version, themeScheme: ui.freesense.themeScheme, themes, elements, files }, null, '\t') + '\n');
 log(`manifest ${Object.keys(files).length} files, version ${ui.version}`);
 if (!existsSync(join(pub, 'themes', 'freesense'))) { console.error('build: the core theme "freesense" is missing'); process.exit(1); }
