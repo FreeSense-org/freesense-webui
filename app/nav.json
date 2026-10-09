@@ -157,6 +157,12 @@
 									"icon": "gear",
 									"href": "/network/dhcp-settings",
 									"priv": "page-services-dhcpserver-settings"
+								},
+								{
+									"title": "DHCPv6 settings",
+									"icon": "gear",
+									"href": "/network/dhcpv6-settings",
+									"priv": "page-services-dhcpv6server-settings"
 								}
 							],
 							"priv": "page-services-dhcpserver"
