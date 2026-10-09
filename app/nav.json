@@ -203,7 +203,21 @@
 							"title": "Dynamic DNS",
 							"icon": "arrows-rotate",
 							"href": "/network/ddns",
-							"priv": "page-services-dynamicdnsclients"
+							"priv": "page-services-dynamicdnsclients",
+							"pages": [
+								{
+									"title": "Dynamic DNS",
+									"icon": "arrows-rotate",
+									"href": "/network/ddns",
+									"priv": "page-services-dynamicdnsclients"
+								},
+								{
+									"title": "RFC 2136",
+									"icon": "key",
+									"href": "/network/rfc2136",
+									"priv": "page-services-rfc2136clients"
+								}
+							]
 						},
 						{
 							"title": "Router advertisements",
