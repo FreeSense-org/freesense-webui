@@ -117,7 +117,6 @@
 		container-type: inline-size;
 		--fs-form-gap: var(--fs-gap);
 		--fs-form-pad: var(--fs-pad);
-		max-width: 60rem;
 		&[data-density='compact'] {
 			--fs-form-gap: calc(var(--fs-gap) * 0.7);
 			--fs-form-pad: calc(var(--fs-pad) * 0.7);
