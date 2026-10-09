@@ -43,6 +43,9 @@ abstract class ResourcePage extends Page {
 	/* A service's own pending state ({pending: bool}) and apply route, instead of the firewall's APPLY subsystem. */
 	const PENDING = null;
 	const APPLY_PATH = null;
+	/* Items can be created / deleted (false for fixed sets, e.g. one entry per interface). */
+	const CREATE = true;
+	const DELETE = true;
 
 	/* One item, lower case: "alias". */
 	abstract protected function noun(): string;
@@ -59,11 +62,16 @@ abstract class ResourcePage extends Page {
 		return array('field' => static::KEY, 'dir' => 'asc');
 	}
 
+	/* Extra elements between the apply bar and the table (e.g. a related setting). */
+	protected function above(Ui $ui): array {
+		return array();
+	}
+
 	public static function match(string $route): ?array {
 		if ($route === static::ROUTE) {
 			return array('view' => 'list');
 		}
-		if ($route === static::ROUTE . '/new') {
+		if (static::CREATE && ($route === static::ROUTE . '/new')) {
 			return array('view' => 'new');
 		}
 		$prefix = static::ROUTE . '/edit/';
@@ -114,30 +122,44 @@ abstract class ResourcePage extends Page {
 			->toolbar($toolbar)
 			->paging(array('mode' => 'client', 'size' => 25, 'sizes' => array(25, 50, 100)))
 			->rowLink(Url::page(static::ROUTE . "/edit/{$key}"))
-			->rowActions(array(
-				array('id' => 'edit', 'label' => gettext('Edit'), 'icon' => 'pen', 'inline' => true, 'href' => Url::page(static::ROUTE . "/edit/{$key}")),
-				array('id' => 'delete', 'label' => gettext('Delete'), 'icon' => 'trash', 'danger' => true, 'api' => array(
-					'method' => 'DELETE',
-					'path' => $this->api("/{$key}"),
-					'pending' => static::APPLY !== null,
-					'success' => sprintf(gettext('Deleted %s'), $key),
-					'confirm' => array('title' => sprintf(gettext('Delete %s?'), $key), 'confirmLabel' => gettext('Delete'), 'danger' => true,
-					    'text' => gettext('This cannot be undone.')),
-				)),
-			))
-			->empty(array('icon' => 'inbox', 'title' => sprintf(gettext('No %s yet'), $this->plural()),
-			    'action' => array('label' => sprintf(gettext('Add %s'), $this->noun()), 'icon' => 'plus', 'href' => Url::page($new))));
+			->rowActions($this->rowActions($key))
+			->empty(array('icon' => 'inbox', 'title' => sprintf(gettext('No %s yet'), $this->plural())) +
+			    (static::CREATE ? array('action' => array('label' => sprintf(gettext('Add %s'), $this->noun()), 'icon' => 'plus', 'href' => Url::page($new))) : array()));
 		if ($tableFilters) {
 			$table->filters($tableFilters);
 		}
 		if ($this->sort() !== null) {
 			$table->sort($this->sort());
 		}
-		$ui->add($this->header($ui)->primary('add', sprintf(gettext('Add %s'), $this->noun()), 'plus', $new));
+		$header = $this->header($ui);
+		if (static::CREATE) {
+			$header->primary('add', sprintf(gettext('Add %s'), $this->noun()), 'plus', $new);
+		}
+		$ui->add($header);
 		if ((static::APPLY !== null) || (static::PENDING !== null)) {
 			$ui->add($this->applyBar($ui));
 		}
+		foreach ($this->above($ui) as $el) {
+			$ui->add($el);
+		}
 		$ui->add($table);
+	}
+
+	protected function rowActions(string $key): array {
+		/* Items keyed by position are named by their noun. */
+		$name = (static::KEY === 'id') ? sprintf(gettext('this %s'), $this->noun()) : $key;
+		$actions = array(
+			array('id' => 'edit', 'label' => gettext('Edit'), 'icon' => 'pen', 'inline' => true, 'href' => Url::page(static::ROUTE . "/edit/{$key}")),
+			array('id' => 'delete', 'label' => gettext('Delete'), 'icon' => 'trash', 'danger' => true, 'api' => array(
+				'method' => 'DELETE',
+				'path' => $this->api("/{$key}"),
+				'pending' => (static::APPLY !== null) || (static::PENDING !== null),
+				'success' => (static::KEY === 'id') ? sprintf(gettext('Deleted the %s'), $this->noun()) : sprintf(gettext('Deleted %s'), $key),
+				'confirm' => array('title' => sprintf(gettext('Delete %s?'), $name), 'confirmLabel' => gettext('Delete'), 'danger' => true,
+				    'text' => gettext('This cannot be undone.')),
+			)),
+		);
+		return static::DELETE ? $actions : array_slice($actions, 0, 1);
 	}
 
 	protected function applyBar(Ui $ui): Element {

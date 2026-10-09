@@ -134,7 +134,11 @@ foreach (require FS_WEBUI_APP . '/pages.php' as $class) {
 	t(isset($entries[$class::ROUTE]) || ($class::PRIV !== null), "{$class}: in the navigation, or names its own privilege");
 	$routes = array($class::ROUTE);
 	if (is_subclass_of($class, FreeSense\WebUI\Patterns\ResourcePage::class)) {
-		$routes[] = $class::ROUTE . '/new';
+		if ($class::CREATE) {
+			$routes[] = $class::ROUTE . '/new';
+		} else {
+			t($class::match($class::ROUTE . '/new') === null, "{$class}: no editor for new items");
+		}
 		$routes[] = $class::ROUTE . '/edit/Some_Item';
 	}
 	foreach ($routes as $r) {
