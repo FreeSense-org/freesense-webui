@@ -27,6 +27,11 @@ abstract class SettingsPage extends Page {
 	const RESOURCE = '';
 	/* Schema name when it differs from RESOURCE. */
 	const SCHEMA = null;
+	/* Saved changes that wait for Apply: the pending route ({pending: bool}) and the apply route, or null. */
+	const PENDING = null;
+	const APPLY_PATH = null;
+	/* The API path the apply bar watches for writes (default: RESOURCE). */
+	const APPLY_MATCH = null;
 
 	public function subtitle(): string {
 		return '';
@@ -38,10 +43,21 @@ abstract class SettingsPage extends Page {
 		if ($this->subtitle() !== '') {
 			$header->subtitle($this->subtitle());
 		}
-		$ui->add($header, $ui->form()
+		$ui->add($header);
+		if (static::PENDING !== null) {
+			$ui->add($ui->applyBar()
+				->source(array('path' => static::PENDING))
+				->apply(array('method' => 'POST', 'path' => static::APPLY_PATH))
+				->match('/' . (static::APPLY_MATCH ?? static::RESOURCE)));
+		}
+		$save = array('method' => 'PUT', 'path' => $path);
+		if (static::PENDING !== null) {
+			$save['pending'] = true;
+		}
+		$ui->add($ui->form()
 			->schemaSource(array('path' => '/v1/schema/' . (static::SCHEMA ?? static::RESOURCE)))
 			->load(array('path' => $path))
-			->save(array('method' => 'PUT', 'path' => $path))
+			->save($save)
 			->label($this->title()));
 	}
 }

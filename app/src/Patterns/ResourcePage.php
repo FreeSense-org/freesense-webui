@@ -40,6 +40,9 @@ abstract class ResourcePage extends Page {
 	const SCHEMA = null;
 	/* The key of an item's editor values when the API nests them (e.g. "fields"), or null. */
 	const LOAD_FIELD = null;
+	/* A service's own pending state ({pending: bool}) and apply route, instead of the firewall's APPLY subsystem. */
+	const PENDING = null;
+	const APPLY_PATH = null;
 
 	/* One item, lower case: "alias". */
 	abstract protected function noun(): string;
@@ -75,7 +78,8 @@ abstract class ResourcePage extends Page {
 			case 'new':
 				return sprintf(gettext('New %s'), $this->noun());
 			case 'edit':
-				return (string)$this->params['key'];
+				/* Items keyed by position have no name to show. */
+				return (static::KEY === 'id') ? sprintf(gettext('Edit %s'), $this->noun()) : (string)$this->params['key'];
 			default:
 				return parent::title();
 		}
@@ -130,13 +134,19 @@ abstract class ResourcePage extends Page {
 			$table->sort($this->sort());
 		}
 		$ui->add($this->header($ui)->primary('add', sprintf(gettext('Add %s'), $this->noun()), 'plus', $new));
-		if (static::APPLY !== null) {
+		if ((static::APPLY !== null) || (static::PENDING !== null)) {
 			$ui->add($this->applyBar($ui));
 		}
 		$ui->add($table);
 	}
 
 	protected function applyBar(Ui $ui): Element {
+		if (static::PENDING !== null) {
+			return $ui->applyBar()
+				->source(array('path' => static::PENDING))
+				->apply(array('method' => 'POST', 'path' => static::APPLY_PATH))
+				->match('/' . static::RESOURCE);
+		}
 		return $ui->applyBar()
 			->only(static::APPLY)
 			->apply(array('method' => 'POST', 'path' => $this->api('/apply')))
