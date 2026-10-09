@@ -190,7 +190,14 @@ el.define('form', {
 					$sec.append($head);
 				}
 				$sec.append($grid);
-				(s.fields || []).forEach((f) => {
+				(s.fields || []).forEach((f0) => {
+					/* optionsFrom: the choices are a {value: label} map (or list) in the loaded values, e.g. an interface's gateway_choices. */
+					let f = f0;
+					if (f0.optionsFrom) {
+						const src = getPath(values, f0.optionsFrom);
+						const opts = Array.isArray(src) ? src : Object.entries(src || {}).map(([value, label]) => ({ value, label: String(label) }));
+						f = { ...f0, options: opts.length ? opts : (f0.options || []) };
+					}
 					const inst = buildField(f, { value: getPath(values, f.name), onChange: changed });
 					inst.section = sec;
 					sec.fields.push(inst);
@@ -364,7 +371,7 @@ el.define('form', {
 					baseline = JSON.stringify(serialise());
 					state.savedOnce = true;
 					toast(meta.message || config.successMessage || t('Changes saved'), { level: 'ok' });
-					if (meta.pending) $(document).trigger('fs:pending', [{ path: config.save.path }]);
+					if (meta.pending || config.save.pending) $(document).trigger('fs:pending', [{ path: config.save.path }]);
 					$node.trigger('fs:saved', [res]);
 					if (config.successHref) go(fill(config.successHref, saved, body));
 					return res;

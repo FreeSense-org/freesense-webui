@@ -22,7 +22,7 @@ through `FS.api`.
 | `schemaSource` | `{path, query}` | — | Load the schema, e.g. `{path: '/v1/schema/firewall/rules'}` |
 | `values` | object | `{}` | Inline values (new records: defaults, prefilled fields) |
 | `load` | `{path, query, field}` | — | `GET` the current values (`data`); with `field`, `data[field]` over `data` (a rule's `fields`, with its `id` and flags still there for `readonlyWhen` and placeholders) |
-| `save` | `{method, path, body}` | `PUT` | `PUT` \| `POST` \| `PATCH`; `{placeholders}` in the path are filled from the loaded values, then the form values (`/v1/firewall/aliases/{name}` keeps the old name on a rename); `body` holds constant fields sent with every save |
+| `save` | `{method, path, body, pending}` | `PUT` | `PUT` \| `POST` \| `PATCH`; `{placeholders}` in the path are filled from the loaded values, then the form values (`/v1/firewall/aliases/{name}` keeps the old name on a rename); `body` holds constant fields sent with every save; `pending: true` shows the apply bar after a save (for APIs that stage changes without `meta.pending`) |
 | `submitLabel` | string | `Save` (`Create` for POST) | Primary button |
 | `cancelHref` | string | — | Cancel (or Back when read-only) navigates here; without it the bar offers "Discard changes", which resets the form |
 | `successHref` | string | — | Navigate after saving; `{placeholders}` from the response data (e.g. `/security/rules/edit/{id}`) |
