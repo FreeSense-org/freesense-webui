@@ -13,6 +13,7 @@ their own `build()`, still using elements only (RULES R1).
 | Pattern | For | Builds |
 |---|---|---|
 | `ResourcePage` | One API resource with list + editor (aliases, rules, NAT, VLANs, routes, users, certificates…) | List view: toolbar (search, filters, bulk actions), data table, row actions, empty/loading/error/stale states, live refresh. Editor view: schema form with sections, advanced, visibility rules, inline 422 errors, sticky save bar, dirty guard. Delete confirm, apply-pending bar |
+| `RuleListPage` | An ordered rule list where position matters (NAT port forwards, outbound, 1:1, NPt…) | Data table with enable switch, drag + keyboard reorder, delete, apply-pending bar; editor from the schema on the item's `fields` |
 | `SettingsPage` | One settings object (General, Advanced, NTP, SNMP, DNS resolver…) | Schema form, Save only, apply-pending bar where the API reports it |
 | `StatusPage` | Read-only live status (gateways, interfaces, services, leases, ARP…) | Summary tiles + live data table or cards, refresh control, optional row actions (restart, wake…) |
 | `LogPage` | A log (firewall, system, VPN, package logs) | Log viewer with live tail, cursor paging, filters, row detail drawer, summary |
@@ -118,18 +119,21 @@ Measured against the baseline inventory (`docs/inventory/`). Of the 208 pages:
 The real porting work moves to the backend schema per resource, which the API
 uses too.
 
-## Implemented (P5)
+## Implemented
 
 The patterns live in `app/src/Patterns/`; pages in `app/pages/` and the list in
 `app/pages.php`. What each one builds today:
 
 | Pattern | Constants | Hooks | Builds |
 |---|---|---|---|
-| `ResourcePage` | `ROUTE`, `RESOURCE`, `KEY`, `APPLY` | `noun()`, `plural()`, `columns()`, `filters()`, `sort()` | List (`ROUTE`): header with Add, apply bar for the `APPLY` subsystem, data table (search, filters, paging, row link, edit/delete). Editor (`ROUTE/new`, `ROUTE/edit/{key}`): schema form from `/v1/schema/{RESOURCE}`, POST or GET+PUT, back to the list |
+| `ResourcePage` | `ROUTE`, `RESOURCE`, `KEY`, `APPLY`, `SCHEMA` (schema name when it differs), `LOAD_FIELD` (editor values nested, e.g. `fields`) | `noun()`, `plural()`, `columns()`, `filters()`, `sort()` | List (`ROUTE`): header with Add, apply bar for the `APPLY` subsystem, data table (search, filters, paging, row link, edit/delete). Editor (`ROUTE/new`, `ROUTE/edit/{key}`): schema form from `/v1/schema/{RESOURCE}`, POST or GET+PUT, back to the list |
+| `RuleListPage` | `ROUTE`, `API`, `SCHEMA`, `APPLY`, `APPLY_PATH`, `ICON` | `noun()`, `columns()`, `subtitle()`, `emptyText()`, `defaults()`, `above(Ui $ui)` | List (`ROUTE`): header with Add, apply bar, optional elements from `above()`, data table on `API` (search, `display.enabled` switch via `POST {id}/toggle`, reorder via `POST order {order: [ids]}`, edit/delete; ids are positions, so it reloads after a change). Editor (`ROUTE/new`, `ROUTE/edit/{id}`): schema form, values from the item's `fields`, POST or PUT |
 | `SettingsPage` | `ROUTE`, `RESOURCE`, `SCHEMA` | `subtitle()` | Schema form: GET and PUT `/v1/{RESOURCE}` |
 | `StatusPage` | `ROUTE`, `SOURCE`, `KEY`, `EVERY` | `columns()`, `rowActions()`, `empty()`, `sort()`, `subtitle()` | Live data table with search and paging |
 | `LogPage` | `ROUTE`, `LOG`, `TYPE`, `SEVERITY` | `subtitle()` | Log viewer on the API's `format=webui` |
 
 Where a page sits in the menus and the privilege that opens it come from
 `app/nav.json`, never from the page. Pilot pages: Aliases, NTP, Gateways,
-Services, ARP table, and the firewall, system, DHCP, DNS and OpenVPN logs.
+Services, ARP table, and the firewall, system, DHCP, DNS and OpenVPN logs;
+then Schedules and Virtual IPs (`ResourcePage`) and the four NAT pages
+(`RuleListPage`).
