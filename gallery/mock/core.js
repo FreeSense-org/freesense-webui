@@ -318,7 +318,7 @@
 	function topTalkers() {
 		var list = HOSTS.slice().sort(function () { return Math.random() - 0.5; }).slice(0, 8).map(function (h) {
 			var rate = Math.pow(Math.random(), 2.4) * 80e6 + 2e5;
-			return { ip: h[0], host: h[1], in_bps: Math.round(rate), out_bps: Math.round(rate * rnd(0.05, 0.4)), flows: Math.floor(rnd(2, 240)) };
+			return { ip: h[0], host: h[1], in_bps: Math.round(rate), out_bps: Math.round(rate * rnd(0.05, 0.4)) };
 		});
 		return list.sort(function (a, b) { return (b.in_bps + b.out_bps) - (a.in_bps + a.out_bps); });
 	}
@@ -405,7 +405,12 @@
 		return ok(s, { message: s.descr + ' ' + (p.action === 'stop' ? 'stopped' : p.action === 'start' ? 'started' : 'restarted') });
 	});
 	route('GET', '/api/v1/status/dhcp-leases', function () { return ok(apiLeases()); });
-	route('GET', '/api/v1/status/top-talkers', function () { return ok(topTalkers(), { window: '10s' }); });
+	/* As the API: hosts on the interface's subnet from a one-second sample; 404 for an unknown interface. */
+	route('GET', '/api/v1/status/top-talkers', function (p, q) {
+		var ifo = IFACES.find(function (x) { return x.id === (q.get('interface') || 'lan'); });
+		if (!ifo) return err(404, 'No such interface.');
+		return ok(topTalkers(), { interface: ifo.id, description: ifo.descr, window: '1s', age: Math.floor(rnd(0, 4)) });
+	});
 	route('GET', '/api/v1/status/vpn', function () {
 		VPN.forEach(function (v) { if (v.status === 'up') { v.rx += rnd(1e4, 3e6); v.tx += rnd(1e4, 1e6); v.handshake = v.type === 'wireguard' ? (v.handshake + 2) % 130 : v.handshake; } });
 		return ok(VPN);

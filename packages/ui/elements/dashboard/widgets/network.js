@@ -194,6 +194,7 @@ widgets.define('top-talkers', {
 	lines: 5,
 	empty: { icon: 'ranking-star', title: 'No traffic', text: 'Nothing is moving right now.' },
 	settings: [
+		{ name: 'iface', type: 'select', label: 'Network', value: 'lan', options: (ctx) => ifaceOptions(ctx) },
 		{ name: 'count', type: 'number', label: 'Hosts to show', value: 6, min: 1, max: 20 },
 		{ name: 'by', type: 'select', label: 'Rank by', value: 'total', options: [{ value: 'total', label: 'In + out' }, { value: 'in', label: 'Download' }, { value: 'out', label: 'Upload' }] }
 	],
@@ -201,18 +202,18 @@ widgets.define('top-talkers', {
 		ctx.state.$list = $('<ol class="fs-wlist fs-wtalkers">').appendTo(ctx.$body);
 	},
 	load(ctx) {
-		return ctx.fetch('/v1/status/top-talkers').then((res) => {
+		return ctx.fetch('/v1/status/top-talkers', { interface: ctx.settings.iface || 'lan' }).then((res) => {
 			const by = ctx.settings.by;
 			const val = (h) => (by === 'in' ? h.in_bps : by === 'out' ? h.out_bps : h.in_bps + h.out_bps);
 			const rows = (res.data || []).slice().sort((a, b) => val(b) - val(a)).slice(0, Math.max(1, +ctx.settings.count || 6));
 			if (!rows.length) return false;
 			const max = Math.max(...rows.map(val), 1);
-			ctx.setSubtitle(res.meta && res.meta.window ? t('Average over {w}', { w: res.meta.window }) : '');
+			ctx.setSubtitle(res.meta && res.meta.description ? res.meta.description : '');
 			keyed(ctx.state.$list, rows, (h) => h.ip, () => $('<li class="fs-wtalker">').append(
 				$('<span class="fs-wtalker-head">').append($('<span class="fs-wtalker-host">'), $('<span class="fs-wtalker-ip fs-mono">'), $('<span class="fs-wtalker-rate fs-num">')),
 				bar(0, 1)), ($r, h) => {
 				$r.find('.fs-wtalker-host').text(h.host || h.ip);
-				$r.find('.fs-wtalker-ip').text(h.host ? h.ip : t('{n} flows', { n: h.flows }));
+				$r.find('.fs-wtalker-ip').text(h.host ? h.ip : '');
 				$r.find('.fs-wtalker-rate').text(ctx.fmt.bps(val(h))).attr('title', t('In {a} · out {b}', { a: ctx.fmt.bps(h.in_bps), b: ctx.fmt.bps(h.out_bps) }));
 				setBar($r.find('.fs-wbar'), val(h) / max);
 			});

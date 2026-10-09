@@ -113,7 +113,7 @@ and `fs:widget-defined`. Widgets trigger `fs:applied` (Quick actions) and react 
 | `traffic` | Network | chart (history + live), chip | interface, start range, chips |
 | `interfaces` | Network | status, sparkline | show down interfaces, trend |
 | `gateways` | Network | status, sparkline (seeded from history) | trend, IPv6 gateways |
-| `top-talkers` | Network | bars | count, rank by |
+| `top-talkers` | Network | bars | network, count, rank by |
 | `dhcp-leases` | Network | status, search | network, online only, rows |
 | `states` | Security | meter, stat-tile, protocol mix bar | — |
 | `firewall-log` | Security | status pills, cursor tail (`?after=`) | action filter, rows |
