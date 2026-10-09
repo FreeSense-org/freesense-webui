@@ -123,28 +123,28 @@
 							"href": "/network/dhcp",
 							"pages": [
 								{
-									"title": "LAN",
+									"title": "DHCPv4",
 									"icon": "ethernet",
 									"href": "/network/dhcp",
 									"priv": "page-services-dhcpserver"
 								},
 								{
-									"title": "GUEST",
+									"title": "DHCPv6",
 									"icon": "ethernet",
-									"href": "/network/dhcp-opt1",
-									"priv": "page-services-dhcpserver"
-								},
-								{
-									"title": "IOT",
-									"icon": "ethernet",
-									"href": "/network/dhcp-opt2",
-									"priv": "page-services-dhcpserver"
+									"href": "/network/dhcpv6",
+									"priv": "page-services-dhcpv6server"
 								},
 								{
 									"title": "Relay",
 									"icon": "arrow-right-arrow-left",
 									"href": "/network/dhcp-relay",
 									"priv": "page-services-dhcprelay"
+								},
+								{
+									"title": "DHCPv6 relay",
+									"icon": "arrow-right-arrow-left",
+									"href": "/network/dhcpv6-relay",
+									"priv": "page-services-dhcpv6relay"
 								},
 								{
 									"title": "Settings",
