@@ -14,6 +14,7 @@ return array(
 	FreeSense\WebUI\Pages\Aliases::class,
 	FreeSense\WebUI\Pages\Rules::class,
 	FreeSense\WebUI\Pages\UpdateCenter::class,
+	FreeSense\WebUI\Pages\Interfaces::class,
 	FreeSense\WebUI\Pages\Ntp::class,
 	FreeSense\WebUI\Pages\FirewallLog::class,
 	FreeSense\WebUI\Pages\SystemLog::class,

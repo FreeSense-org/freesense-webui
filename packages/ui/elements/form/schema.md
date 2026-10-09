@@ -61,6 +61,7 @@ is already translated by the server (gettext).
 | `required` | bool | Must not be empty (marked with *) |
 | `default` | any | Value when the loaded data has none |
 | `readonly` / `disabled` | bool | Always disabled (shown, sent with the form) |
+| `optionsFrom` | string | Dot path into the loaded values whose `{value: label}` map (or option list) becomes `options` (choices that depend on the item, e.g. an interface's `gateway_choices`) |
 | `options` | array or object | Static `[{value, label, group, detail, icon, tone, disabled}]` (or plain strings), or dynamic `{source: {path, query}, value, label, group, detail, prepend, append}` where `value`/`label`/… are dot paths into each row |
 | `min` / `max` / `step` / `unit` | number / string | Numeric range, step and unit suffix |
 | `minLength` / `maxLength` | number | Text length |
