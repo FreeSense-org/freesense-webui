@@ -8,7 +8,7 @@ through `FS.api`.
 
 - Sections render as cards; `advanced` sections are collapsed and open by themselves when they contain an error.
 - `visibleWhen` / `enabledWhen` rules run live on every change.
-- Layout flows with the space: section cards sit side by side (each at least its `size`'s minimum width, cards in a row share its height, a row wraps when the next card does not fit); advanced sections and sections with lists or text areas take the full row. Inside a card, fields fill as many columns of at least 15 rem as fit and share the width; wide fields take the row. On narrow screens everything is one column. Labels sit above inputs at every width. The action bar is the same on every form.
+- Labels sit above inputs at every width; `half`, `third` and `two-thirds` fields pair up on wide forms (container query, one column below ~34 rem).
 - Dirty tracking: a sticky action bar shows "Unsaved changes"; Ctrl+S (Cmd+S) saves; reload/close (`beforeunload`), partial navigation (`a[data-fs-nav]`) and Cancel ask "Discard changes?" first (`FS.confirm`).
 - Client-side checks (required, pattern, length, min/max, type rules such as addresses and ports) mirror the server. A 422 maps `error.details.fields` onto the fields; an error summary at the top takes focus and links to every field (rows of an entry grid included).
 - Success: toast (`meta.message`), `fs:pending` when `meta.pending`, optional navigation (`successHref`, via `FS.nav.go`).

@@ -200,35 +200,21 @@
 	.fs-form-section.is-collapsible:not(.is-open) .fs-form-section-head { padding-bottom: var(--fs-form-pad); }
 	.fs-form-section.is-collapsible:not(.is-open) .fs-form-section-desc { margin-left: 1.5rem; }
 
-	/*
-	 * Sections flow side by side: each card is at least its size's minimum
-	 * wide, cards in a row share its height, and a row wraps when the next card
-	 * does not fit. Advanced sections, lists and text areas take the full row.
-	 */
-	.fs-form-flow {
-		--fs-form-sec-min: 22rem;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: stretch;
-		gap: var(--fs-form-gap);
-		> .fs-form-section { flex: 1 1 var(--fs-form-sec-min); min-width: min(100%, var(--fs-form-sec-min)); }
-		> .fs-form-section[data-size='small'] { --fs-form-sec-min: 20rem; }
-		> .fs-form-section[data-size='medium'] { --fs-form-sec-min: 28rem; flex-grow: 1.4; }
-		> .fs-form-section[data-size='large'] { --fs-form-sec-min: 40rem; flex-grow: 2; }
-		> .fs-form-section[data-size='full'] { flex-basis: 100%; }
-		[data-layout='plain'] & { flex-direction: column; flex-wrap: nowrap; }
-	}
-
-	/* Field grid: as many columns of at least 15rem as fit (sharing the width); wide fields take the row. */
+	/* Field grid: full / half / third on wide forms, one column on narrow ones. */
 	.fs-form-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-		align-items: start;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
 		gap: calc(var(--fs-form-gap) * 1.15) var(--fs-form-gap);
 		padding: var(--fs-form-pad);
 		.is-plain & { padding: 0.5rem 0 0; }
 		&[hidden] { display: none; }
-		> .fs-field[data-span='full'] { grid-column: 1 / -1; }
+		> .fs-field { grid-column: span 6; }
+		> .fs-field[data-width='half'] { grid-column: span 3; }
+		> .fs-field[data-width='third'] { grid-column: span 2; }
+		> .fs-field[data-width='two-thirds'] { grid-column: span 4; }
+	}
+	@container (max-width: 34rem) {
+		.fs-form-grid > .fs-field[data-width] { grid-column: span 6; }
 	}
 
 	/* Live summary sentence */
