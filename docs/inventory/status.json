@@ -310,63 +310,63 @@
 		"prs": []
 	},
 	"interfaces.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/interfaces",
 		"prs": []
 	},
 	"interfaces_assign.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/assignments",
 		"prs": []
 	},
 	"interfaces_bridge.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/bridges",
 		"prs": []
 	},
 	"interfaces_bridge_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/bridges",
 		"prs": []
 	},
 	"interfaces_gif.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gif",
 		"prs": []
 	},
 	"interfaces_gif_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gif",
 		"prs": []
 	},
 	"interfaces_gre.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gre",
 		"prs": []
 	},
 	"interfaces_gre_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gre",
 		"prs": []
 	},
 	"interfaces_groups.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/groups",
 		"prs": []
 	},
 	"interfaces_groups_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/groups",
 		"prs": []
 	},
 	"interfaces_lagg.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/lagg",
 		"prs": []
 	},
 	"interfaces_lagg_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/lagg",
 		"prs": []
 	},
 	"interfaces_nic_settings.php": {
@@ -385,23 +385,23 @@
 		"prs": []
 	},
 	"interfaces_qinq.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/qinq",
 		"prs": []
 	},
 	"interfaces_qinq_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/qinq",
 		"prs": []
 	},
 	"interfaces_vlan.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/vlans",
 		"prs": []
 	},
 	"interfaces_vlan_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/vlans",
 		"prs": []
 	},
 	"interfaces_vxlan.php": {
@@ -530,43 +530,43 @@
 		"prs": []
 	},
 	"services_dhcp.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcp",
 		"prs": []
 	},
 	"services_dhcp_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcp",
 		"prs": []
 	},
 	"services_dhcp_relay.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcp-relay",
 		"prs": []
 	},
 	"services_dhcp_settings.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcp-settings",
 		"prs": []
 	},
 	"services_dhcpv6.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcpv6",
 		"prs": []
 	},
 	"services_dhcpv6_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcpv6",
 		"prs": []
 	},
 	"services_dhcpv6_relay.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcpv6-relay",
 		"prs": []
 	},
 	"services_dhcpv6_settings.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dhcpv6-settings",
 		"prs": []
 	},
 	"services_dnsmasq.php": {
@@ -585,13 +585,13 @@
 		"prs": []
 	},
 	"services_dyndns.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/ddns",
 		"prs": []
 	},
 	"services_dyndns_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/ddns",
 		"prs": []
 	},
 	"services_igmpproxy.php": {
@@ -635,18 +635,18 @@
 		"prs": []
 	},
 	"services_radvd.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/radvd",
 		"prs": []
 	},
 	"services_rfc2136.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/rfc2136",
 		"prs": []
 	},
 	"services_rfc2136_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/rfc2136",
 		"prs": []
 	},
 	"services_snmp.php": {
@@ -655,28 +655,28 @@
 		"prs": []
 	},
 	"services_unbound.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dns-resolver",
 		"prs": []
 	},
 	"services_unbound_acls.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dns-acls",
 		"prs": []
 	},
 	"services_unbound_advanced.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dns-advanced",
 		"prs": []
 	},
 	"services_unbound_domainoverride_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dns-domains",
 		"prs": []
 	},
 	"services_unbound_host_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/dns-hosts",
 		"prs": []
 	},
 	"services_wol.php": {
@@ -930,23 +930,23 @@
 		"prs": []
 	},
 	"system_gateway_groups.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gateway-groups",
 		"prs": []
 	},
 	"system_gateway_groups_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gateway-groups",
 		"prs": []
 	},
 	"system_gateways.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gateways",
 		"prs": []
 	},
 	"system_gateways_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/gateways",
 		"prs": []
 	},
 	"system_groupmanager.php": {
@@ -980,13 +980,13 @@
 		"prs": []
 	},
 	"system_routes.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/routes",
 		"prs": []
 	},
 	"system_routes_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/routes",
 		"prs": []
 	},
 	"system_update_settings.php": {
