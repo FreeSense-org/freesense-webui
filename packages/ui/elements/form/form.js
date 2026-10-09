@@ -106,7 +106,7 @@ function normaliseSchema(s) {
 el.define('form', {
 	init(node, config, ctx) {
 		const $node = $(node).addClass('fs-form').empty()
-			.attr({ 'data-density': config.density || null, 'data-layout': config.layout || 'cards' });
+			.attr({ 'data-density': config.density || null, 'data-layout': config.layout || 'cards', 'data-bar': config.bar === 'inline' ? 'inline' : null });
 		const $body = $('<div class="fs-form-body">').appendTo($node);
 		const ns = `.${uid('form')}`;
 		let api$ = null;
@@ -219,7 +219,8 @@ el.define('form', {
 			else $cancel.text(t('Discard changes'));
 			$actions.append($cancel, readonly ? null : $save);
 			$bar.append($status, $actions);
-			if (!readonly || config.cancelHref) $form.append($bar);
+			/* bar: 'inline' keeps the actions inside the last section (small settings above a list), not sticky. */
+			if (!readonly || config.cancelHref) (config.bar === 'inline' && sections.length ? sections[sections.length - 1].$sec : $form).append($bar);
 			$body.append($form);
 
 			function toggle(sec, open, focus) {

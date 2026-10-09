@@ -472,7 +472,7 @@
 
 	window.FSMock = {
 		routes: ROUTES, interfaces: IFACES, ok: ok, err: err, dispatch: dispatch,
-		markPending: function (area) { pendingAreas[area] = true; }, markRulesPending: function () { pendingChanges = true; }, pending: pendingList,
+		markPending: function (area) { pendingAreas[area] = true; }, clearPending: function (area) { delete pendingAreas[area]; }, markRulesPending: function () { pendingChanges = true; }, pending: pendingList,
 		route: function (method, pattern, handler) { route(method, pattern, handler); ROUTES.unshift(ROUTES.pop()); }
 	};
 })(jQuery);

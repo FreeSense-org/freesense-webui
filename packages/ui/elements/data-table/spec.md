@@ -39,6 +39,7 @@ one on a phone):
 | `selectable` | bool | `false` | Checkboxes, shift-range, select page |
 | `rowActions` | RowAction[] | `[]` | Inline icon buttons (`inline: true`) and the row menu |
 | `bulkActions` | BulkAction[] | `[]` | Actions for the selection (shown by the toolbar's bulk bar) |
+| `reloadOn` | string | — | Space-separated document events that refetch the source, e.g. `fs:saved` when a setting on the same page changes what the list shows |
 | `toggle` | `{field, path, method, label, body, pending}` | — | Inline enable switch: optimistic, `PATCH path` with `{[field]: value}` (or `body` instead, e.g. `{}` for a flip endpoint), rollback + toast on error, then `fs:pending`. `field` may be a dot path |
 | `reorder` | `{path, params, body, idsKey, field, method, pending}` | — | Drag handle + Move up/down: `POST path` with `{...body, ...pick(query, params), ids}`. `field` (e.g. `position`) is renumbered optimistically |
 | `rowLink` | URL template | — | The primary cell becomes a link; a click anywhere on the row follows it (`FS.nav.go`; `#…` sets the hash) |
