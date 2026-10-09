@@ -1,0 +1,68 @@
+{
+	"scheme": "2.0",
+	"name": "nightwatch",
+	"title": "Nightwatch",
+	"version": "2.0.0-alpha.0",
+	"description": "A network operations console: near-black surfaces, hairline borders, electric cyan, square corners and dense rows; a crisp high-contrast daylight mode.",
+	"author": "The FreeSense Project",
+	"license": "Apache-2.0",
+	"defaultMode": "dark",
+	"defaultAccent": "cyan",
+	"accents": {
+		"cyan": {
+			"title": "Cyan",
+			"light": "#0e7490",
+			"dark": "#22d3ee"
+		},
+		"green": {
+			"title": "Phosphor",
+			"light": "#15703a",
+			"dark": "#3fb950"
+		},
+		"amber": {
+			"title": "Amber",
+			"light": "#8a5300",
+			"dark": "#e3b341"
+		},
+		"magenta": {
+			"title": "Magenta",
+			"light": "#a21caf",
+			"dark": "#e879f9"
+		}
+	},
+	"skin": {
+		"topbar": "surface",
+		"sectionMenu": "sunken",
+		"cards": "outlined",
+		"tables": "zebra",
+		"buttons": "square"
+	},
+	"preview": {
+		"light": "#e9edf1",
+		"dark": "#07090c"
+	},
+	"swatches": {
+		"light": {
+			"page": "#e9edf1",
+			"raised": "#ffffff",
+			"sunken": "#f2f4f7",
+			"topbar": "#f7f8fa",
+			"text": "#11161d",
+			"strong": "#000000",
+			"muted": "#47525e",
+			"border": "#b9c2cc",
+			"accent": "#0e7490"
+		},
+		"dark": {
+			"page": "#07090c",
+			"raised": "#0d1117",
+			"sunken": "#0a0d12",
+			"topbar": "#0a0d12",
+			"text": "#c3cfdb",
+			"strong": "#eef3f8",
+			"muted": "#8593a3",
+			"border": "#1f2833",
+			"accent": "#22d3ee"
+		}
+	}
+}

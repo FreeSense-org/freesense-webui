@@ -121,6 +121,7 @@ Administrators set defaults for new users and can install or import themes under
 | Way | For | How |
 |---|---|---|
 | Core | `freesense` theme | `packages/theme-freesense`, compiled into `dist/` |
+| Built in | `nightwatch` theme (operations console, dark by default) | `packages/theme-nightwatch`, compiled into `dist/` |
 | Import | Anyone | Upload a `.theme.json` in System › Appearance; validated and converted on the firewall |
 | Package | Curated themes | `FreeSense-theme-<name>` in freesense-packages installs the compiled folder to `/usr/local/www-ui/themes/<name>/` |
 | npm | Theme authors | `@freesense/theme-kit` (scheme files, compiler, contrast checker, preview gallery) and `npm create @freesense/theme` |
