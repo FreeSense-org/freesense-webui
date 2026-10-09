@@ -226,63 +226,64 @@
 	/* ---------------------------------------------------- boot environments */
 
 	var DAY = 86400000;
+	var sec = function (ms) { return Math.floor(ms / 1000); };
+	/* As GET /v1/system/boot-environments: created in unix time, sizes in bytes, newest first. */
 	var bes = [
-		{ name: 'default', kind: 'be', active: true, next_boot: true, version: '1.1.0-DEVELOPMENT 20261008-0100', created: new Date(T0 - 20 * 3600000).toISOString(), size: 4.1e9, description: 'Running system' },
-		{ name: 'default@2026-10-08-update', kind: 'snapshot', parent: 'default', version: '1.1.0-DEVELOPMENT 20261007-0100', created: new Date(T0 - 1 * DAY - 3 * 3600000).toISOString(), size: 2.3e8, description: 'Before update to 20261008' },
-		{ name: '20261007-0100', kind: 'be', version: '1.1.0-DEVELOPMENT 20261007-0100', created: new Date(T0 - 3 * DAY).toISOString(), size: 3.9e9, description: 'Previous version' },
-		{ name: '20261003-0100', kind: 'be', version: '1.1.0-DEVELOPMENT 20261003-0100', created: new Date(T0 - 6 * DAY).toISOString(), size: 3.8e9 },
-		{ name: 'default@manual-before-vlan', kind: 'snapshot', parent: 'default', version: '1.1.0-DEVELOPMENT 20261003-0100', created: new Date(T0 - 7 * DAY).toISOString(), size: 6.1e7, description: 'Manual snapshot' },
-		{ name: '1.0.1-RELEASE', kind: 'be', version: '1.0.1-RELEASE', created: new Date(T0 - 40 * DAY).toISOString(), size: 3.6e9, description: 'Stable line (cannot be activated after upgrading to 1.1)', locked: true }
+		{ name: 'default', kind: 'be', active: true, next_boot: true, version: '1.1.0-DEVELOPMENT', created: sec(T0 - 20 * 3600000), size: 4100000000, description: 'Running system', locked: false, parent: null },
+		{ name: 'default@2026-10-08-update', kind: 'snapshot', active: false, next_boot: false, version: '1.1.0-DEVELOPMENT', created: sec(T0 - 1 * DAY - 3 * 3600000), size: 230000000, description: '', locked: false, parent: 'default' },
+		{ name: 'default_20261007010000', kind: 'be', active: false, next_boot: false, version: '1.1.0-DEVELOPMENT', created: sec(T0 - 3 * DAY), size: 3900000000, description: 'Before update', locked: false, parent: null },
+		{ name: 'default_20261003010000', kind: 'be', active: false, next_boot: false, version: '1.1.0-DEVELOPMENT', created: sec(T0 - 6 * DAY), size: 3800000000, description: '', locked: false, parent: null },
+		{ name: 'default@manual-before-vlan', kind: 'snapshot', active: false, next_boot: false, version: '1.1.0-DEVELOPMENT', created: sec(T0 - 7 * DAY), size: 61000000, description: '', locked: false, parent: 'default' },
+		{ name: 'default_20260830120000', kind: 'be', active: false, next_boot: false, version: '1.0.1', created: sec(T0 - 40 * DAY), size: 3600000000, description: 'before 1.1', locked: true, parent: null }
 	];
 	function findBe(name) { return bes.find(function (b) { return b.name === name; }); }
+	var BE_NAME = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
+	var INVALID = 'The request failed validation.';
 
-	M.route('GET', '/api/v1/system/boot-environments', function () { return M.ok(bes, { pool: 'zroot', free: 9.64e10 }); });
+	M.route('GET', '/api/v1/system/boot-environments', function () { return M.ok(bes, { pool: 'zroot', free: 96400000000 }); });
 	M.route('POST', '/api/v1/system/boot-environments', function (p, q, b) {
 		var d = new Date();
-		var name = 'default@' + ((b && b.name) || ('manual-' + d.toISOString().slice(0, 16).replace(/[-:T]/g, '')));
-		if (findBe(name)) return M.err(409, 'A snapshot named ' + name + ' already exists.');
+		var name = (b && b.name) || ('manual-' + d.toISOString().slice(0, 19).replace(/[-:T]/g, '').replace(/^(\d{8})/, '$1-'));
+		if (!BE_NAME.test(name)) return M.err(422, INVALID, { name: 'Invalid boot environment name. Use letters, digits, dots, dashes and underscores.' });
+		if (findBe(name)) return M.err(422, INVALID, { name: 'A boot environment named ' + name + ' already exists.' });
 		var act = bes.find(function (x) { return x.active; });
-		bes.unshift({ name: name, kind: 'snapshot', parent: act ? act.name : 'default', version: act ? act.version : '', created: d.toISOString(), size: 1.2e6, description: 'Manual snapshot' });
-		return M.ok(bes[0], { message: 'Snapshot ' + name + ' created' });
+		bes.unshift({ name: name, kind: 'be', active: false, next_boot: false, version: act ? act.version : null, created: sec(d.getTime()), size: 1200000, description: (b && b.description) || '', locked: false, parent: null });
+		return Object.assign(M.ok(bes[0]), { status: 201 });
 	});
-	M.route('POST', '/api/v1/system/boot-environments/{name}/activate', function (p) {
+	M.route('POST', '/api/v1/system/boot-environments/{name}/activate', function (p, q, b) {
 		var be = findBe(p.name);
-		if (!be) return M.err(404, 'Boot environment not found');
-		if (be.locked) return M.err(409, 'A 1.0 boot environment cannot be activated on a 1.1 system (one-way upgrade).');
-		if (be.kind === 'snapshot') {
-			/* Rolling back to a snapshot creates a new boot environment from it. */
-			var nb = { name: p.name.replace(/^.*@/, 'rollback-'), kind: 'be', version: be.version, created: new Date().toISOString(), size: be.size, description: 'Created from snapshot ' + p.name };
-			bes.unshift(nb);
-			be = nb;
-		}
+		if (!be) return M.err(404, 'No boot environment with that name.');
+		if (!b || b.confirm !== true) return M.err(400, 'Activating a boot environment requires {"confirm": true}.');
+		if (be.kind === 'snapshot') return M.err(409, 'A snapshot cannot be booted; create a boot environment from the running system instead.');
+		if (be.locked) return M.err(409, 'This boot environment holds an older release and cannot be activated (one-way upgrade).');
 		bes.forEach(function (x) { x.next_boot = false; });
 		be.next_boot = true;
-		return M.ok(be, { message: be.name + ' will be used at the next boot' });
+		return M.ok(be);
 	});
 	M.route('PATCH', '/api/v1/system/boot-environments/{name}', function (p, q, b) {
 		var be = findBe(p.name);
-		if (!be) return M.err(404, 'Boot environment not found');
+		if (!be) return M.err(404, 'No boot environment with that name.');
+		if (be.kind === 'snapshot' || be.active) return M.err(409, be.active ? 'The running boot environment cannot be renamed.' : 'Snapshots cannot be renamed.');
 		var name = String((b && b.name) || '').trim();
-		var prefix = be.kind === 'snapshot' ? be.name.replace(/@.*$/, '@') : '';
-		if (!/^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(name)) return M.err(422, 'Fix the highlighted fields.', { name: 'Use letters, digits, dots, dashes and underscores (max. 64).' });
-		if (findBe(prefix + name) && prefix + name !== be.name) return M.err(422, 'Fix the highlighted fields.', { name: 'This name is already in use.' });
-		be.name = prefix + name;
-		return M.ok(be, { message: 'Renamed to ' + be.name });
+		if (!BE_NAME.test(name)) return M.err(422, INVALID, { name: 'Invalid boot environment name. Use letters, digits, dots, dashes and underscores.' });
+		if (findBe(name) && name !== be.name) return M.err(422, INVALID, { name: 'A boot environment named ' + name + ' already exists.' });
+		be.name = name;
+		return M.ok(be);
 	});
 	M.route('DELETE', '/api/v1/system/boot-environments/{name}', function (p) {
 		var be = findBe(p.name);
-		if (!be) return M.err(404, 'Boot environment not found');
-		if (be.active || be.next_boot) return M.err(409, 'The active or next-boot environment cannot be deleted.');
+		if (!be) return M.err(404, 'No boot environment with that name.');
+		if (be.active || be.next_boot) return M.err(409, 'The running or next-boot environment cannot be deleted.');
 		bes = bes.filter(function (x) { return x !== be; });
-		return M.ok(null, { message: p.name + ' deleted' });
+		return M.ok({ name: p.name, kind: be.kind, deleted: true });
 	});
 	M.route('GET', '/api/v1/gallery/ops/be-many', function () {
 		var out = [];
 		for (var i = 0; i < 18; i++) {
 			var d = new Date(T0 - i * 2 * DAY);
 			var tag = d.toISOString().slice(0, 10).replace(/-/g, '') + '-0100';
-			out.push({ name: i === 0 ? 'default' : tag, kind: 'be', active: i === 0, next_boot: i === 0, version: '1.1.0-DEVELOPMENT ' + tag, created: d.toISOString(), size: 3.5e9 + i * 1e8 });
-			if (i % 3 === 0) out.push({ name: 'default@auto-' + tag, kind: 'snapshot', parent: 'default', version: '1.1.0-DEVELOPMENT ' + tag, created: new Date(d.getTime() - 3600000).toISOString(), size: 4e7 + i * 1e6, description: 'Automatic snapshot before update with a long description that wraps onto the next line on phones' });
+			out.push({ name: i === 0 ? 'default' : 'default_' + tag, kind: 'be', active: i === 0, next_boot: i === 0, version: '1.1.0-DEVELOPMENT', created: sec(d.getTime()), size: 3500000000 + i * 100000000, description: '', locked: false, parent: null });
+			if (i % 3 === 0) out.push({ name: 'default@auto-' + tag, kind: 'snapshot', active: false, next_boot: false, version: '1.1.0-DEVELOPMENT', created: sec(d.getTime() - 3600000), size: 40000000 + i * 1000000, description: 'Automatic snapshot before update with a long description that wraps onto the next line on phones', locked: false, parent: 'default' });
 		}
 		return M.ok(out);
 	});
