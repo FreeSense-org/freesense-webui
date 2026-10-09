@@ -48,6 +48,7 @@ is already translated by the server (gettext).
 | `open` | With `advanced`: start open |
 | `tag` | Badge next to a collapsible title (default "Advanced") |
 | `visibleWhen` | Condition; hides the whole section |
+| `size` | `small` \| `medium` \| `large` \| `full`: the card's minimum width in the flow (20 / 28 / 40 rem, or the whole row). Default: from the visible fields (≤ 2 small, ≤ 4 medium, more large); `advanced`/`collapsed` sections and sections with a wide field are `full` |
 
 ## Field
 
@@ -71,7 +72,7 @@ is already translated by the server (gettext).
 | `multiple` | bool | `select` with several values (renders as `checklist`) |
 | `visibleWhen` | Condition | Shown only when it holds; hidden fields are not validated or sent |
 | `enabledWhen` | Condition | Enabled only when it holds; disabled fields are sent but not validated |
-| `width` | `full` \| `half` \| `third` \| `two-thirds` | Columns on wide forms (one column below ~34 rem) |
+| `width` | `full` | Take the whole row of the section. Other values (`half`, `third`, `two-thirds`) are accepted and flow like any field: fields sit in as many columns of at least 15 rem as fit. Entry grids, text areas and checklists with more than 6 options (not `inline`) always take the row |
 | `prefix` / `suffix` | string | Text add-ons (`https://`, `ms`) |
 | `mono` | bool | Monospace input (addresses, keys, names) |
 | `badge` | string | Small tag after the label |
