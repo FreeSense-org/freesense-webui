@@ -44,18 +44,27 @@ final class NatOutbound extends RuleListPage {
 	}
 
 	protected function above(Ui $ui): array {
+		/* Short labels for the API's modes (its "choices" carry the 1.x page's long texts). */
+		$modes = array(
+			array('value' => 'automatic', 'label' => gettext('Automatic')),
+			array('value' => 'hybrid', 'label' => gettext('Hybrid')),
+			array('value' => 'advanced', 'label' => gettext('Manual')),
+			array('value' => 'disabled', 'label' => gettext('Disabled')),
+		);
 		$mode = $ui->form()
 			->schema(array('title' => gettext('Outbound NAT mode'), 'sections' => array(array('id' => 'mode', 'fields' => array(
-				array('name' => 'mode', 'type' => 'segmented', 'label' => gettext('Mode'), 'required' => true, 'optionsFrom' => 'choices',
-				    'help' => gettext('Switching to manual copies the automatic mappings into your list.')),
+				array('name' => 'mode', 'type' => 'segmented', 'label' => gettext('Mode'), 'required' => true, 'options' => $modes,
+				    'help' => gettext('Automatic: the firewall creates the mappings. Hybrid: your mappings first, then the automatic ones. Manual: only your mappings (switching copies the automatic ones into your list). Disabled: no outbound NAT.')),
 			)))))
 			->load(array('path' => '/v1/firewall/nat/outbound-mode'))
 			->save(array('method' => 'PUT', 'path' => '/v1/firewall/nat/outbound-mode', 'pending' => true))
 			->density('compact')
+			->bar('inline')
 			->successMessage(gettext('Saved. Apply the changes to use the new mode.'))
 			->label(gettext('Outbound NAT mode'));
 		$auto = $ui->dataTable()
 			->source(array('path' => '/v1/firewall/nat/outbound-automatic'))
+			->reloadOn('fs:saved')
 			->label(gettext('Automatic mappings'))
 			->columns(array(
 				array('field' => 'display.description', 'label' => gettext('Description'), 'primary' => true),

@@ -1211,6 +1211,8 @@ el.define('data-table', {
 				ingest(res || {});
 			}).finally(() => { $root.removeClass('is-busy'); });
 		}
+		/* reloadOn: refetch after other parts of the page changed the data (e.g. 'fs:saved' of a mode setting). */
+		if (c.reloadOn && c.source) $(document).on(String(c.reloadOn).split(/\s+/).map((ev) => `${ev}${ns}`).join(' '), () => { fetchData(); });
 
 		function ingest(res) {
 			const d = res.data;

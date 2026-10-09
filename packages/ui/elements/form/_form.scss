@@ -316,6 +316,17 @@
 		backdrop-filter: blur(0.5rem);
 		box-shadow: var(--fs-shadow-md);
 		.is-dirty & { border-color: color-mix(in srgb, var(--fs-accent-fill) 35%, var(--fs-border-default)); }
+		[data-bar="inline"] & {
+			position: static;
+			margin-top: 0.75rem;
+			padding: 0.75rem 0 0;
+			border: 0;
+			border-top: var(--fs-border-width) solid var(--fs-border-default);
+			border-radius: 0;
+			background: none;
+			backdrop-filter: none;
+			box-shadow: none;
+		}
 	}
 	.fs-form-status {
 		display: inline-flex;

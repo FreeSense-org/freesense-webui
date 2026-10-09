@@ -105,6 +105,7 @@ abstract class RuleListPage extends Page {
 		$edit = Url::page(static::ROUTE . '/edit/{id}');
 		$table = $ui->dataTable()
 			->source(array('path' => static::API))
+			->reloadOn('fs:saved')
 			->key('id')
 			->label(parent::title())
 			->columns($this->columns())

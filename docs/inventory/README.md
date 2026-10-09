@@ -21,9 +21,9 @@ Port progress lives in `status.json` (`todo`, `in-progress`, `ported`,
 
 | State | Count |
 |---|---|
-| in-progress | 2 |
+| in-progress | 14 |
 | replaced-by-api | 12 |
-| todo | 228 |
+| todo | 216 |
 
 Remaining before the 2.0 cutover: **230**.
 

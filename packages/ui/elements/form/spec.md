@@ -31,6 +31,7 @@ through `FS.api`.
 | `layout` | `cards` \| `plain` | `cards` | `plain` drops the card chrome (inside drawers and dialogs) |
 | `sections` | string[] | — | Section order / subset by id (overrides `schema.order`) |
 | `density` | `compact` | — | Tighter spacing for this form only |
+| `bar` | `inline` | sticky | `inline`: Save/Cancel sit at the end of the last section, not in a sticky bar (a small setting above a list, e.g. the outbound NAT mode) |
 | `readonly` | bool | `false` | Force read-only |
 | `readonlyWhen` | Condition | `schema.readonlyWhen` | Read-only when the loaded values match |
 | `readonlyTitle` / `readonlyText` | string | `Read only` / `This is a system rule and cannot be changed.` | Callout text (schema keys of the same name win over the defaults) |

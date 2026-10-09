@@ -185,43 +185,43 @@
 		"prs": []
 	},
 	"firewall_nat.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat",
 		"prs": []
 	},
 	"firewall_nat_1to1.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-1to1",
 		"prs": []
 	},
 	"firewall_nat_1to1_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-1to1",
 		"prs": []
 	},
 	"firewall_nat_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat",
 		"prs": []
 	},
 	"firewall_nat_npt.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-npt",
 		"prs": []
 	},
 	"firewall_nat_npt_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-npt",
 		"prs": []
 	},
 	"firewall_nat_out.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-outbound",
 		"prs": []
 	},
 	"firewall_nat_out_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/nat-outbound",
 		"prs": []
 	},
 	"firewall_rules.php": {
@@ -235,13 +235,13 @@
 		"prs": []
 	},
 	"firewall_schedule.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/schedules",
 		"prs": []
 	},
 	"firewall_schedule_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/schedules",
 		"prs": []
 	},
 	"firewall_shaper.php": {
@@ -265,13 +265,13 @@
 		"prs": []
 	},
 	"firewall_virtual_ip.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/virtual-ips",
 		"prs": []
 	},
 	"firewall_virtual_ip_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/virtual-ips",
 		"prs": []
 	},
 	"getqueuestats.php": {
