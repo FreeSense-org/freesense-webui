@@ -72,6 +72,8 @@ paths; `{id}` falls back to the `key` field. Path values are URL-encoded.
 | `badgeMap` | `badge`: `{value: {label, tone, icon}}`; `tone` default for all |
 | `href` | `link`: URL template (default: the value) |
 | `mono` | Monospace text for `text`/`badge`/`chips` |
+| `itemField` | `chips`: field of object items to show (`entries: [{address, detail}]` → `address`) |
+| `max` | `chips`: show at most this many, then "+n more" (the search still sees all) |
 | `wrap` | Allow long values to wrap anywhere |
 
 **Filter** — maps a toolbar filter id to the data

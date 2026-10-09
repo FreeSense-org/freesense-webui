@@ -55,6 +55,12 @@ export function fill(tpl, row, { encode = false, key = 'id', extra = null } = {}
 	});
 }
 
+/* chips: the items of an array value as strings; itemField picks a field of object items ({address, detail} → address). */
+function chipItems(col, v) {
+	return (Array.isArray(v) ? v : [v]).map((x) => (x && typeof x === 'object' ? (col.itemField ? x[col.itemField] : JSON.stringify(x)) : x))
+		.filter((x) => x !== undefined && x !== null && x !== '').map(String);
+}
+
 function fillDeep(v, row, key) {
 	if (typeof v === 'string') return fill(v, row, { key });
 	if (Array.isArray(v)) return v.map((x) => fillDeep(x, row, key));
@@ -118,7 +124,7 @@ export function cellText(col, row) {
 		case 'datetime': return fmt.datetime(v);
 		case 'status': return statusOf(col, v).label;
 		case 'badge': { const m = (col.badgeMap || {})[String(v)]; return (m && m.label) || String(v); }
-		case 'chips': return (Array.isArray(v) ? v : [v]).join(' ');
+		case 'chips': return chipItems(col, v).join(' ');
 		case 'bool': return v ? t('Yes') : t('No');
 		default: return String(v);
 	}
@@ -151,7 +157,13 @@ function cellContent($td, col, row, key) {
 				break;
 			}
 			case 'chips':
-				$td.append($('<span class="fs-table-chips">').append((Array.isArray(v) ? v : [v]).map((x) => badgeNode({ label: String(x), tone: col.tone || 'neutral', mono: col.mono }))));
+				{
+					const items = chipItems(col, v);
+					const shown = col.max ? items.slice(0, col.max) : items;
+					const $chips = $('<span class="fs-table-chips">').append(shown.map((x) => badgeNode({ label: x, tone: col.tone || 'neutral', mono: col.mono })));
+					if (shown.length < items.length) $chips.append($('<span class="fs-table-more">').text(t('+{n} more', { n: items.length - shown.length })));
+					$td.append($chips);
+				}
 				break;
 			case 'bool':
 				$td.append(v

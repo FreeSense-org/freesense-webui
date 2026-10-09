@@ -40,8 +40,9 @@ t(Url::page('/') === '/next/' && Url::page('/security/aliases') === '/next/secur
 t(Url::page('/next/me') === '/next/me' && Url::page('/api/v1/me') === '/api/v1/me' && Url::page('https://docs.freesense.org/x') === 'https://docs.freesense.org/x',
     'page URLs, API paths and external links pass unchanged');
 t(Url::route('/next') === '/' && Url::route('/next/') === '/' && Url::route('/next/vpn/ipsec/') === '/vpn/ipsec', 'request paths become routes');
-t(Url::route('/nextdoor') === null && Url::route('/index.php') === null && Url::route('/next/a.php') === null && Url::route('/next/x%2f') === null,
-    'paths outside the WebUI, or with characters routes never use, are not routes');
+t(Url::route('/nextdoor') === null && Url::route('/index.php') === null && Url::route('/next/x%2f') === null &&
+    Url::route('/next/a/../b') === null && Url::route('/next/./a') === null, 'paths outside the WebUI, dot segments, or characters routes never use');
+t(Url::route('/next/security/aliases/edit/My_Alias.v6') === '/security/aliases/edit/My_Alias.v6', 'item keys in sub-routes keep their case');
 t(Url::next('/next/vpn/ipsec?x=1') === '/next/vpn/ipsec?x=1', 'a WebUI page is a valid sign-in target');
 foreach (array('', 'https://evil.example/', '//evil.example/next/', '/\\evil.example', '/index.php', 'javascript:alert(1)', '/next/../index.php') as $bad) {
 	t(Url::next($bad) === '/next/', "sign-in never redirects to {$bad}");
@@ -116,6 +117,62 @@ t($s['theme'] === 'freesense' && $s['mode'] === 'dark' && $s['bsTheme'] === 'dar
 $s = Shell::style(array('accent' => '"><x', 'mode' => 'x'));
 t($s['accent'] === 'coral' && $s['mode'] === 'auto' && $s['skin']['cards'] === 'outlined', 'invalid preferences fall back to the theme defaults');
 t(preg_match('#^/ui/fs-ui\.css\?v=[0-9a-f]{12}$#', $s['css']) && preg_match('#^/themes/freesense/theme\.css\?v=[0-9a-f]{12}$#', $s['themeCss']), 'asset URLs are cache-busted');
+
+/* Every page builds (patterns included) with catalogue elements only */
+function fs_page(string $class, Nav $nav, array $entry, array $params) {
+	$page = (new ReflectionClass($class))->newInstanceWithoutConstructor();
+	foreach (array('nav' => $nav, 'entry' => $entry, 'params' => $params) as $prop => $val) {
+		(new ReflectionProperty(FreeSense\WebUI\Page::class, $prop))->setValue($page, $val);
+	}
+	return $page;
+}
+$pageNav = new Nav($raw, function () { return true; });
+$seen = array();
+foreach (require FS_WEBUI_APP . '/pages.php' as $class) {
+	t(!isset($seen[$class::ROUTE]), "{$class}: one page per route");
+	$seen[$class::ROUTE] = true;
+	t(isset($entries[$class::ROUTE]) || ($class::PRIV !== null), "{$class}: in the navigation, or names its own privilege");
+	$routes = array($class::ROUTE);
+	if (is_subclass_of($class, FreeSense\WebUI\Patterns\ResourcePage::class)) {
+		$routes[] = $class::ROUTE . '/new';
+		$routes[] = $class::ROUTE . '/edit/Some_Item';
+	}
+	foreach ($routes as $r) {
+		$params = $class::match($r);
+		t($params !== null, "{$class} serves {$r}");
+		$page = fs_page($class, $pageNav, $entries[$class::ROUTE] ?? array(), $params ?? array());
+		$pageNav->locate($class::ROUTE);
+		$pui = new Ui($catalogue);
+		try {
+			$page->build($pui);
+			$ok = (count($pui->elements()) >= 2) && ($pui->elements()[0]->name() === 'page-header') && ($page->title() !== '');
+		} catch (Throwable $e) {
+			$ok = false;
+			fwrite(STDERR, "  {$class} {$r}: {$e->getMessage()}\n");
+		}
+		t($ok, "{$class} builds {$r}");
+	}
+}
+t(FreeSense\WebUI\Pages\Aliases::match('/security/aliases/edit/../x') === null && FreeSense\WebUI\Pages\Aliases::match('/security/aliasesx') === null,
+    'resource sub-routes only take item keys');
+
+/* The editor and the list of a resource */
+$pageNav->locate('/security/aliases');
+$aui = new Ui($catalogue);
+fs_page(FreeSense\WebUI\Pages\Aliases::class, $pageNav, $entries['/security/aliases'], array('view' => 'edit', 'key' => 'Web_Servers'))->build($aui);
+$form = $aui->elements()[1]->config();
+t(($form['load'] === array('path' => '/v1/firewall/aliases/Web_Servers')) && ($form['save'] === array('method' => 'PUT', 'path' => '/v1/firewall/aliases/{name}')) &&
+    ($form['schemaSource'] === array('path' => '/v1/schema/firewall/aliases')) && ($form['successHref'] === '/next/security/aliases'),
+    'the editor loads the item, saves by its loaded name (renames work) and returns to the list');
+$aui = new Ui($catalogue);
+fs_page(FreeSense\WebUI\Pages\Aliases::class, $pageNav, $entries['/security/aliases'], array('view' => 'list'))->build($aui);
+t((array_map(function ($e) { return $e->name(); }, $aui->elements()) === array('page-header', 'apply-bar', 'data-table')) &&
+    ($aui->elements()[1]->config()['only'] === 'aliases') && ($aui->elements()[2]->config()['rowLink'] === '/next/security/aliases/edit/{name}'),
+    'the list: header, apply bar for alias changes, table linking to the editor');
+$lui = new Ui($catalogue);
+fs_page(FreeSense\WebUI\Pages\SystemLog::class, $pageNav, $entries['/insights/logs-system'], array())->build($lui);
+$lv = $lui->elements()[1]->config();
+t(($lv['source'] === array('path' => '/v1/logs/system', 'query' => array('format' => 'webui'))) && ($lv['severity'] === false), 'logs use the API\'s WebUI format; syslog has no severity');
 
 /* Pages use elements only (RULES R1) */
 foreach (glob(FS_WEBUI_APP . '/pages/*.php') as $file) {

@@ -8,7 +8,8 @@ Apply and optional Discard. Hidden when nothing is pending.
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `source` | `{ path, query }` | `{ path: '/v1/firewall/pending' }` | Pending endpoint. `data` may be `{pending: bool}`, `{pending: n}`, `{count: n}` or `{changes: [...]}` |
+| `source` | `{ path, query }` | `{ path: '/v1/firewall/pending' }` | Pending endpoint. `data` may be `{pending: bool}`, `{pending: n}`, `{pending: [subsystem, …]}` (the firewall API), `{count: n}` or `{changes: [...]}` |
+| `only` | string \| string[] | — | With `{pending: [subsystem, …]}`: count only these subsystems (e.g. `aliases` on the Aliases page) |
 | `every` | seconds | `10` | Poll interval (through `ctx.live`) |
 | `apply` | `{ method, path, body }` | `{ method: 'POST', path: '/v1/firewall/apply' }` | Apply request |
 | `discard` | `{ method, path, body, label, success, confirm }` | — | Shows Discard. `confirm`: `{title, text, confirmLabel}` or `false` (no question) |

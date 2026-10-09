@@ -58,22 +58,27 @@ final class App {
 		};
 		$nav = new Nav($raw, $allowed);
 		$entries = Nav::entries($raw);
-		$pages = array();
-		foreach (require FS_WEBUI_APP . '/pages.php' as $class) {
-			$pages[$class::ROUTE] = $class;
+		/* The page serving the route, and the navigation entry it belongs to (sub-routes belong to their page's entry). */
+		$class = null;
+		$params = array();
+		foreach (require FS_WEBUI_APP . '/pages.php' as $candidate) {
+			if (($p = $candidate::match($route)) !== null) {
+				list($class, $params) = array($candidate, $p);
+				break;
+			}
 		}
+		$home = ($class !== null) ? $class::ROUTE : $route;
 
 		$status = 200;
-		if (isset($entries[$route]) && !empty($entries[$route]['package']) && !is_package_installed((string)$entries[$route]['package'])) {
+		if (isset($entries[$home]) && !empty($entries[$home]['package']) && !is_package_installed((string)$entries[$home]['package'])) {
 			$status = 404;
-		} elseif (isset($entries[$route])) {
-			$entry = $entries[$route];
-			$class = $pages[$route] ?? NotBuilt::class;
+		} elseif (isset($entries[$home])) {
+			$entry = $entries[$home];
+			$class = $class ?? NotBuilt::class;
 			if (!$allowed($entry)) {
 				$status = 403;
 			}
-		} elseif (isset($pages[$route])) {
-			$class = $pages[$route];
+		} elseif ($class !== null) {
 			$entry = array('title' => '', 'priv' => $class::PRIV);
 			if (!$allowed($entry)) {
 				$status = 403;
@@ -88,11 +93,11 @@ final class App {
 			return;
 		}
 
-		$nav->locate($route);
+		$nav->locate($home);
 		$ui = new Ui(Assets::elements());
 		if ($status === 200) {
 			try {
-				$page = new $class($session, $nav, $entry);
+				$page = new $class($session, $nav, $entry, $params);
 				$page->build($ui);
 				$title = $page->title();
 			} catch (\Throwable $e) {

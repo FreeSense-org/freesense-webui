@@ -153,6 +153,7 @@
 	}
 	.fs-table-cell-link { color: var(--fs-accent-text); }
 	.fs-table-chips { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; }
+	.fs-table-more { align-self: center; font-size: 0.75rem; color: var(--fs-text-muted); white-space: nowrap; }
 	.fs-table-bool {
 		display: inline-flex;
 		align-items: center;

@@ -63,16 +63,16 @@ function typeOf(c) {
 	return /firewall/.test((c.source && c.source.path) || '') ? 'firewall' : 'system';
 }
 
-function defaultFilters(type, opts) {
+function defaultFilters(type, opts, severity = true) {
 	if (type === 'firewall') {
 		const f = [{ id: 'action', type: 'chips', multiple: true, label: t('Action'), value: [], options: [
 			{ value: 'pass', label: t('Pass'), icon: 'circle-check' }, { value: 'block', label: t('Block'), icon: 'ban' }, { value: 'reject', label: t('Reject'), icon: 'circle-minus' }] }];
 		if (opts.interfaces && opts.interfaces.length) f.push({ id: 'iface', label: t('Interface'), all: t('All interfaces'), options: opts.interfaces });
 		return f;
 	}
-	const f = [{ id: 'severity', type: 'chips', multiple: true, label: t('Severity'), value: [], options: [
+	const f = severity ? [{ id: 'severity', type: 'chips', multiple: true, label: t('Severity'), value: [], options: [
 		{ value: 'error', label: t('Error'), icon: 'circle-xmark' }, { value: 'warning', label: t('Warning'), icon: 'triangle-exclamation' },
-		{ value: 'notice', label: t('Notice'), icon: 'circle-info' }, { value: 'info', label: t('Info'), icon: 'circle' }] }];
+		{ value: 'notice', label: t('Notice'), icon: 'circle-info' }, { value: 'info', label: t('Info'), icon: 'circle' }] }] : [];
 	if (opts.processes && opts.processes.length) f.push({ id: 'process', label: t('Process'), all: t('All processes'), options: opts.processes });
 	return f;
 }
@@ -84,11 +84,13 @@ el.define('log-viewer', {
 		const type = typeOf(config);
 		const c = {
 			title: type === 'firewall' ? 'Firewall log' : 'System log', every: 2, limit: 100, maxRows: 1000, height: '36rem',
-			live: true, search: true, filters: true, summary: false, columns: null, ruleHref: '/security/rules?rule={rule_id}',
+			live: true, search: true, filters: true, summary: false, columns: null, ruleHref: '/security/rules?rule={rule_id}', severity: true,
 			...config
 		};
 		const defs = COLUMNS[type] || COLUMNS.system;
-		const cols = (c.columns || Object.keys(defs)).filter((k) => defs[k]).map((k) => ({ id: k, ...defs[k] }));
+		/* severity: false = the log has no severity (FreeBSD syslog files): no column, chips or error/warning tiles. */
+		const noSeverity = type !== 'firewall' && !c.severity;
+		const cols = (c.columns || Object.keys(defs)).filter((k) => defs[k] && !(noSeverity && k === 'severity')).map((k) => ({ id: k, ...defs[k] }));
 
 		const $node = $(node).addClass('fs-log-viewer').empty().attr('data-log', type);
 		const $bar = $('<div class="fs-log-viewer-bar">');
@@ -278,7 +280,8 @@ el.define('log-viewer', {
 
 		function run() {
 			const my = gen;
-			return loaded ? tail(my) : initialLoad(my);
+			/* No cursor yet (an empty log): load again instead of tailing. */
+			return loaded && cursor ? tail(my) : initialLoad(my);
 		}
 
 		const task = ctx.live({
@@ -484,7 +487,7 @@ el.define('log-viewer', {
 
 		function buildToolbar(opts) {
 			if (!c.search && !c.filters) return;
-			const fl = c.filters === true ? defaultFilters(type, opts) : (c.filters || []);
+			const fl = c.filters === true ? defaultFilters(type, opts, !noSeverity) : (c.filters || []);
 			for (const f of fl) if (filters[f.id] !== undefined) f.value = filters[f.id];
 			const search = c.search ? { placeholder: type === 'firewall' ? t('Search address, port, rule…') : t('Search process or message…'), label: t('Search the log'), delay: 300, ...(typeof c.search === 'object' ? c.search : {}), value: q } : false;
 			const $tb = childNode({ el: 'toolbar', config: { label: t('Log filters'), search, filters: fl } });
@@ -498,7 +501,8 @@ el.define('log-viewer', {
 		if (type === 'firewall' && c.filters === true && !c.interfaces) {
 			buildToolbar({});
 			batch.get('/v1/status/interfaces').then((r) => {
-				const list = (r.data || []).map((i) => ({ value: i.id, label: i.descr || i.id }));
+				/* The API names interfaces name/description; fixtures id/descr. */
+				const list = (r.data || []).map((i) => ({ value: i.id || i.name, label: i.descr || i.description || i.id || i.name }));
 				if (list.length) buildToolbar({ interfaces: list });
 			}, () => { /* keep the toolbar without an interface filter */ });
 		} else {
@@ -514,11 +518,15 @@ el.define('log-viewer', {
 			requestAnimationFrame(() => {
 				summaryQueued = false;
 				const fw = type === 'firewall';
-				const bad = rows.filter((e) => (fw ? e.action === 'block' || e.action === 'reject' : SEVERITY[e.severity] && SEVERITY[e.severity][0] === 'crit')).length;
-				const other = rows.filter((e) => (fw ? e.action === 'pass' : e.severity === 'warning' || e.severity === 'warn')).length;
+				const bad = noSeverity ? rows.length : rows.filter((e) => (fw ? e.action === 'block' || e.action === 'reject' : SEVERITY[e.severity] && SEVERITY[e.severity][0] === 'crit')).length;
+				const other = noSeverity ? new Set(rows.map((e) => e.process).filter(Boolean)).size
+					: rows.filter((e) => (fw ? e.action === 'pass' : e.severity === 'warning' || e.severity === 'warn')).length;
 				if (!tiles) {
-					const a = childNode({ el: 'stat-tile', config: { label: fw ? t('Blocked in view') : t('Errors in view'), icon: fw ? 'ban' : 'circle-xmark', value: bad, size: 'compact', plain: true } });
-					const b = childNode({ el: 'stat-tile', config: { label: fw ? t('Passed in view') : t('Warnings in view'), icon: fw ? 'circle-check' : 'triangle-exclamation', value: other, size: 'compact', plain: true } });
+					const [la, ia, lb, ib] = fw ? [t('Blocked in view'), 'ban', t('Passed in view'), 'circle-check']
+						: noSeverity ? [t('Entries in view'), 'list', t('Processes in view'), 'microchip']
+							: [t('Errors in view'), 'circle-xmark', t('Warnings in view'), 'triangle-exclamation'];
+					const a = childNode({ el: 'stat-tile', config: { label: la, icon: ia, value: bad, size: 'compact', plain: true } });
+					const b = childNode({ el: 'stat-tile', config: { label: lb, icon: ib, value: other, size: 'compact', plain: true } });
 					const $top = $('<div class="fs-log-viewer-top">');
 					$summary.prop('hidden', false).append($('<div class="fs-log-viewer-tile">').append(a), $('<div class="fs-log-viewer-tile">').append(b), $top);
 					startChildren(a.add(b));

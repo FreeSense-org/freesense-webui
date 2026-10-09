@@ -117,3 +117,19 @@ Measured against the baseline inventory (`docs/inventory/`). Of the 208 pages:
 
 The real porting work moves to the backend schema per resource, which the API
 uses too.
+
+## Implemented (P5)
+
+The patterns live in `app/src/Patterns/`; pages in `app/pages/` and the list in
+`app/pages.php`. What each one builds today:
+
+| Pattern | Constants | Hooks | Builds |
+|---|---|---|---|
+| `ResourcePage` | `ROUTE`, `RESOURCE`, `KEY`, `APPLY` | `noun()`, `plural()`, `columns()`, `filters()`, `sort()` | List (`ROUTE`): header with Add, apply bar for the `APPLY` subsystem, data table (search, filters, paging, row link, edit/delete). Editor (`ROUTE/new`, `ROUTE/edit/{key}`): schema form from `/v1/schema/{RESOURCE}`, POST or GET+PUT, back to the list |
+| `SettingsPage` | `ROUTE`, `RESOURCE`, `SCHEMA` | `subtitle()` | Schema form: GET and PUT `/v1/{RESOURCE}` |
+| `StatusPage` | `ROUTE`, `SOURCE`, `KEY`, `EVERY` | `columns()`, `rowActions()`, `empty()`, `sort()`, `subtitle()` | Live data table with search and paging |
+| `LogPage` | `ROUTE`, `LOG`, `TYPE`, `SEVERITY` | `subtitle()` | Log viewer on the API's `format=webui` |
+
+Where a page sits in the menus and the privilege that opens it come from
+`app/nav.json`, never from the page. Pilot pages: Aliases, NTP, Gateways,
+Services, ARP table, and the firewall, system, DHCP, DNS and OpenVPN logs.

@@ -78,7 +78,7 @@
 		"ui/fonts/jetbrains-mono-latin-600-normal.woff2": "400c6bfda18d5d14acad1c15d6dcb9f8e13c015e7286317e0b9a482539bef147",
 		"ui/fonts/jetbrains-mono-latin-ext-400-normal.woff2": "505dfba8ecbe77e82765f36d317ed7ef4ac42719dc5f4ae68d1c483fd22d0d14",
 		"ui/fonts/jetbrains-mono-latin-ext-600-normal.woff2": "90899aac1c15552c028fd205376bb537a2a5205164fe8626efabad77d7260c20",
-		"ui/fs-ui.css": "75ec38764e50500dbddd051fcad7c53644f1c0822af29951a2280c05fcd41fda",
-		"ui/fs-ui.js": "14e0e6a8b867a2ed940d33f9e0a1cce03855b75fb3b5cf1d4ec67cc4b30869e2"
+		"ui/fs-ui.css": "01268ff53716f2120d220beccb7d7b72c093acc91795161bb92965174cc93268",
+		"ui/fs-ui.js": "9debff33eca55e5078dc2ad8b382b82aaa4ac7cedf3a17d189da2e9335db2823"
 	}
 }

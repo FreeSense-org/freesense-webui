@@ -28,7 +28,8 @@ final class Url {
 			$path = substr($path, strlen($base));
 		}
 		$path = '/' . trim($path, '/');
-		return preg_match('#^/[a-z0-9/_-]*$#', $path) ? $path : null;
+		/* Lower case for pages; item keys in sub-routes (aliases) may use A-Z, digits, _ . - */
+		return (preg_match('#^/[A-Za-z0-9/_.-]*$#', $path) && !preg_match('#(^|/)\.\.?(/|$)#', $path)) ? $path : null;
 	}
 
 	/* A safe local redirect target (sign-in "next"): a WebUI page, never another host. */

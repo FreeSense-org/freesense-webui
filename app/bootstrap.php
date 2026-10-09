@@ -24,7 +24,7 @@ define('FS_WEBUI_PUBLIC', getenv('FS_WEBUI_PUBLIC') ?: '/usr/local/www-ui');
 /* Where pages live: /next while WebUI 2.0 runs next to the 1.x GUI, '' after the cutover. Assets are always /ui/ and /themes/. */
 define('FS_WEBUI_BASE', rtrim((string)(getenv('FS_WEBUI_BASE') ?: '/next'), '/'));
 /* The API level this WebUI needs (RESTAPI_LEVEL, GET /api/v1/meta). */
-define('FS_WEBUI_API_LEVEL', 6);
+define('FS_WEBUI_API_LEVEL', 7);
 
 spl_autoload_register(function (string $class): void {
 	$prefix = 'FreeSense\\WebUI\\';

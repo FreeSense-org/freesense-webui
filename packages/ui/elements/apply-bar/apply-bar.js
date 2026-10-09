@@ -23,10 +23,12 @@ import { confirm, busy } from '../confirm/confirm.js';
 
 let seq = 0;
 
-/** {pending: bool} | {pending: n} | {count: n} | {changes: [..]} → number of changes (0 = none, -1 = some, unknown count). */
-function countOf(data) {
+/** {pending: bool} | {pending: n} | {pending: [subsystems]} | {count: n} | {changes: [..]} → number of changes (0 = none, -1 = some, unknown count). */
+function countOf(data, only) {
 	if (!data) return 0;
 	if (Array.isArray(data.changes)) return data.changes.length;
+	/* The firewall API lists dirty subsystems: {pending: ['aliases', 'rules']}; `only` narrows it to this page's. */
+	if (Array.isArray(data.pending)) return (only ? data.pending.filter((p) => only.includes(p)) : data.pending).length;
 	if (typeof data.count === 'number') return data.count;
 	if (typeof data.pending === 'number') return data.pending;
 	return data.pending ? -1 : 0;
@@ -75,10 +77,11 @@ el.define('apply-bar', {
 		}
 
 		const source = config.source || { path: '/v1/firewall/pending' };
+		const only = config.only ? [].concat(config.only) : null;
 		const task = ctx.live({
 			id: 'pending',
 			every: config.every ?? 10,
-			run: () => batch.get(apiPath(source.path), source.query).then((r) => { if (!working) render(countOf(r.data)); }),
+			run: () => batch.get(apiPath(source.path), source.query).then((r) => { if (!working) render(countOf(r.data, only)); }),
 			onState(s) { ctx.state(s); }
 		});
 

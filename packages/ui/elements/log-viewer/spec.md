@@ -39,6 +39,7 @@ cursor and reloads from the newest entry.
 | `interfaces` | `[{value, label}]` | fetched | Interface options (skips the fetch) |
 | `processes` | `string[]` \| `[{value, label}]` | learned | Process options |
 | `summary` | bool | `false` | Summary strip: blocked / passed in view (errors / warnings for system logs) as `stat-tile`s, plus the top three blocked sources (busiest processes); click one to search (filter) for it |
+| `severity` | bool | `true` | System logs: `false` when entries carry no severity (FreeBSD syslog files): no severity column, chips or error/warning tiles (the summary counts entries and processes instead) |
 | `ruleHref` | URL template | `/security/rules?rule={rule_id}` | "Open rule" link in the firewall drawer; `{field}` placeholders come from the entry. `null` hides it |
 | `quickRules` | `{block, pass}` each `{method, path, body}` | — | Requests for the drawer's "Block source" and "Pass this traffic" (`{src}`, `{iface}`, … placeholders in path and body). Without them the buttons only report a drafted rule (toast) and emit `fs:log-quick-rule` |
 

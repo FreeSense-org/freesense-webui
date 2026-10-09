@@ -26,11 +26,19 @@ abstract class Page {
 	protected Session $session;
 	protected Nav $nav;
 	protected array $entry;
+	/* What match() found in the route (patterns: view, key). */
+	protected array $params;
 
-	public function __construct(Session $session, Nav $nav, array $entry) {
+	public function __construct(Session $session, Nav $nav, array $entry, array $params = array()) {
 		$this->session = $session;
 		$this->nav = $nav;
 		$this->entry = $entry;
+		$this->params = $params;
+	}
+
+	/* Does this page serve $route? Parameters for the page, or null. Patterns add sub-routes (ResourcePage: /new, /edit/{key}). */
+	public static function match(string $route): ?array {
+		return ($route === static::ROUTE) ? array() : null;
 	}
 
 	public function title(): string {

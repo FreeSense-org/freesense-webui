@@ -11,4 +11,14 @@
 return array(
 	FreeSense\WebUI\Pages\Dashboard::class,
 	FreeSense\WebUI\Pages\Profile::class,
+	FreeSense\WebUI\Pages\Aliases::class,
+	FreeSense\WebUI\Pages\Ntp::class,
+	FreeSense\WebUI\Pages\FirewallLog::class,
+	FreeSense\WebUI\Pages\SystemLog::class,
+	FreeSense\WebUI\Pages\DhcpLog::class,
+	FreeSense\WebUI\Pages\DnsLog::class,
+	FreeSense\WebUI\Pages\VpnLog::class,
+	FreeSense\WebUI\Pages\Gateways::class,
+	FreeSense\WebUI\Pages\Services::class,
+	FreeSense\WebUI\Pages\Arp::class,
 );
