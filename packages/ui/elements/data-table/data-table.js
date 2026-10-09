@@ -29,6 +29,7 @@ import { badgeNode } from '../badge/badge.js';
 import { toast } from '../toast/toast.js';
 import { confirm } from '../confirm/confirm.js';
 import { dangerConfirm } from '../danger-confirm/danger-confirm.js';
+import { modalForm } from '../modal-form/modal-form.js';
 import { actionNode, menuItems, icon, disposeMenus } from '../page-header/actions.js';
 import { childNode, startChildren } from '../card/nest.js';
 
@@ -929,7 +930,19 @@ el.define('data-table', {
 			if (isLocked(row) && blockedOnLocked(a)) return;
 			const ev = $.Event('fs:row-action');
 			$(node).trigger(ev, [{ id: a.id, key: get(row, key), row }]);
-			if (ev.isDefaultPrevented() || !a.api) return;
+			if (ev.isDefaultPrevented()) return;
+			if (a.form) {
+				/* A small form in a dialog (modal-form); templates in title, path, values and body use the row. */
+				const F = a.form;
+				const res = await modalForm({ ...F, title: fill(t(F.title || a.label), row, { key }), path: fill(F.path, row, { encode: true, key }),
+					values: F.values ? fillDeep(F.values, row, key) : undefined, body: F.body ? fillDeep(F.body, row, key) : undefined });
+				if (!res) return;
+				if ((res.meta && res.meta.pending) || F.pending) $(node).trigger('fs:pending', [{ path: F.path, id }]);
+				$(node).trigger('fs:done', [{ id: a.id, key: get(row, key), response: res }]);
+				await fetchData().catch(() => {});
+				return;
+			}
+			if (!a.api) return;
 			const A = a.api;
 			if (A.confirm) {
 				const cf = typeof A.confirm === 'string' ? { title: A.confirm } : A.confirm;

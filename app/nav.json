@@ -59,10 +59,16 @@
 									"priv": "page-interfaces-lagg"
 								},
 								{
-									"title": "GIF / GRE",
-									"icon": "road",
-									"href": "/network/tunnels",
+									"title": "GIF",
+									"icon": "route",
+									"href": "/network/gif",
 									"priv": "page-interfaces-gif"
+								},
+								{
+									"title": "GRE",
+									"icon": "route",
+									"href": "/network/gre",
+									"priv": "page-interfaces-gre"
 								},
 								{
 									"title": "Interface groups",

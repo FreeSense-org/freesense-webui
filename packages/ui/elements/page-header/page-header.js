@@ -14,11 +14,18 @@ import $ from 'jquery';
 import { el } from '../../js/el.js';
 import { statusNode } from '../status/status.js';
 import { t, emit, actionNode, menuNode, disposeMenus } from './actions.js';
+import { modalForm } from '../modal-form/modal-form.js';
 
 el.define('page-header', {
 	init(node, config) {
 		const $node = $(node).addClass('fs-ph').empty();
-		const onAction = (a) => emit(node, 'fs:action', { id: a.id, el: 'page-header' });
+		const onAction = async (a) => {
+			emit(node, 'fs:action', { id: a.id, el: 'page-header' });
+			if (!a.form) return;
+			/* A small form in a dialog; on success other elements (e.g. a table with reloadOn: 'fs:saved') refresh. */
+			const res = await modalForm({ title: a.label, ...a.form });
+			if (res) $(node).trigger('fs:saved', [res]);
+		};
 
 		const crumbs = config.breadcrumb || [];
 		if (crumbs.length) {
