@@ -7,8 +7,8 @@
  */
 /*
  * topology — live diagram: WAN gateways → firewall → LAN/OPT networks, from
- * /v1/status/interfaces + /v1/status/gateways (+ /v1/status/system for the
- * hostname). Nodes are HTML cards with status icons; SVG connectors are drawn
+ * /v1/status/interfaces + /v1/status/gateways (+ /v1/system/info for the
+ * hostname, /v1/status/traffic for the rates). Nodes are HTML cards with status icons; SVG connectors are drawn
  * between them and redrawn on resize. Narrow screens stack the columns.
  */
 import $ from 'jquery';
@@ -47,7 +47,8 @@ el.define('topology', {
 			every: 5,
 			interfaces: { path: '/v1/status/interfaces' },
 			gateways: { path: '/v1/status/gateways' },
-			system: { path: '/v1/status/system' },
+			system: { path: '/v1/system/info' },
+			traffic: { path: '/v1/status/traffic' },
 			...config
 		};
 		const ns = `.${nextId('fstopo')}`;
@@ -85,8 +86,10 @@ el.define('topology', {
 			}
 		}
 
-		function render([ifs, gws, sys]) {
-			const ifaces = (Array.isArray(ifs.data) ? ifs.data : []).filter((i) => i && i.id && i.status);
+		function render([ifs, gws, sys, tr]) {
+			const rates = (tr && tr.data && tr.data.interfaces) || {};
+			const ifaces = (Array.isArray(ifs.data) ? ifs.data : []).filter((i) => i && i.name && i.status)
+				.map((i) => ({ ...i, in_bps: (rates[i.name] || {}).in_bps ?? 0, out_bps: (rates[i.name] || {}).out_bps ?? 0 }));
 			const gateways = (Array.isArray(gws.data) ? gws.data : []).filter((g) => g && g.name && g.status);
 			if (!ifaces.length && !gateways.length) { $diagram.detach(); return false; }
 			if ($diagram.parent()[0] !== $box[0]) $box.empty().append($diagram);
@@ -99,30 +102,32 @@ el.define('topology', {
 			for (const g of gateways) {
 				const st = statusOf(g.status);
 				const label = st === 'ok' ? L.online : st === 'warn' ? L.degraded : st === 'crit' ? L.down : null;
-				const detail = g.rtt !== null && g.rtt !== undefined ? format(g.rtt, 'ms') : g.loss ? `${g.loss}% loss` : null;
-				const ifo = ifaces.find((i) => i.id === g.iface);
-				const $c = card('is-gateway', g.name, `${ifo ? `${ifo.descr} · ` : ''}${g.address || ''}`, statusNode(st, label, { detail }));
+				const rtt = g.delay_ms ?? (g.delay !== undefined ? Number.parseFloat(g.delay) : null);
+				const loss = g.loss_pct ?? (g.loss !== undefined ? Number.parseFloat(g.loss) : 0);
+				const detail = st !== 'crit' && Number.isFinite(rtt) ? format(rtt, 'ms') : loss ? `${loss}% loss` : null;
+				const ifo = ifaces.find((i) => i.name === g.interface);
+				const $c = card('is-gateway', g.name, `${ifo ? `${ifo.description} · ` : ''}${g.monitorip || ''}`, statusNode(st, label, { detail }));
 				$c.attr('data-state', st);
 				$left.append($c);
 				links.push({ n: $c[0], side: 'left', state: st });
 			}
 
-			const hostname = sys && sys.data ? sys.data.hostname : '';
+			const hostname = sys && sys.data ? [sys.data.hostname, sys.data.domain].filter(Boolean).join('.') : '';
 			$mid.append($('<div class="fs-topology-node fs-topology-fw">').append(
 				$('<span class="fs-topology-fw-icon" aria-hidden="true">').append($('<i class="fa-solid fa-shield-halved">')),
 				$('<span class="fs-topology-name">').text(c.title || hostname || L.firewall),
 				hostname && c.title ? $('<span class="fs-topology-sub fs-mono">').text(hostname) : null));
 
-			const gwIfaces = new Set(gateways.map((g) => g.iface));
+			const gwIfaces = new Set(gateways.map((g) => g.interface));
 			for (const i of ifaces) {
-				if (gwIfaces.has(i.id) || i.gateway) continue;
+				if (gwIfaces.has(i.name) || i.gateway) continue;
 				const st = i.status === 'up' ? 'ok' : 'crit';
 				const rate = i.status === 'up'
 					? $('<span class="fs-topology-rate fs-num">').append(
 						$('<i class="fa-solid fa-arrow-down" aria-hidden="true">'), $('<span class="visually-hidden">').text(`${L.in} `), document.createTextNode(` ${format(i.in_bps, 'bps')}  `),
 						$('<i class="fa-solid fa-arrow-up" aria-hidden="true">'), $('<span class="visually-hidden">').text(`${L.out} `), document.createTextNode(` ${format(i.out_bps, 'bps')}`))
 					: null;
-				const $c = card('is-network', i.descr, [i.if, i.ipv4].filter(Boolean).join(' · '), statusNode(st, st === 'ok' ? L.up : L.down), rate);
+				const $c = card('is-network', i.description || i.name, [i.if, i.ipaddr].filter(Boolean).join(' · '), statusNode(st, st === 'ok' ? L.up : L.down), rate);
 				$c.attr('data-state', st);
 				$right.append($c);
 				links.push({ n: $c[0], side: 'right', state: st });
@@ -131,7 +136,7 @@ el.define('topology', {
 			return true;
 		}
 
-		const task = states.load(ctx, $box, () => Promise.all([get(c.interfaces), get(c.gateways), get(c.system).catch(() => null)]), render,
+		const task = states.load(ctx, $box, () => Promise.all([get(c.interfaces), get(c.gateways), get(c.system).catch(() => null), get(c.traffic).catch(() => null)]), render,
 			{ every: c.every, lines: 5, $root: $node, empty: { icon: 'diagram-project', title: T.noData } });
 
 		let ro = null;

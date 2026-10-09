@@ -8,8 +8,8 @@
 /*
  * Mock routes for the data-visualisation elements (stat-tile, meter, ring,
  * sparkline, chart, topology):
- *   /api/v1/status/system/history?range=      {t, cpu, mem}  (pct, RRD-style)
- *   /api/v1/status/gateways/history?range=    {t, <gateway name>: rtt ms …}
+ *   /api/v1/status/system/history?range=      {range, step, t, cpu, mem}  (percent, as the API)
+ *   /api/v1/status/gateways/history?range=    {range, step, t, gateways: {<name>: {delay, stddev, loss}}}  (ms, %)
  *   /api/v1/gallery/viz-stale?id=             succeeds twice per id, then 503 (stale state)
  */
 (function (M) {
@@ -37,13 +37,15 @@
 	M.route('GET', '/api/v1/status/system/history', function (p, q) {
 		var range = q.get('range') || '1h';
 		var a = axis(range);
-		return M.ok({ step: a.step, t: a.t, cpu: walk(a.t.length, 14, 16, 5, 2, 99, 0.03), mem: walk(a.t.length, 38, 40, 0.5, 30, 70) }, { range: range, source: 'rrd' });
+		return M.ok({ range: range, step: a.step, t: a.t, cpu: walk(a.t.length, 14, 16, 5, 2, 99, 0.03), mem: walk(a.t.length, 38, 40, 0.5, 30, 70) });
 	});
 
 	M.route('GET', '/api/v1/status/gateways/history', function (p, q) {
 		var range = q.get('range') || '1h';
 		var a = axis(range);
-		return M.ok({ step: a.step, t: a.t, WAN_DHCP: walk(a.t.length, 8.4, 8.5, 1.2, 4, 120, 0.03), WAN_DHCP6: walk(a.t.length, 9.1, 9.2, 1.2, 4, 120, 0.03), WG_SITE_GW: walk(a.t.length, 21.8, 22, 1.5, 6, 120, 0.02) }, { range: range, source: 'rrd' });
+		var n = a.t.length;
+		var gw = function (base, sd) { return { delay: walk(n, base, base + 0.1, 1.2, 4, 120, 0.03), stddev: walk(n, sd, sd, 0.2, 0.1, 9), loss: walk(n, 0, 0, 0.4, 0, 6) }; };
+		return M.ok({ range: range, step: a.step, t: a.t, gateways: { WAN_DHCP: gw(8.4, 0.9), WAN_DHCP6: gw(9.1, 1.2), WG_SITE_GW: gw(21.8, 2.4) } });
 	});
 
 	var calls = {};

@@ -15,11 +15,14 @@
  * ([{id, method, path}] → [{id, status, body}]). If the backend has no
  * batch route yet (404/405), FS.batch switches to plain parallel requests
  * for the rest of the session. At most `maxInFlight` requests run at once.
+ * Identical GETs in one tick share a request, and a tick with more than
+ * `maxBatch` (the server's limit) goes out as several batch calls.
  */
 import { api, url } from './api.js';
 
 const state = { queue: [], scheduled: false, supported: true, inFlight: 0, waiting: [] };
 const maxInFlight = 2;
+const maxBatch = 20;
 
 function slot() {
 	if (state.inFlight < maxInFlight) { state.inFlight++; return Promise.resolve(); }
@@ -41,8 +44,25 @@ function settle(item, res) {
 
 async function flush() {
 	state.scheduled = false;
-	const items = state.queue.splice(0);
-	if (!items.length) return;
+	const queued = state.queue.splice(0);
+	if (!queued.length) return;
+	/* One request per distinct URL; every caller gets its result. */
+	const groups = new Map();
+	for (const it of queued) {
+		const key = url(it.path, it.query);
+		if (!groups.has(key)) groups.set(key, { path: it.path, query: it.query, callers: [] });
+		groups.get(key).callers.push(it);
+	}
+	const fan = (g) => ({ path: g.path, query: g.query, callers: g.callers,
+		/* Each caller gets its own copy, so one element changing its data cannot affect another. */
+		resolve: (v) => g.callers.forEach((c, i) => c.resolve(i ? structuredClone(v) : v)), reject: (e) => g.callers.forEach((c) => c.reject(e)) });
+	const items = [...groups.values()].map(fan);
+	const chunks = [];
+	for (let i = 0; i < items.length; i += maxBatch) chunks.push(items.slice(i, i + maxBatch));
+	await Promise.all(chunks.map(send));
+}
+
+async function send(items) {
 	if (!state.supported || items.length === 1) {
 		await Promise.all(items.map(async (it) => {
 			await slot();
@@ -58,7 +78,7 @@ async function flush() {
 	} catch (e) {
 		if (e.status === 404 || e.status === 405) {
 			state.supported = false;
-			state.queue.unshift(...items);
+			state.queue.unshift(...items.flatMap((it) => it.callers));
 			schedule();
 		} else items.forEach((it) => it.reject(e));
 	} finally { release(); }

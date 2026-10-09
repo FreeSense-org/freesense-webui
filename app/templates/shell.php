@@ -23,6 +23,7 @@ use FreeSense\WebUI\Html;
 <meta name="fs-themes" content="/themes">
 <meta name="fs-csrf" content="<?= Html::e($v['csrf']) ?>">
 <meta name="fs-login" content="<?= Html::e($v['login']) ?>">
+<meta name="fs-base" content="<?= Html::e(FS_WEBUI_BASE) ?>">
 <title><?= Html::e($v['title']) ?> · <?= Html::e($v['host']) ?></title>
 <?php if ($v['mode'] === 'auto'): ?>
 <script>(function (r) { r.dataset.bsTheme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; })(document.documentElement);</script>

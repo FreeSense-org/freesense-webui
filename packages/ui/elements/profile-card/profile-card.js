@@ -25,14 +25,20 @@ const LANGUAGES = [
 	{ value: 'es', label: 'Español' }, { value: 'fr', label: 'Français' }, { value: 'nl', label: 'Nederlands' }
 ];
 
-/** Start-page choices from the navigation model: the dashboard, then every item. */
+/* Start pages are stored as routes ('/security/aliases'); menu links carry the page base (<meta name="fs-base">, '/next'). */
+const routeOf = (href) => {
+	const base = document.querySelector('meta[name="fs-base"]')?.getAttribute('content') || '';
+	return base && (href === base || href.startsWith(`${base}/`)) ? href.slice(base.length) || '/' : href;
+};
+
+/** Start-page choices from the navigation model: the dashboard, then every item (values are routes). */
 function navPages() {
 	let model = {};
 	try { model = JSON.parse(document.getElementById('fs-nav')?.textContent || '{}'); } catch { /* none */ }
 	const out = [];
 	for (const a of model.areas || []) {
-		if (a.href) out.push({ value: a.href, label: a.title });
-		for (const g of a.groups || []) for (const it of g.items || []) out.push({ value: it.href, label: `${a.title} › ${it.title}` });
+		if (a.href) out.push({ value: routeOf(a.href), label: a.title });
+		for (const g of a.groups || []) for (const it of g.items || []) out.push({ value: routeOf(it.href), label: `${a.title} › ${it.title}` });
 	}
 	return out;
 }
@@ -41,12 +47,13 @@ let seq = 0;
 
 el.define('profile-card', {
 	init(node, config, ctx) {
-		const c = { source: { path: '/v1/me' }, every: 0, editable: true, save: '/v1/me/profile', ...config };
+		const c = { source: { path: '/v1/me/profile' }, every: 0, editable: true, save: '/v1/me/profile', ...config };
 		const uid = `fs-pc-${++seq}`;
 		const $node = $(node).addClass('fs-profile-card').empty();
 		const $body = $('<div class="fs-profile-card-body">');
 		$node.append($body);
-		const shared = c.source.path === '/v1/me' && !c.source.query;
+		/* The default source is the shared signed-in user (identity.js me). */
+		const shared = (c.source.path === '/v1/me/profile' || c.source.path === '/v1/me') && !c.source.query;
 		let user = null;
 		let editing = false;
 		const ns = `.fspc${seq}`;
@@ -81,7 +88,7 @@ el.define('profile-card', {
 			const $dl = $('<dl class="fs-profile-card-facts">');
 			const fact = (ic, k, $v) => $dl.append($('<div class="fs-profile-card-fact">').append($('<dt>').append(icon(ic), $('<span>').text(t(k))), $('<dd>').append($v)));
 			fact('envelope', 'Email', u.email ? $('<span class="fs-profile-card-email">').text(u.email) : $('<span class="fs-muted">').text(t('Not set')));
-			fact('language', 'Language', $('<span>').text(labelOf(languages(), u.language)));
+			if (u.language !== undefined) fact('language', 'Language', $('<span>').text(labelOf(languages(), u.language)));
 			fact('house', 'Start page', $('<span>').text(labelOf(startPages(), u.start_page)));
 			if (u.last_login) fact('right-to-bracket', 'Last sign-in', $('<time>').attr({ datetime: u.last_login, title: fmt.datetime(u.last_login) }).text(`${fmt.ago(u.last_login)} · ${fmt.datetime(u.last_login)}`));
 			if (u.created) fact('calendar', 'Member since', $('<time>').attr('datetime', u.created).text(new Date(u.created).toLocaleDateString()));
@@ -115,7 +122,7 @@ el.define('profile-card', {
 				$('<div class="fs-profile-card-grid">').append(
 					field('name', 'Name', $('<input type="text" autocomplete="name" required maxlength="64">').val(u.name || '')),
 					field('email', 'Email', $('<input type="email" autocomplete="email">').val(u.email || ''), 'Used for notices and password resets.'),
-					field('language', 'Language', select(languages(), u.language)),
+					u.language !== undefined ? field('language', 'Language', select(languages(), u.language)) : null,
 					field('start_page', 'Start page', select(startPages(), u.start_page), 'Opens after you sign in.')),
 				$('<div class="fs-profile-card-actions">').append(
 					$('<button type="submit" class="btn btn-primary btn-sm">').append(icon('check'), document.createTextNode(` ${t('Save')}`)),
@@ -138,11 +145,16 @@ el.define('profile-card', {
 
 		function submit($form, $summary) {
 			clearErrors($form, $summary);
-			const data = Object.fromEntries(['name', 'email', 'language', 'start_page'].map((k) => [k, String($form.find(`[name="${k}"]`).val() || '').trim()]));
+			const val = (k) => String($form.find(`[name="${k}"]`).val() || '').trim();
+			/* The profile takes name and email (and language where the API has it); the start page is a preference. */
+			const data = { name: val('name'), email: val('email') };
+			if (user.language !== undefined) data.language = val('language');
+			const startPage = val('start_page');
 			const $btns = $form.find('button').prop('disabled', true);
 			$form.attr('aria-busy', 'true');
-			api.put(apiPath(c.save), data).then((r) => {
-				const next = { ...user, ...data, ...(r.data || {}) };
+			api.put(apiPath(c.save), data).then((r) => (startPage && startPage !== user.start_page
+				? api.put(apiPath('/v1/me/preferences'), { start_page: startPage }).then(() => r) : r)).then((r) => {
+				const next = { ...user, ...data, ...(r.data || {}), start_page: startPage || user.start_page };
 				user = next;
 				if (shared) me.set(next);
 				notify('ok', (r.meta && r.meta.message) || t('Profile saved'));

@@ -15,7 +15,7 @@ Sign out in the profile menu).
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `source` | `{path, query}` | `{path: '/v1/me/sessions'}` | Sessions: `[{id, current, agent, ip, started, last_seen}]` |
+| `source` | `{path, query}` | `{path: '/v1/me/sessions'}` | Sessions (the API's shape): `[{id, current, address, agent, authsource, signed_in, last_seen}]`; `agent` is the raw user agent, shown as "Chrome 141 on Windows" |
 | `every` | seconds | `30` | Refresh interval |
 | `revoke` | path template | `/v1/me/sessions/{id}` | `DELETE` for one session |
 | `revokeOthers` | bool | `true` | Show "Sign out other sessions" |

@@ -36,7 +36,8 @@ const SEVERITY = {
 	emerg: ['crit', 'Emergency'], alert: ['crit', 'Alert'], crit: ['crit', 'Critical'], error: ['crit', 'Error'], err: ['crit', 'Error'],
 	warning: ['warn', 'Warning'], warn: ['warn', 'Warning'], notice: ['info', 'Notice'], info: ['neutral', 'Info'], debug: ['neutral', 'Debug']
 };
-const hostPort = (h, p) => (h == null ? '—' : p == null ? String(h) : String(h).includes(':') ? `[${h}]:${p}` : `${h}:${p}`);
+/** "host:port", "[v6]:port" or "host". */
+export const hostPort = (h, p) => (h == null ? '—' : p == null ? String(h) : String(h).includes(':') ? `[${h}]:${p}` : `${h}:${p}`);
 
 /* Column: label, cell(entry) → node or text, mono, cls. */
 const COLUMNS = {

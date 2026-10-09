@@ -20,7 +20,18 @@ import { pick, num, level } from '../../sparkline/viz.js';
 import { toast } from '../../toast/toast.js';
 import { t, icon, link, keyed, track } from './util.js';
 
+/*
+ * API shapes (freesense): /v1/status/system {cpu: {model, count, usage, load,
+ * freq_mhz}, memory/swap: {used_bytes, total_bytes}, mbuf: {used, max},
+ * states: {current, max}, disks: [{device, mount, type, used_bytes,
+ * total_bytes}], temperatures: [{name, celsius}], uptime_seconds};
+ * /v1/system/info {hostname, domain, product, version, freebsd, platform,
+ * cpu, cpu_count, config_revision: {time, description}}; /v1/system/version
+ * {running_version, installed_version, latest_version, update_available,
+ * channel}.
+ */
 const SYS = '/v1/status/system';
+const CHANNELS = { devel: 'Development', development: 'Development', stable: 'Stable' };
 
 /* ------------------------------------------------------------------ System */
 
@@ -53,18 +64,24 @@ widgets.define('system', {
 		ctx.state.kv = ctx.child(ctx.$body, 'kv-list', { fields });
 	},
 	load(ctx) {
-		return ctx.get(SYS).then((d) => {
-			ctx.state.$name.text(d.hostname);
-			ctx.state.$ver.text(`${d.product} ${d.version} · ${d.build}`);
-			const u = d.update || {};
+		return Promise.all([ctx.get(SYS), ctx.get('/v1/system/info'), ctx.get('/v1/system/version').catch(() => ({}))]).then(([d, info, ver]) => {
+			ctx.state.$name.text([info.hostname, info.domain].filter(Boolean).join('.'));
+			ctx.state.$ver.text([`${info.product || 'FreeSense'} ${ver.running_version || info.version || ''}`.trim(), ver.installed_version].filter(Boolean).join(' · '));
 			const $b = ctx.state.$badges.empty();
-			$b.append(badgeNode({ label: t(d.channel || 'Stable'), tone: 'neutral' }));
-			if (u.available) {
-				$b.append($('<a class="fs-wsys-update" data-fs-nav>').attr({ href: link(ctx, 'update'), title: t('Latest build {v}', { v: u.latest }) })
+			$b.append(badgeNode({ label: t(CHANNELS[ver.channel] || ver.channel || 'Stable'), tone: 'neutral' }));
+			if (ver.update_available) {
+				$b.append($('<a class="fs-wsys-update" data-fs-nav>').attr({ href: link(ctx, 'update'), title: t('Latest build {v}', { v: ver.latest_version }) })
 					.append(badgeNode({ label: t('Update available'), tone: 'info', icon: 'circle-arrow-up' })));
-			} else $b.append(badgeNode({ label: t('Up to date'), tone: 'ok', icon: 'circle-check' }));
-			const cpu = d.cpu ? `${d.cpu.model}${d.cpu.cores ? ` · ${t('{n} cores', { n: d.cpu.cores })}` : ''}` : null;
-			ctx.state.kv.update({ ...d, cpu_text: cpu });
+			} else if (ver.status) $b.append(badgeNode({ label: t('Up to date'), tone: 'ok', icon: 'circle-check' }));
+			const cores = info.cpu_count || (d.cpu && d.cpu.count);
+			const cpu = info.cpu || (d.cpu && d.cpu.model);
+			ctx.state.kv.update({
+				uptime: d.uptime_seconds ?? info.uptime_seconds,
+				last_config_change: info.config_revision && info.config_revision.time ? new Date(info.config_revision.time * 1000).toISOString() : null,
+				freebsd: info.freebsd,
+				platform: info.platform,
+				cpu_text: cpu ? `${cpu}${cores ? ` · ${t('{n} cores', { n: cores })}` : ''}` : null
+			});
 		});
 	}
 });
@@ -112,14 +129,14 @@ widgets.define('resources', {
 	load(ctx) {
 		const s = ctx.state;
 		return ctx.get(SYS).then((d) => {
-			const MiB = 1048576;
 			s.cpu.set(d.cpu.usage, 100);
-			s.mem.set(d.memory.used * MiB, d.memory.total * MiB);
+			s.mem.set(d.memory.used_bytes, d.memory.total_bytes);
 			s.states.set(d.states.current, d.states.max);
-			if (s.mbuf) s.mbuf.set(d.mbuf.used, d.mbuf.total);
+			if (s.mbuf) s.mbuf.set(d.mbuf.used, d.mbuf.max);
 			/* set() with the kept history (not push), so the trend survives a re-initialised child after a move. */
 			if (s.spark) s.spark.set(track(ctx, 'cpu', d.cpu.usage, 60));
-			ctx.setSubtitle(d.cpu.load ? t('Load {a} · {b} · {c}', { a: d.cpu.load[0], b: d.cpu.load[1], c: d.cpu.load[2] }) : '');
+			const ld = (d.cpu.load || []).map((x) => Number(x).toFixed(2));
+			ctx.setSubtitle(ld.length === 3 ? t('Load {a} · {b} · {c}', { a: ld[0], b: ld[1], c: ld[2] }) : '');
 		});
 	}
 });
@@ -143,7 +160,7 @@ widgets.define('thermal', {
 	},
 	load(ctx) {
 		return ctx.get(SYS).then((d) => {
-			const temps = d.temps || [];
+			const temps = (d.temperatures || []).map((x) => ({ name: x.name, c: Number(x.celsius) })).filter((x) => Number.isFinite(x.c));
 			if (!temps.length) { ctx.state.empty = { icon: 'temperature-empty', title: t('No sensors'), text: t('This hardware reports no temperatures.') }; return false; }
 			const max = Math.max(...temps.map((x) => x.c));
 			ctx.setSubtitle(t('Hottest {v} °C', { v: max.toFixed(1) }));
@@ -180,10 +197,10 @@ widgets.define('storage', {
 	},
 	load(ctx) {
 		return ctx.get(SYS).then((d) => {
-			const rows = (d.disks || []).map((x) => ({ key: x.mount, label: `${x.mount} · ${x.fs}`, used: x.used, total: x.total }));
+			const rows = (d.disks || []).map((x) => ({ key: x.mount, label: `${x.mount} · ${x.type || x.device}`, used: x.used_bytes, total: x.total_bytes }));
 			if (ctx.settings.memory) {
-				rows.push({ key: 'mem', label: t('Memory'), used: d.memory.used * 1048576, total: d.memory.total * 1048576 });
-				rows.push({ key: 'swap', label: t('Swap'), used: d.swap.used * 1048576, total: d.swap.total * 1048576 });
+				rows.push({ key: 'mem', label: t('Memory'), used: d.memory.used_bytes, total: d.memory.total_bytes });
+				if (d.swap && d.swap.total_bytes) rows.push({ key: 'swap', label: t('Swap'), used: d.swap.used_bytes, total: d.swap.total_bytes });
 			}
 			if (!rows.length) { ctx.state.empty = { icon: 'hard-drive', title: t('No disks reported') }; return false; }
 			for (const r of rows) {
@@ -197,7 +214,8 @@ widgets.define('storage', {
 
 /* ----------------------------------------------------------------- Notices */
 
-const NOTICE_LEVEL = { warning: 'warn', danger: 'danger', info: 'info', success: 'success' };
+/* API notices: {id, source, text, url, category, level: crit | warn | info, time}. */
+const NOTICE_LEVEL = { crit: 'danger', warn: 'warn', info: 'info' };
 
 widgets.define('notices', {
 	title: 'Notices',
@@ -232,7 +250,7 @@ widgets.define('notices', {
 					if (!ctx.state.$list.children().length) ctx.refresh();
 					ctx.api.del(`/v1/notices/${encodeURIComponent(n.id)}`).then(() => { toast(t('Notice dismissed'), { level: 'ok' }); ctx.refresh(); }, (e) => { ctx.state.gone.delete(n.id); toast.error(e); ctx.refresh(); });
 				};
-				return $li.append(calloutNode({ level: NOTICE_LEVEL[n.level] || 'info', title: n.title, text: n.body, compact: true, dismissible: true }, { onDismiss: dismiss }),
+				return $li.append(calloutNode({ level: NOTICE_LEVEL[n.level] || 'info', title: n.category || n.source || t('Notice'), text: n.text, compact: true, dismissible: true }, { onDismiss: dismiss }),
 					$('<span class="fs-wnotice-time">').attr('title', ctx.fmt.datetime(n.time)));
 			}, ($li, n) => { $li.find('.fs-wnotice-time').text(ctx.fmt.ago(n.time)); });
 			return true;
@@ -278,8 +296,9 @@ widgets.define('quick-actions', {
 	load(ctx) {
 		return ctx.get('/v1/firewall/pending').then((d) => {
 			const s = ctx.state;
-			s.$status.empty().append(d.pending ? statusNode('warn', t('Changes not applied yet')) : statusNode('ok', t('Everything is applied')));
-			s.$apply.prop('disabled', !d.pending);
+			const pending = Array.isArray(d.pending) ? d.pending.length > 0 : !!d.pending;
+			s.$status.empty().append(pending ? statusNode('warn', t('Changes not applied yet')) : statusNode('ok', t('Everything is applied')));
+			s.$apply.prop('disabled', !pending);
 		});
 	},
 	destroy(ctx) { $(document).off(`fs:pending.${ctx.id}`); }

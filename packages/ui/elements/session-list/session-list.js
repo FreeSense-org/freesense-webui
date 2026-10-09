@@ -21,6 +21,18 @@ import { live } from '../../js/live.js';
 import { t, icon, notify, apiPath } from '../avatar/identity.js';
 
 /** Device icon from the agent string. */
+/** "Chrome 141 on Windows" from a user agent string (the API stores the raw header, max. 200 characters). */
+export function agentName(ua) {
+	ua = String(ua || '');
+	if (!ua) return '';
+	const os = /iPhone|iPad/.test(ua) ? (/iPad/.test(ua) ? 'iPad' : 'iPhone') : /Android/.test(ua) ? 'Android' : /Windows/.test(ua) ? 'Windows'
+		: /Mac OS X|Macintosh/.test(ua) ? 'macOS' : /CrOS/.test(ua) ? 'ChromeOS' : /Linux/.test(ua) ? 'Linux' : '';
+	const m = ua.match(/(Edg|OPR|Firefox|Chrome|Version)\/(\d+)/);
+	const names = { Edg: 'Edge', OPR: 'Opera', Firefox: 'Firefox', Chrome: 'Chrome', Version: 'Safari' };
+	const browser = m ? `${names[m[1]]} ${m[2]}` : ua.split(/[\s/]/)[0];
+	return os ? t('{browser} on {os}', { browser, os }) : browser;
+}
+
 export function deviceIcon(agent) {
 	const a = String(agent || '').toLowerCase();
 	if (/iphone|android|mobile|pixel/.test(a)) return 'mobile-screen-button';
@@ -66,17 +78,18 @@ el.define('session-list', {
 			const id = String(s.id);
 			const $li = $('<li class="fs-session-list-item">').attr('data-id', id).toggleClass('is-current', !!s.current);
 			const $main = $('<div class="fs-session-list-main">');
-			const $name = $('<p class="fs-session-list-agent">').append($('<span>').text(s.agent || t('Unknown device')));
+			const $name = $('<p class="fs-session-list-agent">').append($('<span>').attr('title', s.agent || '').text(agentName(s.agent) || t('Unknown device')));
 			if (s.current) $name.append($('<span class="fs-session-list-badge">').append(icon('circle-check'), $('<span>').text(t('This device'))));
 			const $meta = $('<p class="fs-session-list-meta">').append(
-				$('<span class="fs-session-list-ip fs-mono">').text(s.ip || '—'),
-				s.started ? $('<span>').append(document.createTextNode(`${t('Signed in')} `), $('<time>').attr({ datetime: s.started, title: fmt.datetime(s.started) }).text(fmt.ago(s.started))) : null,
+				$('<span class="fs-session-list-ip fs-mono">').text(s.address || '—'),
+				s.signed_in ? $('<span>').append(document.createTextNode(`${t('Signed in')} `), $('<time>').attr({ datetime: s.signed_in, title: fmt.datetime(s.signed_in) }).text(fmt.ago(s.signed_in))) : null,
+				s.authsource && !/^Local Database/.test(s.authsource) ? $('<span>').text(s.authsource) : null,
 				s.last_seen ? $('<span>').append(document.createTextNode(`${t('Last seen')} `), $('<time>').attr({ datetime: s.last_seen, title: fmt.datetime(s.last_seen) }).text(s.current ? t('now') : fmt.ago(s.last_seen))) : null);
 			$main.append($name, $meta);
 			$li.append($('<span class="fs-session-list-icon">').append(icon(deviceIcon(s.agent))), $main);
 			if (!s.current) {
 				$li.append($('<button type="button" class="btn btn-secondary btn-sm fs-session-list-revoke">')
-					.attr({ 'aria-label': t('Sign out {agent}', { agent: s.agent || id }), 'aria-expanded': String(confirming === id) })
+					.attr({ 'aria-label': t('Sign out {agent}', { agent: agentName(s.agent) || id }), 'aria-expanded': String(confirming === id) })
 					.text(t('Sign out'))
 					.on('click', () => { confirming = id; render(); $body.find(`[data-id="${CSS.escape(id)}"] .fs-session-list-confirm .btn-secondary`).trigger('focus'); }));
 			}

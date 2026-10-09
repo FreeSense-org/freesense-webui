@@ -3,7 +3,7 @@
 	"description": "The signed-in user's summary with an inline edit form (PUT /v1/me/profile, 422 errors next to the fields).",
 	"status": "draft",
 	"fixtures": [
-		{ "name": "Signed-in user (Edit; an empty name returns 422)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/me" } } },
+		{ "name": "Signed-in user (Edit; an empty name returns 422)", "width": "lg", "surface": "page", "config": {} },
 		{ "name": "Long text, many groups", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/gallery/identity/me-long" }, "editable": false } },
 		{ "name": "Loading", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/slow" } } },
 		{ "name": "Error", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" } } },

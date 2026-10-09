@@ -5,8 +5,8 @@ middle and the LAN/OPT networks on the right, joined by SVG connectors whose
 style follows the status (down = dashed critical). Below 560 px wide the
 columns stack and the connectors are hidden.
 
-Data: `/v1/status/gateways`, `/v1/status/interfaces` and (for the hostname)
-`/v1/status/system`, loaded together every `every` seconds. Interfaces that
+Data: `/v1/status/gateways`, `/v1/status/interfaces`, `/v1/status/traffic`
+(rates) and `/v1/system/info` (hostname), loaded together every `every` seconds. Interfaces that
 carry a gateway are shown as their gateways; the others are networks.
 
 ## Config
@@ -18,7 +18,8 @@ carry a gateway are shown as their gateways; the others are networks.
 | `label` | string | `Network topology` | Accessible name of the diagram |
 | `interfaces` | `{path, query}` | `/v1/status/interfaces` | Interfaces source |
 | `gateways` | `{path, query}` | `/v1/status/gateways` | Gateways source |
-| `system` | `{path, query}` | `/v1/status/system` | Hostname source (optional; failures are ignored) |
+| `system` | `{path, query}` | `/v1/system/info` | Hostname source (optional; failures are ignored) |
+| `traffic` | `{path, query}` | `/v1/status/traffic` | Rates per interface (optional; failures are ignored) |
 
 ## Builder (PHP, P4)
 

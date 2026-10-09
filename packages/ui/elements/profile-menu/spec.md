@@ -23,9 +23,9 @@ Optionally (`modeToggle`) a separate quick Light/Dark button sits before the ava
 | `signOut.path` | API path | — | `POST` target for sign-out; without it (gallery) Sign out only reports |
 | `signOut.redirect` | URL | `/` | Where to go after signing out |
 | `modeToggle` | bool | `false` | Show the quick Light/Dark button |
-| `user` | object | — | Use this user instead of `GET /v1/me` (fixtures, server-side prefill) |
+| `user` | object | — | Use this user instead of the API (`/v1/me/profile`) (fixtures, server-side prefill) |
 
-The user comes from `GET /v1/me`, shared with every other element through the
+The user comes from `GET /v1/me/profile` and `/v1/me/preferences`, shared with every other element through the
 identity cache, so the top bar makes one request.
 
 ## Builder (PHP, P4)

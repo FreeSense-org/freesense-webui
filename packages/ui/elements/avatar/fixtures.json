@@ -16,7 +16,7 @@
 		{ "name": "Presence: offline", "width": "sm", "config": { "name": "Ida Vang", "size": "md", "presence": "offline" } },
 		{ "name": "Username only", "width": "sm", "config": { "username": "admin", "size": "lg" } },
 		{ "name": "Broken image falls back to initials", "width": "sm", "config": { "name": "Lars Bo", "src": "/gallery/missing-avatar.png", "size": "lg" } },
-		{ "name": "From the API (/v1/me)", "width": "sm", "config": { "source": { "path": "/v1/me" }, "size": "lg" } },
+		{ "name": "From the API (/v1/me/profile)", "width": "sm", "config": { "source": { "path": "/v1/me/profile" }, "size": "lg" } },
 		{ "name": "Long name", "width": "sm", "config": { "name": "Maximiliane Alexandra van den Berghe-Oosterhuis", "size": "md" } },
 		{ "name": "No name", "width": "sm", "config": { "size": "md" } }
 	]

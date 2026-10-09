@@ -15,19 +15,19 @@ form later.
 
 | Option | Type | Default | Meaning |
 |---|---|---|---|
-| `source` | `{path, query}` | `{path: '/v1/me'}` | User: `{username, name, email, role, groups[], avatar, initials, language, start_page, last_login, created}` |
+| `source` | `{path, query}` | `{path: '/v1/me/profile'}` | User (the API's profile): `{username, name, email, initials, local, groups[], admin, signed_in}`; shared with the start page from `/v1/me/preferences`; optional `avatar`, `language`, `last_login`, `created` are shown when present. |
 | `every` | seconds | `0` | Refresh interval |
 | `editable` | bool | `true` | Show Edit |
 | `save` | API path | `/v1/me/profile` | `PUT` target |
 | `languages` | `[{value, label}]` | built-in list | Language choices |
 | `startPages` | `[{value, label}]` | from `#fs-nav` | Start-page choices (dashboard and every menu item) |
 
-With the default source the card shares the `/v1/me` request with the profile menu.
+With the default source the card shares the signed-in user with the profile menu. Saving sends `{name, email}` to `PUT /v1/me/profile` and a changed start page to `PUT /v1/me/preferences`.
 
 ## Builder (PHP, P4)
 
 ```php
-$ui->profileCard()->source('/v1/me')->languages($languages);
+$ui->profileCard()->languages($languages);
 ```
 
 ## Instance API

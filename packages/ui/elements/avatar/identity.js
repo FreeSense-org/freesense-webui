@@ -13,7 +13,7 @@
  *   t(text, vars)           translate through FS.i18n when present ({name} placeholders)
  *   icon(name)              Font Awesome Solid <i>, aria-hidden
  *   notify(level, message)  'fs:toast' event; a small fallback bubble while no toast element exists
- *   me.get() / me.set(d)    the signed-in user (GET /v1/me, shared by every element; 'fs:me' on change)
+ *   me.get() / me.set(d)    the signed-in user (GET /v1/me/profile + /v1/me/preferences, shared by every element; 'fs:me' on change)
  *   prefs.save(changes)     apply live through FS.theme.set and PUT /v1/me/preferences, with rollback
  *   themes.list() / meta()  installed themes (/ui/manifest.json) and their theme.json
  *   popover(...)            dropdown panel behaviour: outside click, Escape, focus return
@@ -69,10 +69,17 @@ export function notify(level, message) {
 let mePromise = null;
 let meData = null;
 export const me = {
-	/** The signed-in user, loaded once and shared. */
+	/**
+	 * The signed-in user, loaded once and shared: the profile
+	 * ({username, name, email, initials, local, groups, admin, signed_in})
+	 * with the start page and appearance from the preferences, and a role.
+	 */
 	get(force = false) {
 		if (!mePromise || force) {
-			mePromise = batch.get(apiPath('/v1/me')).then((r) => (meData = r.data || {}), (e) => { mePromise = null; throw e; });
+			mePromise = Promise.all([
+				batch.get(apiPath('/v1/me/profile')),
+				batch.get(apiPath('/v1/me/preferences')).catch(() => ({ data: {} }))
+			]).then(([p, pr]) => (meData = meOf(p.data || {}, pr.data || {})), (e) => { mePromise = null; throw e; });
 		}
 		return mePromise;
 	},
@@ -84,6 +91,10 @@ export const me = {
 		$(document).trigger('fs:me', [meData]);
 	}
 };
+
+export function meOf(profile, preferences) {
+	return { ...profile, start_page: preferences.start_page || '/', preferences, role: profile.admin ? t('Administrator') : (profile.role || '') };
+}
 
 export function initials(name, fallback = '?') {
 	const words = String(name || '').trim().split(/\s+/).filter(Boolean);

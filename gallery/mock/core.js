@@ -93,7 +93,7 @@
 		{ name: 'sshd',       descr: 'Secure Shell Daemon',     running: true,  enabled: true },
 		{ name: 'syslogd',    descr: 'System Logger Daemon',    running: true,  enabled: true },
 		{ name: 'dpinger',    descr: 'Gateway Monitoring',      running: true,  enabled: true },
-		{ name: 'openvpn',    descr: 'OpenVPN server: RoadWarrior', running: true, enabled: true },
+		{ name: 'openvpn',    descr: 'OpenVPN server: RoadWarrior', running: true, enabled: true, mode: 'server', vpnid: 1 },
 		{ name: 'wireguard',  descr: 'WireGuard',               running: true,  enabled: true },
 		{ name: 'suricata',   descr: 'Suricata IDS/IPS (WAN)',  running: false, enabled: true },
 		{ name: 'miniupnpd',  descr: 'UPnP IGD & PCP',          running: true,  enabled: true },
@@ -251,52 +251,64 @@
 
 	/* ----------------------------------------------------------------- notices */
 
+	/* The API's shape (restapi_notice_list): {id, source, text, url, category, level: crit | warn | info, time}. */
+	var nid = function (ms) { return String(Math.floor(ms / 1000)); };
 	var NOTICES = [
-		{ id: 1, level: 'warning', title: 'Gateway WAN2_DHCP is down', body: 'Monitor 8.8.8.8 unreachable for 41 minutes. Gateway group FAILOVER is running degraded.', time: new Date(T0 - 41 * 60000).toISOString(), link: '#gateways' },
-		{ id: 2, level: 'danger', title: 'Suricata (WAN) is not running', body: 'The service stopped after a rules update at 03:12. Restart it or check the Suricata log.', time: new Date(T0 - 5.3 * 3600000).toISOString(), link: '#services' },
-		{ id: 3, level: 'info', title: 'FreeSense 1.1.0-DEV-20261008 is available', body: 'You are running 20261007. The nightly System build contains 6 changes.', time: new Date(T0 - 2 * 3600000).toISOString(), link: '#update' },
-		{ id: 4, level: 'info', title: 'Certificate expires soon', body: 'webConfigurator default (fw01.home.arpa) expires in 24 days.', time: new Date(T0 - 26 * 3600000).toISOString(), link: '#certs' }
+		{ id: nid(T0 - 41 * 60000), source: 'gateways', category: 'Gateway WAN2_DHCP is down', text: 'Monitor 8.8.8.8 unreachable for 41 minutes. Gateway group FAILOVER is running degraded.', url: '', level: 'warn', time: new Date(T0 - 41 * 60000).toISOString() },
+		{ id: nid(T0 - 5.3 * 3600000), source: 'suricata', category: 'Suricata (WAN) is not running', text: 'The service stopped after a rules update at 03:12. Restart it or check the Suricata log.', url: '', level: 'crit', time: new Date(T0 - 5.3 * 3600000).toISOString() },
+		{ id: nid(T0 - 2 * 3600000), source: 'update', category: 'Update available', text: 'FreeSense 1.1.0.a.20261009.0100 is available. You are running 20261008.', url: '', level: 'info', time: new Date(T0 - 2 * 3600000).toISOString() },
+		{ id: nid(T0 - 26 * 3600000), source: 'certificates', category: 'Certificate expires soon', text: 'webConfigurator default (fw01.home.arpa) expires in 24 days.', url: '', level: 'info', time: new Date(T0 - 26 * 3600000).toISOString() }
 	];
 
 	/* ------------------------------------------------------------- dashboards */
 
+	/* The API's shape (status_metrics_vpn): {type, name, description, status, peer, since, handshake, rx, tx}. */
 	var VPN = [
-		{ type: 'wireguard', name: 'wg0 · Office', peer: 'office-gw', endpoint: '198.51.100.20:51820', status: 'up', handshake: 38, rx: 9.2e9, tx: 3.1e9 },
-		{ type: 'wireguard', name: 'wg0 · Phone', peer: 'pixel-9', endpoint: '192.0.2.88:40112', status: 'up', handshake: 112, rx: 1.1e8, tx: 9.9e8 },
-		{ type: 'openvpn', name: 'RoadWarrior', peer: 'roadwarrior1', endpoint: '198.51.100.77:51544', status: 'up', since: 4200, rx: 2.2e8, tx: 1.3e9, virtual: '10.8.0.6' },
-		{ type: 'ipsec', name: 'Datacenter (con1)', peer: '192.0.2.10', endpoint: '192.0.2.10', status: 'up', since: 86400 * 3 + 3600, rx: 5.1e10, tx: 2.2e10, children: 2 },
-		{ type: 'ipsec', name: 'Branch Aarhus (con2)', peer: '198.51.100.140', endpoint: '198.51.100.140', status: 'connecting', since: 0, rx: 0, tx: 0, children: 0 }
+		{ type: 'wireguard', name: 'Office', description: 'Office', interface: 'tun_wg0', peer: '198.51.100.20:51820', status: 'up', since: null, handshake: 38, rx: 9.2e9, tx: 3.1e9 },
+		{ type: 'wireguard', name: 'Phone', description: 'Phone', interface: 'tun_wg0', peer: '192.0.2.88:40112', status: 'up', since: null, handshake: 112, rx: 1.1e8, tx: 9.9e8 },
+		{ type: 'openvpn', name: 'RoadWarrior UDP4:1194', description: 'RoadWarrior UDP4:1194', peer: '1 client', status: 'up', since: 4200, handshake: null, rx: 2.2e8, tx: 1.3e9, vpnid: 1 },
+		{ type: 'ipsec', name: 'con1', description: 'Datacenter', peer: '192.0.2.10', status: 'up', since: 86400 * 3 + 3600, handshake: null, rx: 5.1e10, tx: 2.2e10 },
+		{ type: 'ipsec', name: 'con2', description: 'Branch Aarhus', peer: '198.51.100.140', status: 'connecting', since: null, handshake: null, rx: 0, tx: 0 }
 	];
 
+	/* /v1/status/system as the API returns it (status_metrics_system). */
 	function sysPayload() {
 		var up = 86400 * 12 + 3600 * 5 + 1540 + Math.floor((Date.now() - T0) / 1000);
+		var MiB = 1048576;
 		return {
-			hostname: 'fw01.home.arpa', product: 'FreeSense', version: '1.1.0-DEV', build: '20261007-0100', channel: 'Development',
-			freebsd: '15.0-RELEASE-p2', platform: 'Protectli VP2420', serial: 'PT24A9F0021', bios: 'coreboot 0.9.1 (2025-11-03)',
-			cpu: { model: 'Intel Celeron J6412 @ 2.00GHz', cores: 4, usage: Math.round(sys.cpu), load: [+(sys.cpu / 28).toFixed(2), +(sys.cpu / 31).toFixed(2), 0.41] },
-			memory: { used: Math.round(sys.mem / 100 * 8192), total: 8192 },
-			swap: { used: 0, total: 4096 },
-			mbuf: { used: Math.round(sys.mbuf * 1000), total: 1000000 / 10 * 3 },
+			cpu: { model: 'Intel(R) Celeron(R) J6412 @ 2.00GHz', count: 4, usage: Math.round(sys.cpu * 10) / 10,
+				load: [+(sys.cpu / 28).toFixed(2), +(sys.cpu / 31).toFixed(2), 0.41], freq_mhz: 2000, freq_max_mhz: 2600 },
+			memory: { used_bytes: Math.round(sys.mem / 100 * 8192) * MiB, total_bytes: 8192 * MiB },
+			swap: { used_bytes: 0, total_bytes: 4096 * MiB },
+			mbuf: { used: Math.round(sys.mbuf * 1000), max: 300000 },
 			states: { current: sys.states, max: 800000 },
-			uptime: up,
-			temps: sys.temps.map(function (c, i) { return { name: 'Core ' + i, c: Math.round(c * 10) / 10 }; }),
-			disks: [{ mount: '/', fs: 'zfs', used: 4.1e9, total: 1.08e11 }, { mount: '/var/log', fs: 'zfs', used: 1.3e9, total: 1.08e11 }, { mount: '/tmp', fs: 'tmpfs', used: 3.1e7, total: 5.12e8 }],
-			dns: ['127.0.0.1', '1.1.1.1', '9.9.9.9'],
-			last_config_change: new Date(T0 - 3 * 3600000).toISOString(),
-			update: { current: '20261007-0100', latest: '20261008-0100', available: true },
-			time: new Date().toISOString()
+			temperatures: sys.temps.map(function (c, i) { return { name: 'CPU ' + i, celsius: Math.round(c * 10) / 10 }; }),
+			disks: [{ device: 'zroot/ROOT/default', mount: '/', type: 'zfs', used_bytes: 4.1e9, total_bytes: 1.08e11 },
+				{ device: 'zroot/var/log', mount: '/var/log', type: 'zfs', used_bytes: 1.3e9, total_bytes: 1.08e11 },
+				{ device: 'tmpfs', mount: '/tmp', type: 'tmpfs', used_bytes: 3.1e7, total_bytes: 5.12e8 }],
+			uptime_seconds: up,
+			time: Math.floor(Date.now() / 1000)
 		};
 	}
+	/* /v1/system/info as the API returns it. */
+	function infoPayload() {
+		return { hostname: 'fw01', domain: 'home.arpa', product: 'FreeSense', version: '1.1.0-DEVELOPMENT', freebsd: '16.0-CURRENT', platform: 'amd64',
+			cpu: 'Intel(R) Celeron(R) J6412 @ 2.00GHz', cpu_count: 4, memory_bytes: 8192 * 1048576,
+			uptime_seconds: sysPayload().uptime_seconds, config_revision: { time: Math.floor((T0 - 3 * 3600000) / 1000), description: 'admin@192.168.1.31 (Local Database): Edited a firewall alias.' } };
+	}
 
+	/* /v1/status/interfaces as the API returns it (no rates; those are /v1/status/traffic). */
+	var maskOf = function (bits) { var m = []; for (var k = 0; k < 4; k++) { var n = Math.min(8, Math.max(0, bits - k * 8)); m.push(256 - Math.pow(2, 8 - n)); } return m.join('.'); };
 	function ifPayload(i) {
 		var t = traffic[i.id];
+		var v4 = i.ipv4 ? i.ipv4.split('/') : [null, null];
+		var v6 = i.ipv6 ? i.ipv6.split('/') : [null, null];
 		return {
-			id: i.id, descr: i.descr, if: i.if, status: i.down ? 'down' : 'up', ipv4: i.ipv4, ipv6: i.ipv6, mac: i.mac, media: i.media,
-			speed: i.speed, gateway: i.gw, in_bps: Math.round(t.inb), out_bps: Math.round(t.outb),
-			in_pps: Math.round(t.inb / 8 / 900), out_pps: Math.round(t.outb / 8 / 700),
-			bytes_in: Math.round(t.bytesIn), bytes_out: Math.round(t.bytesOut),
-			errors_in: t.errIn, errors_out: t.errOut, collisions: t.colls,
-			mtu: i.id === 'wg0' ? 1420 : 1500, dhcp: i.id === 'wan' ? { lease_expires: new Date(T0 + 6 * 3600000).toISOString() } : null
+			name: i.id, description: i.descr, hwif: i.if.split('.')[0], enable: true, if: i.if, status: i.down ? 'no carrier' : 'up',
+			macaddr: i.mac, mtu: i.id === 'wg0' ? 1420 : 1500, ipaddr: v4[0], subnet: v4[1] ? maskOf(+v4[1]) : null,
+			ipaddrv6: v6[0], subnetv6: v6[1] || null, inerrs: t.errIn, outerrs: t.errOut, collisions: t.colls,
+			inbytes: Math.round(t.bytesIn), outbytes: Math.round(t.bytesOut), inpkts: Math.round(t.bytesIn / 900), outpkts: Math.round(t.bytesOut / 700),
+			media: i.media, gateway: i.gw ? (GATEWAYS.find(function (g) { return g.name === i.gw; }) || {}).address || null : null
 		};
 	}
 
@@ -322,6 +334,14 @@
 		return list.sort(function (a, b) { return (b.in_bps + b.out_bps) - (a.in_bps + a.out_bps); });
 	}
 
+	/* /v1/status/dhcp-leases as the API returns it (system_get_dhcpleases + reachable/static). */
+	function apiLeases() {
+		return { leases: leases().map(function (l) {
+			var ifo = IFACES.find(function (x) { return x.descr === l.iface; }) || IFACES[1];
+			return { ip: l.ip, type: l.type, mac: l.mac, hostname: l.hostname, descr: l.vendor, if: ifo.id, act: 'active',
+				online: l.online ? 'active/online' : 'idle/offline', starts: '', ends: l.expires, reachable: l.online, static: l.type === 'static' };
+		}), failover: [] };
+	}
 	function leases() {
 		return HOSTS.map(function (h, n) {
 			var exp = T0 + (n * 1300 + 600) * 1000;
@@ -345,39 +365,60 @@
 	}
 
 	route('GET', '/api/v1/status/system', function () { return ok(sysPayload()); });
+	route('GET', '/api/v1/system/info', function () { return ok(infoPayload()); });
 	route('GET', '/api/v1/status/interfaces', function () { return ok(IFACES.map(ifPayload)); });
-	route('GET', '/api/v1/status/interfaces/{id}', function (p) {
-		var i = IFACES.find(function (x) { return x.id === p.id; });
-		return i ? ok(ifPayload(i)) : err(404, 'No such interface');
-	});
 	route('GET', '/api/v1/status/traffic', function (p, q) {
 		var ids = (q.get('if') || IFACES.map(function (i) { return i.id; }).join(',')).split(',');
 		var out = {};
-		ids.forEach(function (id) { if (traffic[id]) out[id] = { in_bps: Math.round(traffic[id].inb), out_bps: Math.round(traffic[id].outb) }; });
-		return ok(out, { t: Math.floor(Date.now() / 1000) });
+		ids.forEach(function (id) {
+			var tr = traffic[id], ifo = IFACES.find(function (x) { return x.id === id; });
+			if (tr) out[id] = { description: ifo.descr, in_bps: Math.round(tr.inb), out_bps: Math.round(tr.outb), in_pps: Math.round(tr.inb / 8 / 900),
+				out_pps: Math.round(tr.outb / 8 / 700), in_bytes: Math.round(tr.bytesIn), out_bytes: Math.round(tr.bytesOut) };
+		});
+		return ok({ t: Math.floor(Date.now() / 1000), interfaces: out });
 	});
 	route('GET', '/api/v1/status/traffic/history', function (p, q) {
 		var range = q.get('range') || '1h';
 		var cfg = { '10m': [120, 5], '1h': [180, 20], '24h': [288, 300], '7d': [336, 1800] }[range] || [180, 20];
-		return ok(history(q.get('if') || 'wan', cfg[0], cfg[1]), { range: range, source: 'rrd' });
+		var h = history(q.get('if') || 'wan', cfg[0], cfg[1]);
+		return ok({ interface: h.iface, range: range, step: h.step, t: h.t, in_bps: h.in_bps, out_bps: h.out_bps });
 	});
-	route('GET', '/api/v1/status/gateways', function () { return ok(GATEWAYS.map(function (g) { return $.extend({}, g, { rtt: g.rtt && Math.round(g.rtt * 10) / 10, sd: g.sd && Math.round(g.sd * 10) / 10 }); })); });
-	route('GET', '/api/v1/status/services', function () { return ok(SERVICES); });
-	route('POST', '/api/v1/status/services/{name}/{action}', function (p) {
+	/* /v1/status/gateways as the API returns it: dpinger's strings plus delay_ms, stddev_ms, loss_pct, interface, default (level 8). */
+	route('GET', '/api/v1/status/gateways', function () {
+		return ok(GATEWAYS.map(function (g) {
+			var r1 = function (v) { return v === null ? null : Math.round(v * 1000) / 1000; };
+			var down = g.status === 'down';
+			return { monitorip: g.monitor, srcip: (IFACES.find(function (x) { return x.id === g.iface; }) || {}).ipv4 ? IFACES.find(function (x) { return x.id === g.iface; }).ipv4.split('/')[0] : '',
+				name: g.name, delay: down ? '0ms' : r1(g.rtt) + 'ms', stddev: down ? '0ms' : r1(g.sd) + 'ms', loss: g.loss + '.0%',
+				status: g.status === 'warning' ? 'loss' : g.status, substatus: g.status === 'warning' ? 'highloss' : 'none',
+				delay_ms: down ? null : r1(g.rtt), stddev_ms: down ? null : r1(g.sd), loss_pct: g.loss,
+				interface: g.iface, description: 'Interface ' + g.name + ' Gateway', ipprotocol: /6$/.test(g.name) ? 'inet6' : 'inet', default: !!g.default };
+		}));
+	});
+	route('GET', '/api/v1/status/services', function () {
+		return ok(SERVICES.map(function (s) {
+			var o = { name: s.name, description: s.descr, running: s.running };
+			if (s.mode) { o.mode = s.mode; o.vpnid = s.vpnid; }
+			return o;
+		}));
+	});
+	route('POST', '/api/v1/services/{name}/{action}', function (p, q, b) {
 		var s = SERVICES.find(function (x) { return x.name === p.name; });
 		if (!s) return err(404, 'No such service');
+		if (!b || b.confirm !== true) return err(400, 'Add {"confirm": true} to the request body.');
 		if (p.action === 'stop') s.running = false; else s.running = true;
 		return ok(s, { message: s.descr + ' ' + (p.action === 'stop' ? 'stopped' : p.action === 'start' ? 'started' : 'restarted') });
 	});
-	route('GET', '/api/v1/status/dhcp-leases', function () { return ok(leases()); });
+	route('GET', '/api/v1/status/dhcp-leases', function () { return ok(apiLeases()); });
 	route('GET', '/api/v1/status/top-talkers', function () { return ok(topTalkers(), { window: '10s' }); });
 	route('GET', '/api/v1/status/vpn', function () {
 		VPN.forEach(function (v) { if (v.status === 'up') { v.rx += rnd(1e4, 3e6); v.tx += rnd(1e4, 1e6); v.handshake = v.type === 'wireguard' ? (v.handshake + 2) % 130 : v.handshake; } });
 		return ok(VPN);
 	});
 	route('GET', '/api/v1/status/states', function () {
-		return ok({ current: sys.states, max: 800000, rate_insert: Math.round(rnd(80, 420)), rate_remove: Math.round(rnd(80, 420)), searches: Math.round(rnd(9000, 21000)),
-			by_proto: { tcp: Math.round(sys.states * 0.61), udp: Math.round(sys.states * 0.35), icmp: Math.round(sys.states * 0.03), other: Math.round(sys.states * 0.01) } });
+		/* The API's shape (status_metrics_states); by_proto is not part of it. */
+		return ok({ current: sys.states, searches: 3755280 + Math.floor((Date.now() - T0) / 50), inserts: 29910, removals: 29877,
+			search_rate: Math.round(rnd(9000, 21000)), insert_rate: Math.round(rnd(80, 420)), removal_rate: Math.round(rnd(80, 420)), max: 800000 });
 	});
 	route('GET', '/api/v1/notices', function () { return ok(NOTICES); });
 	route('DELETE', '/api/v1/notices/{id}', function (p) {
@@ -421,8 +462,9 @@
 		RULES[body.interface] = next; pendingChanges = true;
 		return ok(null, { pending: true });
 	});
-	route('GET', '/api/v1/firewall/pending', function () { return ok({ pending: pendingChanges }); });
-	route('POST', '/api/v1/firewall/apply', function () { pendingChanges = false; return ok({ pending: false }, { message: 'Firewall rules reloaded' }); });
+	/* The API's shape: pending is the list of areas with unapplied changes. */
+	route('GET', '/api/v1/firewall/pending', function () { return ok({ pending: pendingChanges ? ['rules'] : [] }); });
+	route('POST', '/api/v1/firewall/apply', function () { pendingChanges = false; return ok({ applied: true, pending: [] }); });
 	route('GET', '/api/v1/firewall/aliases', function (p, q) {
 		var s = (q.get('q') || '').toLowerCase();
 		return ok(ALIASES.filter(function (a) { return !s || a.name.toLowerCase().indexOf(s) >= 0 || a.descr.toLowerCase().indexOf(s) >= 0; }));

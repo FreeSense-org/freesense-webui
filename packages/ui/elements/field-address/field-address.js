@@ -71,10 +71,16 @@ let ifacesAt = 0;
 export function interfaceNets() {
 	if (!ifaces || Date.now() - ifacesAt > 60000) {
 		ifacesAt = Date.now();
-		ifaces = batch.get('/v1/status/interfaces').then((r) => (r.data || []).filter((i) => i.ipv4 || i.ipv6).flatMap((i) => [
-			{ value: `${i.descr} net`, label: `${i.descr} net`, detail: i.ipv4 || i.ipv6, group: t('Interfaces') },
-			{ value: `${i.descr} address`, label: `${i.descr} address`, detail: (i.ipv4 || i.ipv6 || '').split('/')[0], group: t('Interfaces') }
-		]), () => []);
+		/* /v1/status/interfaces: {name, description, ipaddr, subnet (dotted), ipaddrv6, subnetv6}. */
+		const bits = (m) => String(m).split('.').reduce((n, o) => n + (Number(o) >>> 0).toString(2).replace(/0/g, '').length, 0);
+		ifaces = batch.get('/v1/status/interfaces').then((r) => (r.data || []).filter((i) => i.ipaddr || i.ipaddrv6).flatMap((i) => {
+			const net = i.ipaddr ? `${i.ipaddr}${i.subnet ? `/${bits(i.subnet)}` : ''}` : `${i.ipaddrv6}${i.subnetv6 ? `/${i.subnetv6}` : ''}`;
+			const name = i.description || i.name;
+			return [
+				{ value: `${name} net`, label: `${name} net`, detail: net, group: t('Interfaces') },
+				{ value: `${name} address`, label: `${name} address`, detail: i.ipaddr || i.ipaddrv6, group: t('Interfaces') }
+			];
+		}), () => []);
 	}
 	return ifaces;
 }

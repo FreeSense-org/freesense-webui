@@ -52,6 +52,11 @@ final class SignIn {
 			return;
 		}
 		self::cookie('', time() - 3600);
+		/* Without a page to return to, open the user's start page. */
+		if (trim((string)($_REQUEST['next'] ?? '')) === '') {
+			$start = (string)(webui_prefs_get($username)['start_page'] ?? '/');
+			$next = Url::next(Url::page(($start !== '' && $start[0] === '/') ? $start : '/'));
+		}
 		App::redirect($next);
 	}
 

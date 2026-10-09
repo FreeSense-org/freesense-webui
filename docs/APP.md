@@ -67,6 +67,18 @@ URLs and redirects, escaping, the builder, navigation filtering by privilege
 and package, theme fallbacks, and the no-markup rule for pages. CI runs it in
 `php:8.5-cli` against the committed `dist/`.
 
+## Local preview
+
+`npm run preview` runs the real PHP app against stubbed backend functions
+(`app/dev/router.php`, `app/dev/backend.php`) in PHP's built-in server
+(local `php`, or Docker `php:8.5-cli` on 127.0.0.1:8771), behind the gallery
+server: open http://localhost:8770/next/. The gallery mock API answers the
+`/api/v1` calls and is injected after `fs-ui.js`.
+
+The mock mirrors the product API exactly (field names, envelopes, status
+codes). The API in `freesense` is the contract: when they differ, fix the
+mock and the elements, and change the backend only additively.
+
 ## Shipping to the firewall
 
 The `FreeSense-webui` package (port `security/FreeSense-webui` in

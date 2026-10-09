@@ -24,6 +24,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const port = Number(process.env.PORT || 8770);
+/* PHP preview of the app (tools/build/preview.mjs sets it). */
+const preview = process.env.FS_PREVIEW_PHP || '';
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.woff2': 'font/woff2', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp', '.txt': 'text/plain; charset=utf-8' };
 
 async function mockScripts() {
@@ -50,6 +52,20 @@ createServer(async (req, res) => {
 	let path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
 	try {
 		if (path === '/gallery/fixtures.json') return send(res, 200, types['.json'], JSON.stringify(await fixtures()));
+		/* The PHP app preview (npm run preview): /next/* from PHP's built-in server, with the mock API injected. */
+		if (preview && (path === '/next' || path.startsWith('/next/'))) {
+			const r = await fetch(preview + req.url, { headers: { cookie: req.headers.cookie || '' }, redirect: 'manual' });
+			const type = r.headers.get('content-type') || 'text/plain';
+			let body = await r.text();
+			if (type.startsWith('text/html')) {
+				const mock = await mockScripts();
+				/* After fs-ui.js (the mock hooks into its jQuery), like <!--fs-mock--> in the gallery shell. */
+				body = body.replace(/<script src="\/ui\/fs-ui\.js[^"]*"><\/script>/, (m) => `${m}\n${mock}`);
+			}
+			const headers = { 'Content-Type': type, 'Cache-Control': 'no-store' };
+			if (r.headers.get('location')) headers.Location = r.headers.get('location');
+			return res.writeHead(r.status, headers).end(body);
+		}
 		if (path.startsWith('/gallery/app') && !/\.[a-z0-9]+$/.test(path)) {
 			const mod = await import(`${pathToFileURL(join(root, 'gallery', 'app', 'render.mjs')).href}?t=${Date.now()}`);
 			const html = await mod.renderApp(path);

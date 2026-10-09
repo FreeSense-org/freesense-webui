@@ -17,14 +17,14 @@ presence dot.
 | `color` | `auto` \| `accent` \| `1`–`8` | `auto` | `auto` = hash of username/name onto a series slot; `accent` = the user's accent |
 | `presence` | `online` \| `away` \| `busy` \| `offline` | — | Dot at the bottom right; its meaning is in the accessible name and title |
 | `label` | string \| `false` | name | Accessible name; `false` makes the avatar decorative (when a name is shown next to it) |
-| `source` | `{path, query}` | — | Load `{name, username, initials, avatar}` from the API (e.g. `/v1/me`) |
+| `source` | `{path, query}` | — | Load `{name, username, initials, avatar}` from the API (e.g. `/v1/me/profile`) |
 | `every` | seconds | `0` | Refresh interval for `source` |
 
 ## Builder (PHP, P4)
 
 ```php
 $ui->avatar(gettext('Alex Morgan'))->username('alex')->size('lg')->presence('online');
-$ui->avatar()->source('/v1/me')->size('sm');
+$ui->avatar()->source('/v1/me/profile')->size('sm');
 ```
 
 ## Instance API
@@ -38,7 +38,7 @@ markup (profile-menu, profile-card and lists use it).
 
 `avatar/identity.js` holds helpers shared by the identity and shell-tool
 elements: `t()` (FS.i18n when present), `notify()` (`fs:toast`, with a small
-fallback bubble until the toast element exists), the shared `/v1/me` cache
+fallback bubble until the toast element exists), the shared signed-in user (`/v1/me/profile` + `/v1/me/preferences`)
 (`me.get/set`, event `fs:me`), `prefs.save()` (FS.theme.set + PUT
 /v1/me/preferences with rollback), theme metadata, the dropdown `popover()`,
 radio-group keyboard helpers and `apiPath()`. Its shared parts (`.fs-idbtn`,
