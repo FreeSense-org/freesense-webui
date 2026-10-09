@@ -51,11 +51,27 @@ export function notesNodes(md) {
 	return out;
 }
 
+/**
+ * The API's version (GET /v1/system/version) and system info (GET /v1/system/info)
+ * as the card shows them.
+ */
+export function versionView(v, info) {
+	v = v || {};
+	info = info || {};
+	return {
+		product: info.product || 'FreeSense', version: v.running_version || info.version || '', build: v.installed_version || null,
+		channel: v.channel || '', freebsd: info.freebsd || null, arch: info.platform || null,
+		update: { available: !!v.update_available, latest: v.latest_version || '', status: v.status || null }
+	};
+}
+
 el.define('release-card', {
 	init(node, config, ctx) {
 		const c = {
-			title: 'FreeSense version', source: { path: '/v1/system/version' }, changelog: { path: '/v1/system/update/changelog' },
-			update: { method: 'POST', path: '/v1/system/update' }, check: { method: 'POST', path: '/v1/system/update/check' },
+			title: 'FreeSense version', source: { path: '/v1/system/version' }, info: { path: '/v1/system/info' },
+			changelog: { path: '/v1/system/update/changelog' },
+			update: { method: 'POST', path: '/v1/system/firmware/update', body: { confirm: true } }, jobId: 'packages',
+			check: { method: 'GET', path: '/v1/system/version', query: { refresh: 1 } },
 			schedule: null, gate: null, channel: 'update', every: 0, ...config
 		};
 		const $node = $(node).addClass('fs-release-card').empty();
@@ -154,8 +170,9 @@ el.define('release-card', {
 		async function checkNow($btn) {
 			$btn.prop('disabled', true).attr('aria-busy', 'true');
 			try {
-				const res = await api.request((c.check.method || 'POST').toUpperCase(), c.check.path, c.check.body || {});
-				const d = res.data || {};
+				const method = (c.check.method || 'GET').toUpperCase();
+				const res = method === 'GET' ? await api.request('GET', api.url(c.check.path, c.check.query)) : await api.request(method, c.check.path, c.check.body || {});
+				const d = versionView(res.data).update;
 				const was = ver && ver.update && ver.update.available;
 				ver = { ...ver, update: { ...(ver && ver.update), ...d } };
 				toast(res.meta && res.meta.message ? res.meta.message : (d.available ? t('Update available') : t('FreeSense is up to date')), { level: d.available && !was ? 'info' : 'ok' });
@@ -186,7 +203,8 @@ el.define('release-card', {
 			$update.prop('disabled', true).attr('aria-busy', 'true');
 			try {
 				const res = await api.request((c.update.method || 'POST').toUpperCase(), c.update.path, c.update.body || {});
-				const id = res.data && (res.data.id || res.data.job);
+				/* The API answers 202 with the job id ("packages": the package operation / system update job). */
+				const id = (res.data && (res.data.id || res.data.job)) || c.jobId;
 				if (!id) throw { message: t('The server did not return a job.') };
 				busyJob = true;
 				$node.trigger('fs:job-start', [{ id, title: t('Update to {v}', { v: latest }), channel: c.channel }]);
@@ -207,7 +225,11 @@ el.define('release-card', {
 			if ((e.type === 'fs:job-closed' || (e.type === 'fs:job-done' && d && d.state === 'succeeded')) && task) live.now(task.id);
 		});
 
-		const task = states.load(ctx, $body, () => batch.get(c.source.path, c.source.query).then((r) => r.data), render, {
+		const load = () => Promise.all([
+			batch.get(c.source.path, c.source.query).then((r) => r.data),
+			c.info ? batch.get(c.info.path, c.info.query).then((r) => r.data, () => null) : null
+		]).then(([v, info]) => versionView(v, info));
+		const task = states.load(ctx, $body, load, render, {
 			every: c.every, lines: 5, empty: { icon: 'circle-info', title: t('No version information') }
 		});
 

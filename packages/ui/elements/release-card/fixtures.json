@@ -5,7 +5,7 @@
 	"fixtures": [
 		{ "name": "Update available", "width": "full", "surface": "page", "config": { "schedule": "Daily at 06:00 UTC" } },
 		{ "name": "No release notes source", "width": "lg", "surface": "page", "config": { "changelog": false, "schedule": "Daily at 06:00 UTC", "title": "Version" } },
-		{ "name": "Up to date (stable)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/version-current" }, "check": { "method": "POST", "path": "/v1/gallery/ops/check-current" } } },
+		{ "name": "Up to date (stable)", "width": "lg", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/version-current" }, "check": { "method": "GET", "path": "/v1/gallery/ops/version-current", "query": { "refresh": 1 } } } },
 		{ "name": "Loading", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/ops/slow" } } },
 		{ "name": "Empty", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/empty" } } },
 		{ "name": "Error", "width": "md", "surface": "page", "config": { "source": { "path": "/v1/gallery/fail" } } }

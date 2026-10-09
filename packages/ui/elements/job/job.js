@@ -38,6 +38,27 @@ function writeParam(name, value) {
 }
 const unreachable = (e) => !e || e.status === 0 || e.status >= 500 || e.code === 'timeout' || e.code === 'network';
 
+/**
+ * GET /v1/jobs/{id} as the element uses it. The API's job ("packages": package
+ * operation or system update) has percent, started_at (unix time), cursor,
+ * state none | running | succeeded | failed | stopped, reboot_needed and notice.
+ */
+export function jobView(d, wasRunning) {
+	d = d || {};
+	let state = d.state || 'running';
+	/* "none" right after a start: the operation has not registered yet. */
+	if (state === 'none') state = wasRunning === false ? 'none' : 'running';
+	if (state === 'stopped') state = 'failed';
+	return {
+		...d,
+		state,
+		progress: typeof d.progress === 'number' ? d.progress : (typeof d.percent === 'number' ? d.percent : null),
+		started: d.started || (d.started_at ? new Date(d.started_at * 1000).toISOString() : null),
+		error: d.error || (state === 'failed' ? (d.notice || (d.state === 'stopped' ? 'The operation stopped without a result.' : null)) : null),
+		notice: d.notice || (d.reboot_needed ? 'A reboot is needed to finish.' : null)
+	};
+}
+
 el.define('job', {
 	init(node, config, ctx) {
 		const c = {
@@ -68,6 +89,7 @@ el.define('job', {
 		let job = null; /* {id, title} */
 		let task = null;
 		let cursor = 0;
+		let attachedAt = 0;
 		let state = 'idle';
 		let started = null;
 		let finished = null;
@@ -152,7 +174,11 @@ el.define('job', {
 			setLog(!okRun);
 		}
 
-		function update(d) {
+		function update(raw) {
+			/* Shortly after a start the API may not report the operation yet; later "none" means nothing runs. */
+			const d = jobView(raw, Date.now() - attachedAt < 15000 ? undefined : false);
+			if (d.state === 'none') { gone(t('No operation is running.')); return; }
+			if (typeof raw.cursor === 'number') cursor = Math.max(cursor, raw.cursor);
 			if (d.started) started = new Date(d.started).getTime();
 			if (d.finished) finished = new Date(d.finished).getTime();
 			const prev = state;
@@ -221,6 +247,7 @@ el.define('job', {
 		function attach(id, opts = {}) {
 			if (!id) return;
 			job = { id: String(id), title: opts.title || null };
+			attachedAt = Date.now();
 			cursor = 0;
 			started = null;
 			finished = null;

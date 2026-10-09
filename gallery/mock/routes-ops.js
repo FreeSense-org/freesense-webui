@@ -9,17 +9,16 @@
  * Gallery mock routes for the logs & operations elements (log-viewer,
  * console, job, preflight, release-card, be-timeline):
  *
- *   POST   /api/v1/jobs/demo                        {title, steps, fail, outage: {step, seconds}, per} → {id}
- *   GET    /api/v1/jobs/{id}?after=<line>           state running|succeeded|failed, progress, step, log (cursor)
+ *   POST   /api/v1/jobs/demo                        {title, steps, fail, outage: {step, seconds}, per} → {id} (gallery only)
+ *   GET    /api/v1/jobs/{id}?after=<line>           as the API: {id, title, state running|succeeded|failed, running, percent,
+ *                                                    step, reboot_needed, notice, started_at, cursor, log: [{n, text}]}
  *                                                    503 while a simulated outage (reboot) is running
  *   GET    /api/v1/gallery/ops/ping?run=&after=     ping output that grows over time (console)
  *   GET    /api/v1/gallery/ops/lines?count=         many lines at once (console limit)
  *   GET    /api/v1/gallery/ops/slow                 answers [] after 12 s (loading states)
- *   GET    /api/v1/system/update/changelog          release notes (markdown-ish text)
- *   POST   /api/v1/system/update/check              {available, latest, checked}
- *   POST   /api/v1/system/update                    starts the update job (with a reboot outage) → {id}
- *   GET    /api/v1/gallery/ops/version-current      a stable system that is up to date
- *   POST   /api/v1/gallery/ops/check-current        its "Check now"
+ *   GET    /api/v1/system/update/changelog          {version, date, url, notes}
+ *   POST   /api/v1/system/firmware/update           {confirm: true} → 202 {started, id: "packages", …}; the job reboots midway
+ *   GET    /api/v1/gallery/ops/version-current      a stable system that is up to date (GET /v1/system/version shape)
  *   GET    /api/v1/system/update/preflight          checks; "packages" runs for ~3 s first
  *   GET    /api/v1/gallery/ops/preflight-fail       checks with a failure
  *   GET    /api/v1/system/boot-environments         boot environments and snapshots
@@ -67,8 +66,8 @@
 
 	var UPDATE_STEPS = ['Checking for updates', 'Creating boot environment snapshot', 'Downloading packages (412 MiB)', 'Verifying signatures', 'Installing System packages', 'Updating Optional Packages', 'Rebooting', 'Finishing'];
 
-	function createJob(b) {
-		var id = 'j' + Math.random().toString(36).slice(2, 8);
+	function createJob(b, fixedId) {
+		var id = fixedId || 'j' + Math.random().toString(36).slice(2, 8);
 		jobs[id] = {
 			id: id, title: (b && b.title) || 'Demo job', started: Date.now(),
 			steps: (b && b.steps) || UPDATE_STEPS.filter(function (s) { return s !== 'Rebooting'; }),
@@ -96,14 +95,15 @@
 		}
 		if (failed) add(failAt * per + per * 0.6, 'ERROR: signature verification failed for FreeSense-system-1.1.0.pkg', 'error');
 		var state = failed ? 'failed' : done >= j.steps.length ? 'succeeded' : 'running';
-		var end = state === 'running' ? null : new Date(j.started + ((paused || 0) + (failed ? (failAt + 0.6) : j.steps.length) * per) * 1000).toISOString();
+		/* restapi_job_view(): the step is the last log line. */
 		return M.ok({
-			id: j.id, title: j.title, state: state,
-			progress: state === 'succeeded' ? 100 : Math.round(Math.min(0.99, elapsed / (per * j.steps.length)) * 100),
-			step: j.steps[Math.min(done, j.steps.length - 1)], step_index: Math.min(done, j.steps.length - 1) + 1, steps: j.steps.length,
-			started: new Date(j.started).toISOString(), finished: end,
-			log: lines.filter(function (l) { return l.n > after; })
-		}, { cursor: lines.length });
+			id: j.id, title: j.title, state: state, running: state === 'running',
+			percent: state === 'succeeded' ? 100 : Math.round(Math.min(0.99, elapsed / (per * j.steps.length)) * 100),
+			step: lines.length ? lines[lines.length - 1].text.replace(/^>>> /, '') : '', reboot_needed: false,
+			notice: failed ? 'The update failed. The system was not changed.' : null,
+			started_at: Math.floor(j.started / 1000), cursor: lines.length,
+			log: lines.filter(function (l) { return l.n > after; }).map(function (l) { return { n: l.n, text: l.text }; })
+		});
 	}
 
 	override('POST', '/api/v1/jobs/demo', function (p, q, b) { return M.ok({ id: createJob(b) }); });
@@ -165,7 +165,6 @@
 
 	/* ---------------------------------------------------------------- update */
 
-	var update = { available: true, latest: '1.1.0-DEVELOPMENT 20261009-0100', checked: new Date(T0 - 40 * 60000).toISOString(), schedule: 'Daily at 06:00 UTC' };
 	var NOTES = [
 		'## System',
 		'- WebUI: the Update Center shows boot environments as a timeline',
@@ -184,25 +183,20 @@
 	].join('\n');
 
 	M.route('GET', '/api/v1/system/update/changelog', function () {
-		return M.ok({ version: update.latest, date: '2026-10-09', notes: NOTES, url: 'https://www.freesense.org/releases/' });
+		var v = M.dispatch('GET', '/api/v1/system/version', new URLSearchParams(), null).body.data || {};
+		return M.ok({ version: v.latest_version, date: '2026-10-09', notes: NOTES, url: 'https://www.freesense.org/releases/' });
 	});
-	M.route('POST', '/api/v1/system/update/check', function () {
-		update.checked = new Date().toISOString();
-		return M.ok(update, { message: update.available ? 'Update available: ' + update.latest : 'FreeSense is up to date' });
-	});
-	M.route('GET', '/api/v1/system/update/status', function () { return M.ok(update); });
-	var stable = { checked: new Date(T0 - 5 * 3600000).toISOString(), schedule: 'Daily at 06:00 UTC' };
+	/* GET /v1/system/version for an up-to-date stable system ("Check now" adds ?refresh=1). */
 	M.route('GET', '/api/v1/gallery/ops/version-current', function () {
-		return M.ok({ product: 'FreeSense', version: '1.0.1-RELEASE', build: '20260921-1200', channel: 'stable', arch: 'amd64', freebsd: '15.0-RELEASE-p2', boot_environment: 'default',
-			update: { available: false, latest: '1.0.1-RELEASE', checked: stable.checked, schedule: stable.schedule } });
+		return M.ok({ running_version: '1.0.1-RELEASE', installed_version: '1.0.1', latest_version: '1.0.1', update_available: false, status: 'up_to_date', channel: 'stable' });
 	});
-	M.route('POST', '/api/v1/gallery/ops/check-current', function () {
-		stable.checked = new Date().toISOString();
-		return M.ok({ available: false, latest: '1.0.1-RELEASE', checked: stable.checked }, { message: 'FreeSense is up to date' });
-	});
-	M.route('POST', '/api/v1/system/update', function () {
-		var id = createJob({ title: 'Update to ' + update.latest, steps: UPDATE_STEPS, per: 2.5, outage: { step: 'Rebooting', seconds: 10 } });
-		return M.ok({ id: id }, { message: 'Update started' });
+	/* As the API: confirm required, only with an update available, 202 with the job id "packages". */
+	M.route('POST', '/api/v1/system/firmware/update', function (p, q, b) {
+		if (!b || b.confirm !== true) return M.err(400, 'The system update requires {"confirm": true}.');
+		var v = M.dispatch('GET', '/api/v1/system/version', new URLSearchParams(), null).body.data || {};
+		if (!v.update_available) return M.err(409, 'No update is available (installed ' + v.installed_version + ', latest ' + v.latest_version + ').');
+		createJob({ title: 'System update', steps: UPDATE_STEPS, per: 2.5, outage: { step: 'Rebooting', seconds: 10 } }, 'packages');
+		return Object.assign(M.ok({ started: true, status_url: '/api/v1/packages/operation', id: 'packages', operation: { state: 'running', running: true } }), { status: 202 });
 	});
 
 	/* ------------------------------------------------------------- preflight */
