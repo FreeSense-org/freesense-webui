@@ -84,13 +84,41 @@ function setError(x, msg) {
 	}
 }
 
+/* A dot path into an object ("meta.available_ports"). */
+function getPath(o, path) {
+	return String(path || '').split('.').filter(Boolean).reduce((v, k) => (v == null ? v : v[k]), o);
+}
+
+/* Options from the API: {path, query, from: 'meta.available_ports' (default 'data'), value, label}; a {value: label} map works too. */
+async function loadOptions(f) {
+	const s = f.optionsSource;
+	const res = await api.get(apiPath(s.path), s.query || undefined);
+	const src = getPath(res, s.from || 'data');
+	const list = Array.isArray(src) ? src : Object.entries(src || {}).map(([value, label]) => ({ value, label: String(label) }));
+	return { ...f, options: list.map((x) => (typeof x === 'object' ? { value: String(get(x, s.value || 'value')), label: String(get(x, s.label || 'label') ?? get(x, s.value || 'value')) } : { value: String(x), label: String(x) })) };
+	function get(x, k) { return getPath(x, k); }
+}
+
 /**
  * Open the form. Resolves with the API response ({data, meta}) after a
  * successful submit, or null when cancelled.
- *   { title, text, fields: [{name, type, label, help, required, placeholder, options, min, max, rows, value}],
- *     values: {}, method: 'POST', path, submitLabel, success, transform(values) }
+ *   { title, text, fields: [{name, type, label, help, required, placeholder, options, optionsSource, min, max, rows, value}],
+ *     values: {}, method: 'POST', path, body (merged into the submitted values), submitLabel, success, transform(values) }
+ * A select's optionsSource ({path, query, from, value, label}) is loaded before the dialog opens.
  */
-export function modalForm(o = {}) {
+export async function modalForm(o = {}) {
+	if ((o.fields || []).some((f) => f.optionsSource)) {
+		try {
+			o = { ...o, fields: await Promise.all(o.fields.map((f) => (f.optionsSource ? loadOptions(f) : f))) };
+		} catch (e) {
+			toast.error(e);
+			return null;
+		}
+	}
+	return openForm(o);
+}
+
+function openForm(o) {
 	const idBase = `fs-mf-${++seq}`;
 	const d = dialog({ title: o.title || '', icon: o.icon || null, static: true, focus: () => d.$dialog.find('.form-control, .form-select, .form-check-input').filter(':visible')[0] });
 	d.$dialog.addClass('fs-modal-form');
@@ -133,7 +161,8 @@ export function modalForm(o = {}) {
 		busy($submit, true);
 		$cancel.prop('disabled', true);
 		try {
-			const res = await api.request((o.method || 'POST').toUpperCase(), apiPath(o.path), o.transform ? o.transform(body) : body);
+			const sent = o.body ? { ...body, ...o.body } : body;
+			const res = await api.request((o.method || 'POST').toUpperCase(), apiPath(o.path), o.transform ? o.transform(sent) : sent);
 			const meta = res.meta || {};
 			const msg = meta.message || o.success;
 			if (msg) toast(msg, { level: 'ok' });
