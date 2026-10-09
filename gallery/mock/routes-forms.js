@@ -7,11 +7,8 @@
  */
 /*
  * Gallery mock routes for the schema form and its field types:
- *   GET  /api/v1/schema/firewall/rules         rule editor schema
  *   GET  /api/v1/schema/firewall/aliases       alias schema, as the API serves it
  *   GET  /api/v1/schema/services/ntp           NTP schema, as the API serves it (interfaces from the mock)
- *   PUT  /api/v1/firewall/rules/{id}           adds checks for the advanced fields and refuses
- *   POST /api/v1/firewall/rules                system rules, then hands over to the core routes
  *   GET    /api/v1/firewall/aliases           {name, type, description, entries: [{address, detail}], update_frequency?}
  *   GET    /api/v1/firewall/aliases/{name}    one alias (404 when missing)
  *   POST   /api/v1/firewall/aliases           create (201; 422 per entry: entries.N.address)
@@ -26,14 +23,6 @@
  */
 (function (M) {
 	'use strict';
-
-	function previous(method, sample) {
-		var r = M.routes.find(function (x) { return x.method === method && x.re.test(sample); });
-		return r ? r.handler : function () { return M.err(404, 'No mock route for ' + method + ' ' + sample); };
-	}
-	var coreRulePut = previous('PUT', '/api/v1/firewall/rules/1');
-	var coreRulePost = previous('POST', '/api/v1/firewall/rules');
-	var coreRuleGet = previous('GET', '/api/v1/firewall/rules/1');
 
 	var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
 	var V4 = /^(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/;
@@ -77,67 +66,6 @@
 		{ value: 'sctp', label: 'SCTP', group: 'Other' }, { value: 'carp', label: 'CARP', detail: 'High availability', group: 'Other' }, { value: 'pfsync', label: 'PFSYNC', detail: 'State synchronisation', group: 'Other' }
 	];
 	var PORTED = ['tcp', 'udp', 'tcp/udp'];
-
-	var RULE_SCHEMA = {
-		resource: 'firewall/rules',
-		title: 'Firewall rule',
-		summary: '{action} [{ipproto} ][{protocol} ]traffic on {interface} from {source}[ port {source_port}] to {destination}[ port {destination_port}][, logged{log}]',
-		summaryIcon: 'shield-halved',
-		readonlyWhen: { field: 'system', truthy: true },
-		readonlyText: 'This is a system rule and cannot be changed. It keeps the firewall reachable and safe.',
-		sections: [
-			{ id: 'rule', title: 'Rule', description: 'What happens to matching traffic, and where the rule applies.', fields: [
-				{ name: 'action', type: 'segmented', label: 'Action', required: true, default: 'pass', width: 'full',
-					help: 'Block drops packets silently; Reject also tells the sender the connection was refused.',
-					options: [
-						{ value: 'pass', label: 'Pass', icon: 'circle-check', tone: 'pass' },
-						{ value: 'block', label: 'Block', icon: 'ban', tone: 'block' },
-						{ value: 'reject', label: 'Reject', icon: 'circle-minus', tone: 'reject' }
-					] },
-				{ name: 'interface', type: 'select', label: 'Interface', required: true, width: 'half',
-					options: { source: { path: '/v1/gallery/forms/options', query: { set: 'interfaces', floating: 1 } }, value: 'id', label: 'descr', detail: 'detail' } },
-				{ name: 'direction', type: 'segmented', label: 'Direction', width: 'half', default: 'in', visibleWhen: { field: 'interface', equals: 'floating' },
-					options: [{ value: 'in', label: 'In' }, { value: 'out', label: 'Out' }, { value: 'any', label: 'Any' }] },
-				{ name: 'ipproto', type: 'select', label: 'Address family', width: 'half', default: 'inet',
-					options: [{ value: 'inet', label: 'IPv4' }, { value: 'inet6', label: 'IPv6' }, { value: 'inet46', label: 'IPv4 + IPv6' }] },
-				{ name: 'protocol', type: 'select', label: 'Protocol', width: 'half', default: 'tcp', required: true, options: PROTOCOLS },
-				{ name: 'enabled', type: 'switch', label: 'Enabled', text: 'Apply this rule', default: true, width: 'half' }
-			] },
-			{ id: 'source', title: 'Source', description: 'Where the traffic comes from.', fields: [
-				{ name: 'source', type: 'address', label: 'Address', required: true, default: 'any', invert: true, width: 'two-thirds',
-					placeholder: 'any, 192.0.2.10, 10.0.0.0/24, an alias…' },
-				{ name: 'source_port', type: 'port', label: 'Port', width: 'third', emptyValue: 'any',
-					visibleWhen: { field: 'protocol', in: PORTED }, help: 'Usually any: clients pick a random source port.' }
-			] },
-			{ id: 'destination', title: 'Destination', description: 'Where the traffic goes to.', fields: [
-				{ name: 'destination', type: 'address', label: 'Address', required: true, default: 'any', invert: true, width: 'two-thirds',
-					placeholder: 'any, 192.0.2.10, 10.0.0.0/24, an alias…' },
-				{ name: 'destination_port', type: 'port', label: 'Port', width: 'third', emptyValue: 'any',
-					visibleWhen: { field: 'protocol', in: PORTED } }
-			] },
-			{ id: 'options', title: 'Options', fields: [
-				{ name: 'descr', type: 'text', label: 'Description', maxLength: 52, placeholder: 'e.g. Allow web servers from the internet',
-					help: 'Shown in the rule list and in the firewall log.' },
-				{ name: 'log', type: 'switch', label: 'Log', text: 'Log packets that match this rule', width: 'half',
-					help: 'The firewall log keeps a limited history; log only what you need.' },
-				{ name: 'schedule', type: 'select', label: 'Schedule', width: 'half', placeholder: 'Always active',
-					options: [{ value: 'WorkHours', label: 'WorkHours', detail: 'Mon–Fri 08:00–18:00' }, { value: 'Weekends', label: 'Weekends', detail: 'Sat–Sun all day' }, { value: 'NightlyBackup', label: 'NightlyBackup', detail: 'Daily 01:00–04:00' }] },
-				{ name: 'gateway', type: 'select', label: 'Gateway', width: 'half', default: 'default', visibleWhen: { field: 'action', equals: 'pass' },
-					help: 'Policy routing: send matching traffic through this gateway.',
-					options: { source: { path: '/v1/status/gateways' }, value: 'name', label: 'name', detail: 'address', prepend: [{ value: 'default', label: 'Default', detail: 'Use the routing table' }] } }
-			] },
-			{ id: 'advanced', title: 'Advanced options', advanced: true, description: 'State tracking, limits and tags. The defaults suit almost every rule.', fields: [
-				{ name: 'state_type', type: 'select', label: 'State type', width: 'half', default: 'keep',
-					options: [{ value: 'keep', label: 'Keep state', detail: 'Default' }, { value: 'sloppy', label: 'Sloppy state', detail: 'Asymmetric routing' }, { value: 'synproxy', label: 'Synproxy', detail: 'TCP only' }, { value: 'none', label: 'None' }] },
-				{ name: 'max_states', type: 'number', label: 'Maximum states', width: 'half', min: 1, max: 1000000, unit: 'states', placeholder: 'No limit' },
-				{ name: 'tag', type: 'text', label: 'Tag', width: 'half', mono: true, pattern: '^[A-Za-z0-9_]{0,32}$',
-					patternMessage: 'Use up to 32 letters, digits and underscores.', help: 'Mark matching packets for NAT or other rules.' },
-				{ name: 'quick', type: 'switch', label: 'Quick', text: 'Stop at the first match', default: true, width: 'half', visibleWhen: { field: 'interface', equals: 'floating' } },
-				{ name: 'tcp_flags', type: 'checklist', label: 'TCP flags that must be set', visibleWhen: { field: 'protocol', in: ['tcp', 'tcp/udp'] },
-					options: ['FIN', 'SYN', 'RST', 'PSH', 'ACK', 'URG', 'ECE', 'CWR'] }
-			] }
-		]
-	};
 
 	/* The schemas exactly as GET /api/v1/schema/... returns them on a firewall. */
 	var ALIAS_SCHEMA = {
@@ -681,34 +609,9 @@
 	}
 	function ntpInterfaces() { return M.interfaces.map(function (i) { return [i.id, i.descr]; }).concat([['lo0', 'Localhost']]); }
 
-	M.route('GET', '/api/v1/schema/firewall/rules', function () { return M.ok(RULE_SCHEMA); });
 	M.route('GET', '/api/v1/schema/firewall/aliases', function () { return M.ok(ALIAS_SCHEMA); });
 	M.route('GET', '/api/v1/schema/services/ntp', function () { return M.ok(ntpSchema()); });
 	M.route('GET', '/api/v1/gallery/forms/slow-schema', function () { return Object.assign(M.ok(ALIAS_SCHEMA), { delay: 8000 }); });
-
-	/* -------------------------------------------------------------- rules */
-
-	/* Checks for the fields the core mock does not know; the core validates the rest and saves. */
-	function ruleExtraErrors(b) {
-		var e = {};
-		if (b.max_states != null && !(Math.floor(b.max_states) === b.max_states && b.max_states >= 1 && b.max_states <= 1000000)) e.max_states = 'Use a whole number from 1 to 1,000,000.';
-		if (b.tag && !/^[A-Za-z0-9_]{1,32}$/.test(b.tag)) e.tag = 'Use up to 32 letters, digits and underscores.';
-		if (b.state_type === 'synproxy' && b.protocol !== 'tcp') e.state_type = 'Synproxy only works with TCP.';
-		if (b.interface === 'floating' && !b.direction) e.direction = 'Choose a direction for a floating rule.';
-		return e;
-	}
-	M.route('PUT', '/api/v1/firewall/rules/{id}', function (p, q, b) {
-		var cur = coreRuleGet({ id: p.id });
-		if (cur.status === 200 && cur.body.data.system) return M.err(409, 'System rules cannot be changed.');
-		var e = ruleExtraErrors(b || {});
-		if (Object.keys(e).length) return M.err(422, 'Fix the highlighted fields.', e);
-		return coreRulePut(p, q, b);
-	});
-	M.route('POST', '/api/v1/firewall/rules', function (p, q, b) {
-		var e = ruleExtraErrors(b || {});
-		if (Object.keys(e).length) return M.err(422, 'Fix the highlighted fields.', e);
-		return coreRulePost(p, q, b);
-	});
 
 	/* ------------------------------------------------------------ aliases */
 

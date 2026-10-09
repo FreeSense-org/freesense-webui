@@ -39,7 +39,7 @@ one on a phone):
 | `selectable` | bool | `false` | Checkboxes, shift-range, select page |
 | `rowActions` | RowAction[] | `[]` | Inline icon buttons (`inline: true`) and the row menu |
 | `bulkActions` | BulkAction[] | `[]` | Actions for the selection (shown by the toolbar's bulk bar) |
-| `toggle` | `{field, path, method, label, body, pending}` | — | Inline enable switch: optimistic, `PATCH path` with `{[field]: value}`, rollback + toast on error, then `fs:pending` |
+| `toggle` | `{field, path, method, label, body, pending}` | — | Inline enable switch: optimistic, `PATCH path` with `{[field]: value}` (or `body` instead, e.g. `{}` for a flip endpoint), rollback + toast on error, then `fs:pending`. `field` may be a dot path |
 | `reorder` | `{path, params, body, idsKey, field, method, pending}` | — | Drag handle + Move up/down: `POST path` with `{...body, ...pick(query, params), ids}`. `field` (e.g. `position`) is renumbered optimistically |
 | `rowLink` | URL template | — | The primary cell becomes a link; a click anywhere on the row follows it (`FS.nav.go`; `#…` sets the hash) |
 | `empty` | `{icon, title, text, action}` | inbox / "Nothing here yet" | `FS.states.empty` config when the source returns no rows |
@@ -108,27 +108,27 @@ the selected keys. `confirm.title`/`text`/`success` may use `{n}`. Without
 ## Builder (PHP, P4)
 
 ```php
-$ui->card(gettext('Rules'))->flush()->content([
-    $ui->toolbar()->search(gettext('Search rules'))
-       ->select('interface', gettext('Interface'), $interfaces, all: false, value: 'wan')
-       ->action('add', gettext('Add rule'), 'plus', variant: 'primary'),
-    $ui->dataTable('/v1/firewall/rules')->query(['interface' => 'wan'])->every(2)->live(['hits', 'states'])
-       ->column('action', gettext('Action'), 'status', statusMap: $actionStates, variant: 'pill')
-       ->column('source', gettext('Source'))->column('destination', gettext('Destination'))
-       ->column('descr', gettext('Description'), primary: true)
-       ->column('hits', gettext('Hits'), 'num', sortable: true, priority: 3)
-       ->filter('interface', query: 'interface')
-       ->selectable()->locked('system', gettext('System rule'))
-       ->toggle('enabled', '/v1/firewall/rules/{id}')
-       ->reorder('/v1/firewall/rules/order', params: ['interface'], field: 'position')
-       ->rowLink('/security/rules/edit?id={id}')
-       ->rowAction('edit', gettext('Edit'), 'pen', href: '/security/rules/edit?id={id}', inline: true)
-       ->rowAction('delete', gettext('Delete'), 'trash-can', danger: true,
-                   api: ['DELETE', '/v1/firewall/rules/{id}'], confirm: gettext('Delete rule {descr}?'))
-       ->bulkAction('delete', gettext('Delete'), 'trash-can', danger: true, api: ['DELETE', '/v1/firewall/rules/{id}'])
-       ->empty(gettext('No rules on this interface'), icon: 'shield-halved'),
-]);
+// app/pages/Rules.php (abridged): the real rules API, where ids are positions.
+$ui->dataTable()
+   ->source(['path' => '/v1/firewall/rules', 'query' => ['interface' => $tab]])
+   ->key('id')
+   ->columns([
+       ['field' => 'type', 'label' => gettext('Action'), 'format' => 'badge', 'badgeMap' => $actions],
+       ['field' => 'descr', 'label' => gettext('Description'), 'primary' => true, 'sub' => 'display.protocol'],
+       ['field' => 'display.source', 'label' => gettext('Source'), 'mono' => true],
+       ['field' => 'display.destination', 'label' => gettext('Destination'), 'mono' => true],
+   ])
+   ->toolbar(['search' => true, 'filters' => [['id' => 'interface', 'all' => false, 'value' => $tab,
+       'href' => Url::page('/security/rules/{value}'),
+       'options' => ['source' => ['path' => '/v1/firewall/rules/tabs'], 'value' => 'id', 'label' => 'label', 'count' => 'count']]]])
+   ->toggle(['field' => 'display.enabled', 'method' => 'POST', 'path' => '/v1/firewall/rules/{id}/toggle', 'body' => (object)[]])
+   ->reorder(['path' => '/v1/firewall/rules/order', 'params' => ['interface'], 'idsKey' => 'order'])
+   ->rowActions([['id' => 'delete', 'label' => gettext('Delete'), 'icon' => 'trash', 'danger' => true,
+       'api' => ['method' => 'DELETE', 'path' => '/v1/firewall/rules/{id}', 'pending' => true, 'confirm' => gettext('Delete this rule?')]]]);
 ```
+
+The table reloads after a reorder (the server's order is the truth, and keys
+may be positions that just changed) and after every row action.
 
 A toolbar placed directly before the table (as above, or in the same card) is
 wired automatically; `->toolbar([...])` embeds one inside the table surface.

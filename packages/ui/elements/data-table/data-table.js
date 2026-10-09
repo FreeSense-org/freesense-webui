@@ -34,6 +34,14 @@ import { childNode, startChildren } from '../card/nest.js';
 
 /* ------------------------------------------------------------ helpers */
 
+/** Set the value at a dot path, creating objects on the way. */
+export function setAt(o, path, value) {
+	const keys = String(path).split('.');
+	let v = o;
+	for (const k of keys.slice(0, -1)) v = (v[k] != null && typeof v[k] === 'object') ? v[k] : (v[k] = {});
+	v[keys[keys.length - 1]] = value;
+}
+
 /** Value at a dot path ('a.b.c'). */
 export function get(o, path) {
 	if (o == null || path == null || path === '') return undefined;
@@ -851,10 +859,10 @@ el.define('data-table', {
 			const row = rec.row;
 			const prev = get(row, tg.field);
 			overrides.set(id, { ...(overrides.get(id) || {}), [tg.field]: on });
-			row[tg.field] = on;
+			setAt(row, tg.field, on);
 			rec.$tr.toggleClass('is-off', !on);
 			rec.sig = sigOf(row);
-			const body = { [tg.field]: on, ...(tg.body || {}) };
+			const body = tg.body !== undefined ? tg.body : { [tg.field]: on };
 			api.request((tg.method || 'PATCH').toUpperCase(), fill(tg.path, row, { encode: true, key }), body).then((res) => {
 				clearOverride(id, tg.field);
 				if (tg.pending !== false) $(node).trigger('fs:pending', [{ path: tg.path, id }]);
@@ -864,7 +872,7 @@ el.define('data-table', {
 				clearOverride(id, tg.field);
 				const cur = recs.get(id);
 				if (cur) {
-					cur.row[tg.field] = prev;
+					setAt(cur.row, tg.field, prev);
 					cur.$tr.toggleClass('is-off', !prev);
 					cur.$tr.find('.fs-table-switch-input').prop('checked', !!prev);
 					cur.sig = sigOf(cur.row);
@@ -1056,6 +1064,8 @@ el.define('data-table', {
 				pendingOrder = null;
 				if (R.pending !== false) $(node).trigger('fs:pending', [{ path: R.path }]);
 				$(node).trigger('fs:reorder', [{ ids: body[R.idsKey || 'ids'] }]);
+				/* The server's order is the truth (keys may be positions that just changed). */
+				fetchData().catch(() => {});
 			}, (e) => {
 				pendingOrder = null;
 				all = before;
@@ -1208,7 +1218,7 @@ el.define('data-table', {
 			rows = rows.filter((r) => r && typeof r === 'object');
 			for (const r of rows) {
 				const o = overrides.get(String(get(r, key)));
-				if (o) Object.assign(r, o);
+				if (o) for (const [f, v] of Object.entries(o)) setAt(r, f, v);
 			}
 			total = (res.meta && typeof res.meta.total === 'number') ? res.meta.total : rows.length;
 			all = rows;

@@ -19,7 +19,7 @@ one field on its own (config = the field schema plus `value` and `error`).
 | `error` | string | — | Initial inline error (standalone element) |
 | `width` | `full` \| `half` \| `third` \| `two-thirds` | `full` | Column span inside a form |
 | `text` | string | — | Caption next to the switch (also clickable) |
-| `values` | `[off, on]` | `[false, true]` | Stored values |
+| `values` | `[off, on]` | `[false, true]` | Stored values. Without `values`, a loaded `"yes"` or `"on"` (checkbox fields as the API returns them) also counts as on |
 
 ## Builder (PHP, P4)
 

@@ -117,7 +117,11 @@ el.define('form', {
 				: config.schemaSource ? batch.get(config.schemaSource.path, config.schemaSource.query).then((r) => r.data)
 					: Promise.resolve({ sections: [] });
 			const valuesP = config.values ? Promise.resolve(config.values)
-				: config.load ? batch.get(config.load.path, config.load.query).then((r) => r.data || {})
+				: config.load ? batch.get(config.load.path, config.load.query).then((r) => {
+					const d = r.data || {};
+					/* load.field: edit that member (e.g. a rule's "fields"); the rest stays available to conditions and placeholders. */
+					return config.load.field ? { ...d, ...(d[config.load.field] || {}) } : d;
+				})
 					: Promise.resolve({});
 			return Promise.all([schemaP, valuesP]);
 		}
@@ -347,7 +351,8 @@ el.define('form', {
 				const entries = fields.flatMap((x) => x.validate());
 				if (entries.length) { showErrors(entries); return false; }
 				if (!config.save || !config.save.path) { toast(t('Nothing to save to (no save path).'), { level: 'warn' }); return false; }
-				const body = serialise();
+				/* save.body: constant fields sent with every save (e.g. floating: true for a new floating rule). */
+				const body = { ...((config.save && config.save.body) || {}), ...serialise() };
 				saving = true;
 				busy($save, true);
 				updateStatus();

@@ -118,71 +118,8 @@
 		['192.0.2.200', ''], ['13.107.42.14', 'microsoft']
 	];
 
-	/* --------------------------------------------------------- firewall rules */
-
-	var ruleSeq = 100;
-	function R(o) {
-		return $.extend({
-			id: ++ruleSeq, enabled: true, action: 'pass', ipproto: 'inet', protocol: 'tcp',
-			source: 'any', source_port: 'any', destination: 'any', destination_port: 'any',
-			gateway: 'default', schedule: null, log: false, quick: true, direction: 'in',
-			tracker: 1700000000 + ruleSeq, states: 0, hits: 0, bytes: 0, created: '2026-09-12 10:22', updated: '2026-10-04 18:40',
-			created_by: 'admin@192.168.1.31'
-		}, o);
-	}
-	var RULES = {
-		wan: [
-			R({ system: true, action: 'block', protocol: 'any', source: 'Reserved / not assigned by IANA', descr: 'Block bogon networks', log: true, hits: 2240 }),
-			R({ system: true, action: 'block', protocol: 'any', source: 'RFC 1918 networks', descr: 'Block private networks', log: true, hits: 812 }),
-			R({ action: 'pass', protocol: 'tcp', destination: '172.16.40.10', destination_port: '443 (HTTPS)', descr: 'NAT web01 HTTPS', hits: 98211, states: 214, assoc_nat: true, log: false }),
-			R({ action: 'pass', protocol: 'tcp', destination: '172.16.40.11', destination_port: 'MAIL_PORTS', descr: 'NAT mail01 SMTP/IMAPS', hits: 12011, states: 18, assoc_nat: true }),
-			R({ action: 'pass', protocol: 'udp', destination: 'WAN address', destination_port: '51820', descr: 'WireGuard site-to-site', hits: 4410, states: 2 }),
-			R({ action: 'pass', protocol: 'udp', destination: 'WAN address', destination_port: '1194 (OpenVPN)', descr: 'OpenVPN RoadWarrior', hits: 302, states: 3 }),
-			R({ action: 'block', protocol: 'any', source: 'CROWDSEC_BLOCKLIST', descr: 'CrowdSec community blocklist', log: true, hits: 55120 }),
-			R({ action: 'pass', protocol: 'icmp', ipproto: 'inet46', destination: 'WAN address', descr: 'Allow ICMP echo (rate limited)', hits: 1802, states: 0 }),
-			R({ action: 'reject', enabled: false, protocol: 'tcp', destination: 'WAN address', destination_port: '22 (SSH)', descr: 'Old SSH access (disabled)', hits: 0 })
-		],
-		lan: [
-			R({ system: true, action: 'pass', protocol: 'tcp', destination: 'This Firewall', destination_port: '443, 22', descr: 'Anti-Lockout Rule', hits: 6020, states: 4 }),
-			R({ action: 'block', protocol: 'tcp/udp', source: 'LAN net', destination: '!DNS_SERVERS', destination_port: '53 (DNS)', descr: 'Force local DNS resolver', log: true, hits: 7731 }),
-			R({ action: 'pass', protocol: 'any', ipproto: 'inet46', source: 'LAN net', destination: 'any', descr: 'Default allow LAN to any', hits: 1983221, states: 1288 }),
-			R({ action: 'pass', protocol: 'any', source: 'LAN net', destination: 'any', gateway: 'WG_SITE_GW', destination_port: 'any', descr: 'Office subnet via WireGuard', destination_override: '10.50.0.0/16', hits: 11203, states: 22 }),
-			R({ action: 'pass', protocol: 'tcp', source: 'ADMIN_HOSTS', destination: 'DMZ net', destination_port: 'SSH_ADMIN', descr: 'Admin to DMZ', hits: 812, states: 2, schedule: 'WorkHours' })
-		],
-		opt1: [
-			R({ action: 'block', protocol: 'any', source: 'GUEST net', destination: 'RFC1918_ALL', descr: 'Isolate guests from private nets', log: true, hits: 4203 }),
-			R({ action: 'pass', protocol: 'tcp/udp', source: 'GUEST net', destination: 'GUEST address', destination_port: '53 (DNS)', descr: 'Guest DNS', hits: 66231, states: 31 }),
-			R({ action: 'pass', protocol: 'any', source: 'GUEST net', destination: 'any', gateway: 'WAN_DHCP', descr: 'Guest internet', hits: 302311, states: 188, schedule: null })
-		],
-		opt2: [
-			R({ action: 'pass', protocol: 'tcp', source: 'IOT net', destination: '192.168.1.70', destination_port: '8123', descr: 'IoT to Home Assistant', hits: 23022, states: 9 }),
-			R({ action: 'block', protocol: 'any', source: 'IOT net', destination: 'any', descr: 'IoT default deny', log: true, hits: 90112 })
-		],
-		floating: [
-			R({ action: 'match', direction: 'any', protocol: 'any', descr: 'Shaper: tag VoIP to qVoIP', quick: false, hits: 551023 }),
-			R({ action: 'block', direction: 'in', protocol: 'any', source: 'THREAT_FEEDS', descr: 'ThreatShield feeds (all interfaces)', log: true, hits: 3021 })
-		]
-	};
+	/* Rule changes mark "rules" pending; the rules themselves live in routes-rules.js. */
 	var pendingChanges = false;
-	setInterval(function () {
-		Object.keys(RULES).forEach(function (k) {
-			RULES[k].forEach(function (r) {
-				if (!r.enabled) return;
-				var w = Math.max(1, r.hits / 50000);
-				if (Math.random() < 0.6) r.hits += Math.round(rnd(0, 4 * w));
-				if (r.action === 'pass' && r.states > 0) r.states = Math.max(0, Math.round(r.states + rnd(-2, 2.2)));
-				r.bytes += r.hits % 7 * 1500;
-			});
-		});
-	}, 1000);
-
-	function findRule(id) {
-		var out = null;
-		Object.keys(RULES).forEach(function (k) {
-			RULES[k].forEach(function (r, idx) { if (r.id === id) out = { list: RULES[k], idx: idx, iface: k, rule: r }; });
-		});
-		return out;
-	}
 
 	/* ------------------------------------------------------------------- logs */
 
@@ -214,12 +151,11 @@
 		else { src = pick(HOSTS.filter(function (h) { return h[0].indexOf(ifo.ipv4.split('.').slice(0, 2).join('.')) === 0; }).concat([pick(HOSTS)]))[0]; dst = pick(REMOTE)[0]; }
 		var proto = pick(['TCP:S', 'TCP:S', 'UDP', 'TCP:SA', 'ICMP', 'TCP:RA']);
 		var action = iface === 'wan' ? pick(['block', 'block', 'block', 'pass', 'reject']) : pick(['pass', 'pass', 'block']);
-		var list = RULES[iface] || RULES.wan;
-		var rule = list[Math.floor(Math.random() * list.length)];
+		var rule = (window.FSMock && window.FSMock.ruleFor) ? window.FSMock.ruleFor(iface) : { tracker: '0100000101', descr: 'Default allow LAN to any rule' };
 		return {
 			id: ++logSeq, time: new Date(at).toISOString(), action: action, iface: iface, iface_descr: ifo.descr,
 			dir: inbound ? 'in' : 'out', proto: proto, src: src, srcport: proto === 'ICMP' ? null : Math.floor(rnd(1024, 65535)),
-			dst: dst, dstport: proto === 'ICMP' ? null : pick(PORTS), rule_id: rule.id, rule: rule.descr,
+			dst: dst, dstport: proto === 'ICMP' ? null : pick(PORTS), rule: rule.descr,
 			tracker: rule.tracker, len: Math.floor(rnd(40, 1500))
 		};
 	}
@@ -427,78 +363,11 @@
 		return ok(null);
 	});
 
-	route('GET', '/api/v1/firewall/rules', function (p, q) {
-		var iface = q.get('interface') || 'wan';
-		return ok((RULES[iface] || []).map(function (r, i) { return $.extend({ position: i + 1, interface: iface }, r); }),
-			{ interface: iface, interfaces: Object.keys(RULES).map(function (k) { return { id: k, descr: k === 'floating' ? 'Floating' : (IFACES.find(function (x) { return x.id === k; }) || {}).descr, count: RULES[k].length }; }), pending: pendingChanges });
-	});
-	route('GET', '/api/v1/firewall/rules/{id}', function (p) {
-		var f = findRule(+p.id);
-		return f ? ok($.extend({ interface: f.iface, position: f.idx + 1 }, f.rule)) : err(404, 'Rule not found');
-	});
-	route('PATCH', '/api/v1/firewall/rules/{id}', function (p, q, body) {
-		var f = findRule(+p.id);
-		if (!f) return err(404, 'Rule not found');
-		if (f.rule.system) return err(409, 'System rules cannot be changed here');
-		$.extend(f.rule, body || {});
-		pendingChanges = true;
-		return ok(f.rule, { pending: true });
-	});
-	route('PUT', '/api/v1/firewall/rules/{id}', function (p, q, body) { return saveRule(+p.id, body); });
-	route('POST', '/api/v1/firewall/rules', function (p, q, body) { return saveRule(null, body); });
-	route('DELETE', '/api/v1/firewall/rules/{id}', function (p) {
-		var f = findRule(+p.id);
-		if (!f) return err(404, 'Rule not found');
-		if (f.rule.system) return err(409, 'System rules cannot be deleted');
-		f.list.splice(f.idx, 1); pendingChanges = true;
-		return ok(null, { pending: true });
-	});
-	route('POST', '/api/v1/firewall/rules/order', function (p, q, body) {
-		var list = RULES[body.interface];
-		if (!list) return err(404, 'No such interface');
-		var map = {}; list.forEach(function (r) { map[r.id] = r; });
-		var next = (body.ids || []).map(function (id) { return map[id]; }).filter(Boolean);
-		if (next.length !== list.length) return err(422, 'Order must list every rule once');
-		RULES[body.interface] = next; pendingChanges = true;
-		return ok(null, { pending: true });
-	});
-	/* The API's shape: pending is the list of areas with unapplied changes. */
 	/* Areas with unapplied changes besides the rules (aliases, nat, virtual_ips), set by the other mock files. */
 	var pendingAreas = {};
 	function pendingList() { return (pendingChanges ? ['rules'] : []).concat(Object.keys(pendingAreas)); }
 	route('GET', '/api/v1/firewall/pending', function () { return ok({ pending: pendingList() }); });
 	route('POST', '/api/v1/firewall/apply', function () { pendingChanges = false; pendingAreas = {}; return ok({ applied: true, pending: [] }); });
-	function saveRule(id, b) {
-		b = b || {};
-		var e = {};
-		var addrOk = function (v) { return /^(any|[A-Z][A-Z0-9_]*|!?[A-Z][A-Z0-9_]*|(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?|[\w ]+ (net|address)|This Firewall)$/i.test(v || ''); };
-		var portOk = function (v) { v = String(v || '').replace(/\s*\([^)]*\)$/, ''); return !v || v === 'any' || /^\d{1,5}(:\d{1,5})?$/.test(v) || /^\d{1,5}(,\s*\d{1,5})+$/.test(v) || /^[A-Z][A-Z0-9_]*$/.test(v); };
-		if (!b.interface || !RULES[b.interface]) e.interface = 'Choose an interface.';
-		if (['pass', 'block', 'reject', 'match'].indexOf(b.action) < 0) e.action = 'Choose an action.';
-		if (!addrOk(b.source)) e.source = 'Enter "any", an alias, a host, a network in CIDR form or an interface net.';
-		if (!addrOk(b.destination)) e.destination = 'Enter "any", an alias, a host, a network in CIDR form or an interface net.';
-		if (['tcp', 'udp', 'tcp/udp'].indexOf(b.protocol) >= 0) {
-			if (!portOk(b.destination_port)) e.destination_port = 'Use a port (443), a range (8000:8100) or a port alias.';
-			if (!portOk(b.source_port)) e.source_port = 'Use a port, a range or a port alias.';
-			var m = /^(\d+):(\d+)$/.exec(String(b.destination_port || '').replace(/\s*\([^)]*\)$/, ''));
-			if (m && +m[1] > +m[2]) e.destination_port = 'The range start must be lower than the end.';
-		}
-		if ((b.descr || '').length > 52) e.descr = 'Keep the description to 52 characters.';
-		if (Object.keys(e).length) return err(422, 'Fix the highlighted fields.', e);
-		var rule;
-		if (id) {
-			var f = findRule(id);
-			if (!f) return err(404, 'Rule not found');
-			if (f.iface !== b.interface) { f.list.splice(f.idx, 1); RULES[b.interface].push(f.rule); }
-			rule = $.extend(f.rule, b, { updated: new Date().toISOString().slice(0, 16).replace('T', ' ') });
-		} else {
-			rule = R(b);
-			RULES[b.interface].push(rule);
-		}
-		pendingChanges = true;
-		return ok(rule, { pending: true, message: id ? 'Rule saved' : 'Rule created' });
-	}
-
 	route('GET', '/api/v1/logs/firewall', function (p, q) { return logQuery(FWLOG, q, function (e, s) {
 		return (e.src + ' ' + e.dst + ' ' + e.rule + ' ' + e.proto + ' ' + e.iface_descr + ' ' + (e.dstport || '')).toLowerCase().indexOf(s) >= 0;
 	}, function (e, q) {
@@ -603,7 +472,7 @@
 
 	window.FSMock = {
 		routes: ROUTES, interfaces: IFACES, ok: ok, err: err, dispatch: dispatch,
-		markPending: function (area) { pendingAreas[area] = true; }, pending: pendingList,
+		markPending: function (area) { pendingAreas[area] = true; }, markRulesPending: function () { pendingChanges = true; }, pending: pendingList,
 		route: function (method, pattern, handler) { route(method, pattern, handler); ROUTES.unshift(ROUTES.pop()); }
 	};
 })(jQuery);

@@ -3,49 +3,38 @@
 	"description": "API-backed table: search, filters, sort, paging, selection with bulk actions, row actions, inline toggle, drag and keyboard reorder, live cells, groups. Rows become cards below 48rem of container width.",
 	"status": "draft",
 	"fixtures": [
-		{ "name": "Firewall rules · WAN (full list pattern)", "width": "full", "note": "toolbar + table in one surface; switch the interface, drag the grip, toggle, select", "config": {
+		{ "name": "Firewall rules · WAN (full list pattern)", "width": "full", "note": "the real rules API: switch the interface, drag the grip, toggle; port forward rules are locked", "config": {
 			"label": "Firewall rules",
 			"source": { "path": "/v1/firewall/rules", "query": { "interface": "wan" } },
-			"every": 2,
-			"live": ["hits", "states", "bytes"],
 			"name": "descr",
 			"toolbar": {
 				"label": "Rule tools",
 				"search": { "placeholder": "Search rules" },
 				"filters": [
-					{ "id": "interface", "label": "Interface", "all": false, "value": "wan", "options": [{ "value": "wan", "label": "WAN" }, { "value": "lan", "label": "LAN" }, { "value": "opt1", "label": "GUEST" }, { "value": "opt2", "label": "IOT" }, { "value": "floating", "label": "Floating" }] },
-					{ "id": "action", "type": "chips", "label": "Action", "multiple": true, "options": [{ "value": "pass", "label": "Pass" }, { "value": "block", "label": "Block" }, { "value": "reject", "label": "Reject" }] }
+					{ "id": "interface", "label": "Interface", "all": false, "value": "wan", "options": { "source": { "path": "/v1/firewall/rules/tabs" }, "value": "id", "label": "label", "count": "count" } },
+					{ "id": "type", "type": "chips", "label": "Action", "multiple": true, "options": [{ "value": "pass", "label": "Pass" }, { "value": "block", "label": "Block" }, { "value": "reject", "label": "Reject" }] }
 				],
 				"actions": [{ "id": "add", "label": "Add rule", "icon": "plus", "variant": "primary" }]
 			},
-			"filters": [{ "id": "interface", "query": "interface" }, { "id": "action", "field": "action" }],
-			"selectable": true,
-			"locked": { "field": "system", "label": "System rule" },
-			"toggle": { "field": "enabled", "label": "On", "path": "/v1/firewall/rules/{id}", "method": "PATCH" },
-			"reorder": { "path": "/v1/firewall/rules/order", "params": ["interface"], "field": "position" },
+			"filters": [{ "id": "interface", "query": "interface" }, { "id": "type", "field": "type" }],
+			"locked": { "field": "display.nat", "label": "Port forward rule" },
+			"toggle": { "field": "display.enabled", "label": "On", "method": "POST", "path": "/v1/firewall/rules/{id}/toggle", "body": {} },
+			"reorder": { "path": "/v1/firewall/rules/order", "params": ["interface"], "idsKey": "order" },
 			"rowLink": "#rule-{id}",
 			"count": ["{n} rule", "{n} rules"],
 			"columns": [
-				{ "field": "position", "label": "#", "format": "num", "width": "3rem", "priority": 3 },
-				{ "field": "action", "label": "Action", "format": "status", "variant": "pill", "width": "6.5rem", "statusMap": { "pass": { "state": "pass", "label": "Pass" }, "block": { "state": "block", "label": "Block" }, "reject": { "state": "reject", "label": "Reject" }, "match": { "state": "match", "label": "Match" } } },
-				{ "field": "protocol", "label": "Protocol", "format": "mono" },
-				{ "field": "source", "label": "Source" },
-				{ "field": "destination", "label": "Destination" },
-				{ "field": "destination_port", "label": "Port", "priority": 2 },
-				{ "field": "descr", "label": "Description", "primary": true },
-				{ "field": "states", "label": "States", "format": "num", "sortable": true, "priority": 3 },
-				{ "field": "hits", "label": "Hits", "format": "num", "sortable": true }
+				{ "field": "type", "label": "Action", "format": "badge", "width": "6.5rem", "badgeMap": { "pass": { "label": "Pass", "tone": "ok", "icon": "circle-check" }, "block": { "label": "Block", "tone": "crit", "icon": "ban" }, "reject": { "label": "Reject", "tone": "warn", "icon": "circle-xmark" }, "match": { "label": "Match", "tone": "info", "icon": "tag" } } },
+				{ "field": "descr", "label": "Description", "primary": true, "sub": "display.protocol" },
+				{ "field": "display.source", "label": "Source", "mono": true, "sub": "display.source_port" },
+				{ "field": "display.destination", "label": "Destination", "mono": true },
+				{ "field": "display.destination_port", "label": "Port", "mono": true, "priority": 2 },
+				{ "field": "display.gateway", "label": "Gateway", "priority": 3 },
+				{ "field": "display.schedule", "label": "Schedule", "priority": 3 }
 			],
 			"rowActions": [
 				{ "id": "edit", "label": "Edit", "icon": "pen", "inline": true, "href": "#rule-{id}" },
-				{ "id": "duplicate", "label": "Duplicate", "icon": "clone", "api": { "method": "POST", "path": "/v1/firewall/rules/{id}/duplicate" } },
 				{ "id": "log", "label": "Show matching log entries", "icon": "list", "href": "#log-{tracker}" },
-				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/rules/{id}", "success": "Rule {descr} deleted", "confirm": { "title": "Delete rule {descr}?", "text": "The rule is removed when you apply the changes." } } }
-			],
-			"bulkActions": [
-				{ "id": "enable", "label": "Enable", "icon": "toggle-on", "api": { "method": "PATCH", "path": "/v1/firewall/rules/{id}", "body": { "enabled": true } }, "success": "{n} rules enabled" },
-				{ "id": "disable", "label": "Disable", "icon": "toggle-off", "api": { "method": "PATCH", "path": "/v1/firewall/rules/{id}", "body": { "enabled": false } }, "success": "{n} rules disabled" },
-				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/rules/{id}" }, "success": "{n} rules deleted", "confirm": { "title": "Delete {n} rules?", "text": "The rules are removed when you apply the changes." } }
+				{ "id": "delete", "label": "Delete", "icon": "trash-can", "danger": true, "api": { "method": "DELETE", "path": "/v1/firewall/rules/{id}", "pending": true, "success": "Rule {descr} deleted", "confirm": { "title": "Delete rule {descr}?", "text": "The rule is removed when you apply the changes." } } }
 			],
 			"empty": { "icon": "shield-halved", "title": "No rules on this interface", "text": "Traffic is blocked by the default deny rule.", "action": { "label": "Add rule", "icon": "plus", "href": "#rule-new" } }
 		} },

@@ -15,6 +15,10 @@ import $ from 'jquery';
 import { el } from '../../js/el.js';
 import { t, icon, emit, actionNode, disposeMenus } from '../page-header/actions.js';
 import { childNode, startChildren } from '../card/nest.js';
+import { batch } from '../../js/batch.js';
+import { nav } from '../../js/nav.js';
+
+const get = (o, path) => String(path).split('.').reduce((v, k) => (v == null ? undefined : v[k]), o);
 
 let seq = 0;
 
@@ -83,12 +87,29 @@ el.define('toolbar', {
 				painters[f.id] = paint;
 				$filters.append($g);
 			} else {
-				filters[f.id] = f.value ?? '';
+				/* A select with href opens pages; it is not a filter of the collection. */
+				const current = f.value ?? '';
+				if (!f.href) filters[f.id] = current;
 				const $sel = $('<select class="form-select fs-toolbar-select">').attr({ id: `${uid}-f-${f.id}`, 'aria-label': f.label || f.id });
 				if (f.all !== false) $sel.append($('<option value="">').text(f.all || `${f.label || ''}: ${t('All')}`.replace(/^: /, '')));
-				for (const o of opts) $sel.append($('<option>').val(String(o.value)).text(o.label ?? o.value));
-				$sel.val(String(filters[f.id])).on('change', () => { filters[f.id] = $sel.val(); emitFilter(f.id, filters[f.id]); });
-				painters[f.id] = () => $sel.val(String(filters[f.id] ?? ''));
+				const addOptions = (list) => { for (const o of list) $sel.append($('<option>').val(String(o.value)).text(o.count != null ? `${o.label ?? o.value} (${o.count})` : (o.label ?? o.value))); };
+				if (Array.isArray(opts)) addOptions(opts);
+				else if (opts && opts.source) {
+					/* Options from the API: {source: {path, query}, value, label, count} (dot paths into each row). */
+					const src = opts;
+					$sel.prop('disabled', true);
+					batch.get(src.source.path, src.source.query).then((res) => {
+						addOptions((Array.isArray(res.data) ? res.data : []).map((row) => ({ value: get(row, src.value || 'value'), label: get(row, src.label || 'label'), count: src.count ? get(row, src.count) : null })));
+						$sel.val(String(f.href ? current : (filters[f.id] ?? ''))).prop('disabled', false);
+					}, () => $sel.prop('disabled', false));
+				}
+				$sel.val(String(f.href ? current : filters[f.id])).on('change', () => {
+					/* href: the choice is a page of its own (e.g. the rules of one interface). */
+					if (f.href) { nav.go(String(f.href).replace('{value}', encodeURIComponent($sel.val()))); return; }
+					filters[f.id] = $sel.val();
+					emitFilter(f.id, filters[f.id]);
+				});
+				if (!f.href) painters[f.id] = () => $sel.val(String(filters[f.id] ?? ''));
 				$filters.append($sel);
 			}
 		}

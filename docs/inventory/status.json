@@ -225,13 +225,13 @@
 		"prs": []
 	},
 	"firewall_rules.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/rules",
 		"prs": []
 	},
 	"firewall_rules_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/security/rules",
 		"prs": []
 	},
 	"firewall_schedule.php": {

@@ -28,7 +28,8 @@ defineField('switch', {
 			$el: $box,
 			$focus: $in,
 			get: () => ($in.prop('checked') ? on : off),
-			set(v) { $in.prop('checked', v === on || String(v) === String(on)); sync(); },
+			/* Without values, the API's checkbox fields ("yes", as a 1.x form posts them) count as on too. */
+			set(v) { $in.prop('checked', v === on || String(v) === String(on) || (!Array.isArray(f.values) && (v === 'yes' || v === 'on'))); sync(); },
 			setDisabled: (b) => $in.prop('disabled', b),
 			display: (v) => (v === on ? (f.label || t('On')) : '')
 		};

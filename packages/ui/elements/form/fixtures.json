@@ -5,12 +5,12 @@
 	"fixtures": [
 		{
 			"name": "Firewall rule: edit",
-			"note": "rule 114; try port 9000:8000, tag a-b or synproxy with UDP",
+			"note": "rule 8 (LAN); try destination 10.0.0.300, port 99999 or synproxy with UDP",
 			"width": "full",
 			"surface": "page",
 			"config": {
 				"schemaSource": { "path": "/v1/schema/firewall/rules" },
-				"load": { "path": "/v1/firewall/rules/114" },
+				"load": { "path": "/v1/firewall/rules/8", "field": "fields" },
 				"save": { "method": "PUT", "path": "/v1/firewall/rules/{id}" },
 				"summary": true
 			}
@@ -22,19 +22,19 @@
 			"surface": "page",
 			"config": {
 				"schemaSource": { "path": "/v1/schema/firewall/rules" },
-				"values": { "interface": "lan", "source": "LAN net", "destination_port": "443" },
+				"values": { "interface": "lan", "srctype": "lan", "dsttype": "any", "proto": "tcp", "dstbeginport": "443" },
 				"save": { "method": "POST", "path": "/v1/firewall/rules" },
 				"submitLabel": "Create rule",
 				"summary": true
 			}
 		},
 		{
-			"name": "System rule (read-only)",
+			"name": "Port forward rule (read-only)",
 			"width": "full",
 			"surface": "page",
 			"config": {
 				"schemaSource": { "path": "/v1/schema/firewall/rules" },
-				"load": { "path": "/v1/firewall/rules/110" },
+				"load": { "path": "/v1/firewall/rules/7", "field": "fields" },
 				"save": { "method": "PUT", "path": "/v1/firewall/rules/{id}" },
 				"cancelHref": "#el-form",
 				"summary": true

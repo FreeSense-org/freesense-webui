@@ -24,10 +24,11 @@ bulk bar replaces search and filters.
 | `id` | Filter key in events and `values()` |
 | `type` | `select` (default) or `chips` |
 | `label` | Accessible name (select: also the "Label: All" option) |
-| `options` | `[{value, label, icon, count}]` |
+| `options` | `[{value, label, icon, count}]`, or for a select `{source: {path, query}, value, label, count}` (dot paths into each row of the API list) |
 | `value` | Initial value (array for multiple chips) |
 | `multiple` | Chips: toggle several (`aria-pressed`) instead of one |
 | `all` | Select: text of the empty option, or `false` for none |
+| `href` | Select: open this URL instead of filtering, `{value}` replaced by the choice (one page per choice, e.g. `/security/rules/{value}`) |
 
 ## Builder (PHP, P4)
 
