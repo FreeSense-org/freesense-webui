@@ -24,6 +24,7 @@ return array(
 	FreeSense\WebUI\Pages\Assignments::class,
 	FreeSense\WebUI\Pages\Vlans::class,
 	FreeSense\WebUI\Pages\Qinqs::class,
+	FreeSense\WebUI\Pages\Vxlans::class,
 	FreeSense\WebUI\Pages\Bridges::class,
 	FreeSense\WebUI\Pages\Laggs::class,
 	FreeSense\WebUI\Pages\Gifs::class,
