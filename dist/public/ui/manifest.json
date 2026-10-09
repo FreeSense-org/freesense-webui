@@ -81,7 +81,7 @@
 		"ui/fonts/jetbrains-mono-latin-600-normal.woff2": "400c6bfda18d5d14acad1c15d6dcb9f8e13c015e7286317e0b9a482539bef147",
 		"ui/fonts/jetbrains-mono-latin-ext-400-normal.woff2": "505dfba8ecbe77e82765f36d317ed7ef4ac42719dc5f4ae68d1c483fd22d0d14",
 		"ui/fonts/jetbrains-mono-latin-ext-600-normal.woff2": "90899aac1c15552c028fd205376bb537a2a5205164fe8626efabad77d7260c20",
-		"ui/fs-ui.css": "fcdc7e61164a4d8324498c0028311036ba9b015113ccd1c8ae6393eb1a5d9d07",
-		"ui/fs-ui.js": "c895d1072adba22cc19f64b2c69f6c01c778bc18818d58492fa4370e70416596"
+		"ui/fs-ui.css": "525f3b8660e18b4c7fd83cb05501fc561f03243a73bfa4983eaf400387ae062c",
+		"ui/fs-ui.js": "a84ba8728a6bf5b719aacece08826af6ca704960d7088d77e8dc37fd960409f6"
 	}
 }

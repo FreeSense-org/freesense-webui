@@ -103,13 +103,6 @@ function normaliseSchema(s) {
 
 /* --------------------------------------------------------------- element */
 
-/* Fields that need a whole row: lists, text areas, long checklists, or width: 'full' in the schema. */
-function wideField(f) {
-	if (f.width === 'full' || f.span === 'full') return true;
-	if (f.type === 'entry-grid' || f.type === 'textarea') return true;
-	return f.type === 'checklist' && !f.inline && (f.options || []).length > 6;
-}
-
 el.define('form', {
 	init(node, config, ctx) {
 		const $node = $(node).addClass('fs-form').empty()
@@ -173,8 +166,6 @@ el.define('form', {
 			const order = config.sections || schema.order;
 			const list = order ? order.map((id) => schema.sections.find((s) => s.id === id)).filter(Boolean) : schema.sections;
 			const plain = config.layout === 'plain';
-			/* Sections flow side by side (wrapping, each at least its minimum width), see sizeSections(). */
-			const $flow = $('<div class="fs-form-flow">').appendTo($form);
 
 			list.forEach((s) => {
 				const sid = uid('sec');
@@ -209,14 +200,12 @@ el.define('form', {
 					}
 					const inst = buildField(f, { value: getPath(values, f.name), onChange: changed });
 					inst.section = sec;
-					/* Wide controls take the whole row of the section; the rest flow in columns of a minimum width. */
-					inst.$wrap.attr('data-span', wideField(f) ? 'full' : 'auto');
 					sec.fields.push(inst);
 					fields.push(inst);
 					$grid.append(inst.$wrap);
 				});
 				sections.push(sec);
-				$flow.append($sec);
+				$form.append($sec);
 				if (collapsible) toggle(sec, s.open === true, false);
 			});
 
@@ -244,16 +233,6 @@ el.define('form', {
 
 			/* ------------------------------------------------ values & rules */
 
-			/* A section's card size from its visible fields: small / medium / large flow side by side, full takes the row. */
-			function sizeSections() {
-				sections.forEach((sec) => {
-					const shown = sec.fields.filter((x) => x.visible);
-					const size = sec.s.size || ((sec.s.advanced || sec.s.collapsed || shown.some((x) => x.$wrap.attr('data-span') === 'full')) ? 'full'
-						: shown.length <= 2 ? 'small' : shown.length <= 4 ? 'medium' : 'large');
-					sec.$sec.attr('data-size', size);
-				});
-			}
-
 			function flatValues() { const o = {}; fields.forEach((x) => { o[x.name] = x.get(); }); return o; }
 			function serialise() {
 				const out = {};
@@ -275,7 +254,6 @@ el.define('form', {
 					});
 					if (!changedAny) break;
 				}
-				sizeSections();
 			}
 			const isDirty = () => !readonly && JSON.stringify(serialise()) !== baseline;
 			function renderSummary() {
