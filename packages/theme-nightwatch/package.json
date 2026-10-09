@@ -1,0 +1,9 @@
+{
+	"name": "@freesense/theme-nightwatch",
+	"version": "2.0.0-alpha.0",
+	"description": "Nightwatch: a network operations console theme for the FreeSense WebUI (dark and daylight)",
+	"license": "Apache-2.0",
+	"repository": { "type": "git", "url": "https://github.com/FreeSense-org/freesense-webui.git", "directory": "packages/theme-nightwatch" },
+	"files": ["nightwatch.theme.json"],
+	"peerDependencies": { "@freesense/ui": "^2.0.0-alpha.0" }
+}

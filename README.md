@@ -22,6 +22,7 @@ FreeBSD-based firewall, rebuilt from scratch.
 ```
 packages/ui/               @freesense/ui: engine, element library, runtime JS
 packages/theme-freesense/  @freesense/theme-freesense: the default theme
+packages/theme-nightwatch/ @freesense/theme-nightwatch: a network operations console theme (dark and daylight)
 packages/create-theme/     `npm create @freesense/theme` scaffold
 app/                       PHP app: router, page specs, shell, menu registry
 gallery/                   element gallery (fixtures + mock API)
