@@ -30,6 +30,12 @@ import { icon } from '../console/console.js';
 
 const fill = (path, name) => path.replace('{name}', encodeURIComponent(name));
 
+/* created: unix seconds (the API) or an ISO date → ISO date. */
+function whenOf(v) {
+	if (v == null || v === '') return null;
+	return typeof v === 'number' ? new Date(v < 1e12 ? v * 1000 : v).toISOString() : String(v);
+}
+
 el.define('be-timeline', {
 	init(node, config, ctx) {
 		const base = '/v1/system/boot-environments';
@@ -70,7 +76,8 @@ el.define('be-timeline', {
 			const $title = $('<p class="fs-be-timeline-name">').append($('<span class="fs-mono">').text(b.name), ...badges(b));
 			const facts = [];
 			if (b.version) facts.push($('<span class="fs-mono">').text(b.version));
-			if (b.created) facts.push($('<time>').attr({ datetime: b.created, title: fmt.ago(b.created) }).text(fmt.datetime(b.created)));
+			const when = whenOf(b.created);
+			if (when) facts.push($('<time>').attr({ datetime: when, title: fmt.ago(when) }).text(fmt.datetime(when)));
 			if (b.size != null) facts.push($('<span class="fs-num">').text(fmt.bytes(b.size)));
 			const $meta = $('<p class="fs-be-timeline-meta">').append(facts.flatMap((f, i) => (i ? [$('<span aria-hidden="true">').text(' · '), f] : [f])));
 			const $main = $('<div class="fs-be-timeline-main">').append($title, $meta);
@@ -78,8 +85,9 @@ el.define('be-timeline', {
 			$li.append($marker, $main);
 			if (!c.readOnly) {
 				const items = [];
-				if (!b.next_boot) items.push({ id: 'activate', label: snap ? t('Roll back to this snapshot') : t('Activate for next boot'), icon: snap ? 'clock-rotate-left' : 'power-off', disabled: !!b.locked });
-				items.push({ id: 'rename', label: t('Rename'), icon: 'pen' });
+				/* The API boots boot environments only, and renames neither snapshots nor the running system. */
+				if (!b.next_boot && !snap) items.push({ id: 'activate', label: t('Activate for next boot'), icon: 'power-off', disabled: !!b.locked });
+				if (!snap) items.push({ id: 'rename', label: t('Rename'), icon: 'pen', disabled: !!b.active, title: b.active ? t('The running system cannot be renamed') : null });
 				items.push({ divider: true }, { id: 'delete', label: t('Delete'), icon: 'trash-can', danger: true, disabled: !!(b.active || b.next_boot), title: b.active || b.next_boot ? t('The active or next-boot environment cannot be deleted') : null });
 				$li.append(menuNode(items, { label: t('Actions for {name}', { name: b.name }), size: 'sm', onAction: (a) => act(a.id, b), className: 'fs-be-timeline-menu' }));
 			}
@@ -90,7 +98,7 @@ el.define('be-timeline', {
 			list = Array.isArray(data) ? data : [];
 			if (!list.length) return false;
 			disposeMenus(node);
-			const sorted = [...list].sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
+			const sorted = [...list].sort((a, b) => String(whenOf(b.created) || '').localeCompare(String(whenOf(a.created) || '')));
 			$body.empty().append($('<ol class="fs-be-timeline-list">').attr('aria-label', t(c.title)).append(sorted.map(item)));
 			const bes = list.filter((b) => b.kind !== 'snapshot').length;
 			const parts = [t('{n} boot environment', { n: bes }, '{n} boot environments'), t('{n} snapshot', { n: list.length - bes }, '{n} snapshots')];
@@ -126,7 +134,7 @@ el.define('be-timeline', {
 						icon: 'power-off'
 					});
 					if (!ok) return;
-					const res = await api.post(fill(c.paths.activate, b.name), {});
+					const res = await api.post(fill(c.paths.activate, b.name), { confirm: true });
 					toast((res.meta && res.meta.message) || t('{name} will be used at the next boot', { name: b.name }), { level: 'ok' });
 					focusAfter = b.name;
 				} else if (id === 'rename') {

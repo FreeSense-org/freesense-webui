@@ -2,19 +2,20 @@
 
 Boot environments and their snapshots as a vertical timeline, newest first:
 the active environment, the one used at the next boot, previous versions and
-snapshots, each with version, date and size. Actions per entry: activate for
-the next boot (or roll back to a snapshot) after `FS.confirm`, rename
-(`FS.modalForm`), delete (`FS.dangerConfirm`, type the name). "Snapshot now"
-saves the running system.
+snapshots, each with version, date and size. Actions per entry: activate a
+boot environment for the next boot after `FS.confirm`, rename a boot
+environment that is not running (`FS.modalForm`), delete (`FS.dangerConfirm`,
+type the name). Snapshots can be deleted only, as on the 1.x page.
+"Snapshot now" saves the running system.
 
 ## API
 
 | Request | Meaning |
 |---|---|
-| `GET /v1/system/boot-environments` | `[{name, kind: 'be' \| 'snapshot', active, next_boot, version, created, size, description, locked, parent}]`, `meta: {pool, free}` |
+| `GET /v1/system/boot-environments` | `[{name, kind: 'be' \| 'snapshot', active, next_boot, version, created (unix time), size, description, locked, parent}]`, newest first, `meta: {pool, free}`; 409 `no_boot_environments` without ZFS |
 | `POST /v1/system/boot-environments` `{name?}` | Snapshot now |
-| `POST /v1/system/boot-environments/{name}/activate` | Use at the next boot (snapshot: creates a boot environment from it) |
-| `PATCH /v1/system/boot-environments/{name}` `{name}` | Rename (422 with `fields.name`) |
+| `POST /v1/system/boot-environments/{name}/activate` `{confirm: true}` | Use at the next boot (boot environments only; 409 for locked ones) |
+| `PATCH /v1/system/boot-environments/{name}` `{name}` | Rename (422 with `fields.name`; 409 for the running one and for snapshots) |
 | `DELETE /v1/system/boot-environments/{name}` | Delete (409 for the active or next-boot one) |
 
 ## Config
