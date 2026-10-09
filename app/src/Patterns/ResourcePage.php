@@ -36,6 +36,10 @@ abstract class ResourcePage extends Page {
 	const KEY = 'name';
 	/* The firewall subsystem whose changes need Apply ('aliases', 'rules', …), or null. */
 	const APPLY = null;
+	/* Schema name when it differs from RESOURCE (e.g. firewall/virtual_ips for firewall/virtual-ips). */
+	const SCHEMA = null;
+	/* The key of an item's editor values when the API nests them (e.g. "fields"), or null. */
+	const LOAD_FIELD = null;
 
 	/* One item, lower case: "alias". */
 	abstract protected function noun(): string;
@@ -144,14 +148,18 @@ abstract class ResourcePage extends Page {
 		$crumbs = $this->nav->crumbs();
 		$crumbs[] = array(parent::title(), static::ROUTE);
 		$form = $ui->form()
-			->schemaSource(array('path' => '/v1/schema/' . static::RESOURCE))
+			->schemaSource(array('path' => '/v1/schema/' . (static::SCHEMA ?? static::RESOURCE)))
 			->cancelHref($list)
 			->successHref($list)
 			->label($this->title());
 		if ($this->params['view'] === 'new') {
 			$form->save(array('method' => 'POST', 'path' => $this->api()));
 		} else {
-			$form->load(array('path' => $this->api('/' . rawurlencode($this->params['key']))))
+			$load = array('path' => $this->api('/' . rawurlencode($this->params['key'])));
+			if (static::LOAD_FIELD !== null) {
+				$load['field'] = static::LOAD_FIELD;
+			}
+			$form->load($load)
 				->save(array('method' => 'PUT', 'path' => $this->api('/{' . static::KEY . '}')));
 		}
 		$ui->add($ui->pageHeader($this->title())->breadcrumb($crumbs), $form);
