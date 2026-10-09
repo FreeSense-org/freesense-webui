@@ -66,3 +66,21 @@ Elements nested as values become `{el, config}`, which containers render.
 URLs and redirects, escaping, the builder, navigation filtering by privilege
 and package, theme fallbacks, and the no-markup rule for pages. CI runs it in
 `php:8.5-cli` against the committed `dist/`.
+
+## Shipping to the firewall
+
+The `FreeSense-webui` package (port `security/FreeSense-webui` in
+freesense-system-ports) installs one pinned commit of this repository:
+`app/` and the committed `dist/`. Nothing is built on the package builder.
+
+1. Merge to `main` here (CI checks that `dist/` matches the sources).
+2. `npm run port -- --ports ../freesense-system-ports` points the port at
+   `origin/main`: it writes `GH_TAGNAME`, `DISTVERSION`/`PORTREVISION`,
+   `distinfo` (GitHub's archive of the commit) and `pkg-plist`.
+3. Open a pull request in freesense-system-ports; its CI
+   (`tools/webui_port_audit.py`) checks the archive and the plist.
+
+The port is a System root (freesense `tools/conf/pfPorts/poudriere_system`),
+so a port update rebuilds the System repository only. It is not a dependency
+of `FreeSense`: devices get it with `pkg install FreeSense-webui`, and the
+first install regenerates the WebGUI configuration so nginx serves `/next/`.

@@ -17,6 +17,7 @@
 		"check:themes": "node tools/theme/check.mjs",
 		"gallery": "node tools/build/serve.mjs",
 		"inventory": "node tools/inventory/build-inventory.mjs",
+		"port": "node tools/port/port.mjs",
 		"test": "node --test \"tools/**/*.test.mjs\""
 	},
 	"devDependencies": {
