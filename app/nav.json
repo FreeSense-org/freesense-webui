@@ -47,6 +47,12 @@
 									"priv": "page-interfaces-qinq"
 								},
 								{
+									"title": "VXLAN",
+									"icon": "diagram-project",
+									"href": "/network/vxlan",
+									"priv": "page-interfaces-vxlan"
+								},
+								{
 									"title": "Bridges",
 									"icon": "bridge",
 									"href": "/network/bridges",

@@ -405,13 +405,13 @@
 		"prs": []
 	},
 	"interfaces_vxlan.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/vxlan",
 		"prs": []
 	},
 	"interfaces_vxlan_edit.php": {
-		"state": "todo",
-		"route": null,
+		"state": "in-progress",
+		"route": "/network/vxlan",
 		"prs": []
 	},
 	"interfaces_wireless.php": {

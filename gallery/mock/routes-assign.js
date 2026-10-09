@@ -13,8 +13,8 @@
  *   PUT    /api/v1/interfaces/assignments/{name}     {port, confirm: true}
  *   DELETE /api/v1/interfaces/assignments/{name}?confirm=true   409 when in use, 403 for WAN/LAN
  *   GET    /api/v1/interfaces/assignments/pending    {pending, reboot_needed, reload_pending, message}
- *   GET/POST/PUT/DELETE /api/v1/interfaces/{vlans|qinqs|bridges|laggs|gifs|gres|groups}[/{id}]   items with fields + display
- *   GET    /api/v1/schema/network/{vlans|qinq|bridges|laggs|gifs|gres|groups|assignments}   captured schemas (choices from the mock)
+ *   GET/POST/PUT/DELETE /api/v1/interfaces/{vlans|vxlans|qinqs|bridges|laggs|gifs|gres|groups}[/{id}]   items with fields + display
+ *   GET    /api/v1/schema/network/{vlans|vxlans|qinq|bridges|laggs|gifs|gres|groups|assignments}   captured schemas (choices from the mock)
  */
 (function (M) {
 	'use strict';
@@ -111,6 +111,181 @@
 				}
 			],
 			"resource": "network/vlans"
+		},
+		"vxlans": {
+			"title": "VXLAN",
+			"summary": "VXLAN {vni} on {if}[ to {remote-addr}][ group {mcastgroup}]",
+			"summaryIcon": "network-wired",
+			"sections": [
+				{
+					"id": "vxlan",
+					"title": "VXLAN configuration",
+					"fields": [
+						{
+							"name": "if",
+							"type": "select",
+							"label": "Parent interface",
+							"required": true,
+							"width": "half",
+							"options": [
+								{
+									"value": "wan",
+									"label": "WAN"
+								},
+								{
+									"value": "lan",
+									"label": "LAN"
+								}
+							],
+							"help": "The tunnel is sent from this interface. Its address of the selected family is used as the local VTEP address."
+						},
+						{
+							"name": "ipproto",
+							"type": "segmented",
+							"label": "Address family",
+							"required": true,
+							"default": "inet",
+							"options": [
+								{
+									"value": "inet",
+									"label": "IPv4"
+								},
+								{
+									"value": "inet6",
+									"label": "IPv6"
+								}
+							],
+							"help": "Address family of the outer (encapsulating) traffic."
+						},
+						{
+							"name": "mode",
+							"type": "segmented",
+							"label": "Mode",
+							"required": true,
+							"default": "unicast",
+							"options": [
+								{
+									"value": "unicast",
+									"label": "Unicast (one remote VTEP)"
+								},
+								{
+									"value": "multicast",
+									"label": "Multicast group"
+								}
+							]
+						},
+						{
+							"name": "vni",
+							"type": "number",
+							"label": "VXLAN network identifier",
+							"required": true,
+							"min": 0,
+							"max": 16777215,
+							"width": "half",
+							"help": "The VNI (0-16777215) must match on every VTEP of this segment.",
+							"errorMatch": [
+								"vni",
+								"already uses vni",
+								"the vni or the port must differ"
+							]
+						},
+						{
+							"name": "remote-addr",
+							"type": "text",
+							"label": "Remote address",
+							"required": true,
+							"mono": true,
+							"width": "half",
+							"visibleWhen": {
+								"field": "mode",
+								"equals": "unicast"
+							},
+							"help": "Address of the remote VTEP.",
+							"errorMatch": [
+								"the remote address must"
+							]
+						},
+						{
+							"name": "mcastgroup",
+							"type": "text",
+							"label": "Multicast group",
+							"required": true,
+							"mono": true,
+							"width": "half",
+							"placeholder": "239.1.1.1",
+							"visibleWhen": {
+								"field": "mode",
+								"equals": "multicast"
+							},
+							"help": "Group joined on the parent interface. IPv4 groups must be 224.0.1.0 or above; IPv6 groups must have site scope or wider (ff05::, ff08::, ff0e::)."
+						},
+						{
+							"name": "learn",
+							"type": "switch",
+							"label": "MAC learning",
+							"default": true,
+							"text": "Learn which remote VTEP each MAC address is behind",
+							"help": "With learning, frames for a known MAC address are sent to the VTEP it was learned from instead of the remote address or group."
+						},
+						{
+							"name": "allowrule",
+							"type": "switch",
+							"label": "Firewall rule",
+							"text": "Allow the VXLAN traffic in on the parent interface",
+							"help": "Adds a pass rule for the encapsulated UDP traffic from the remote VTEP (in multicast mode from any sender, plus IGMP or MLD), placed before the parent's private and bogon network blocks. Traffic inside the tunnel still needs rules on the assigned VXLAN interface."
+						},
+						{
+							"name": "descr",
+							"type": "text",
+							"label": "Description",
+							"help": "A description for administrative reference (not parsed)."
+						}
+					]
+				},
+				{
+					"id": "advanced",
+					"title": "Ports and TTL",
+					"advanced": true,
+					"description": "The defaults suit FreeBSD and most other VTEPs. Linux peers use port 8472 unless configured with \"dstport 4789\".",
+					"fields": [
+						{
+							"name": "localport",
+							"type": "number",
+							"label": "Local port",
+							"min": 1,
+							"max": 65535,
+							"width": "third",
+							"placeholder": "4789",
+							"help": "UDP port to listen on. Default 4789.",
+							"errorMatch": [
+								"need different local ports",
+								"must use the same local port"
+							]
+						},
+						{
+							"name": "remoteport",
+							"type": "number",
+							"label": "Remote port",
+							"min": 1,
+							"max": 65535,
+							"width": "third",
+							"placeholder": "4789",
+							"help": "UDP port of the remote VTEP. Default 4789."
+						},
+						{
+							"name": "ttl",
+							"type": "number",
+							"label": "TTL",
+							"min": 1,
+							"max": 255,
+							"width": "third",
+							"placeholder": "64",
+							"help": "TTL of the outer packets. Default 64."
+						}
+					]
+				}
+			],
+			"resource": "network/vxlans"
 		},
 		"qinq": {
 			"title": "QinQ",
@@ -2316,6 +2491,9 @@
 		qinqs: { key: 'vlanif', schema: 'qinq', items: [
 			{ vlanif: 'igc5.200', if: 'igc5', tag: '200', tag_type: 'stag', autogroup: true, members: [{ tag: '10' }, { tag: '11' }, { tag: '12' }, { tag: '20' }], descr: 'Carrier hand-off' }
 		] },
+		vxlans: { key: 'vxlanif', schema: 'vxlans', items: [
+			{ vxlanif: 'vxlan0', if: 'wan', ipproto: 'inet', mode: 'unicast', vni: '100', 'remote-addr': '203.0.113.20', mcastgroup: '', localport: '', remoteport: '', ttl: '', learn: 'yes', descr: 'Data centre link' }
+		] },
 		bridges: { key: 'bridgeif', schema: 'bridges', items: [
 			{ bridgeif: 'bridge0', members: ['opt4', 'opt5'], descr: 'Lab bridge', enablestp: false }
 		] },
@@ -2336,6 +2514,9 @@
 		var d = { description: x.descr || '', assigned_to: kind === 'groups' ? '' : assignedTo(id) };
 		if (kind === 'vlans' || kind === 'qinqs') Object.assign(d, { interface: id, parent: parent(x.if), tag: x.tag, tag_type: x.tag_type === 'stag' ? 'S-Tag (0x88a8)' : 'C-Tag (0x8100)', priority: x.pcp || '' });
 		if (kind === 'qinqs') Object.assign(d, { members: (x.members || []).map(function (m) { return m.tag; }), autogroup: !!x.autogroup });
+		if (kind === 'vxlans') Object.assign(d, { interface: id, parent: label(x.if), vni: x.vni, mode: x.mode, family: x.ipproto === 'inet6' ? 'IPv6' : 'IPv4',
+			remote: x.mode === 'multicast' ? x.mcastgroup : x['remote-addr'], local: x.if === 'wan' ? '203.0.113.42' : '', port: x.localport || '4789', remote_port: x.remoteport || '4789',
+			learning: x.learn === 'yes', allowrule: x.allowrule === 'yes' });
 		if (kind === 'bridges') Object.assign(d, { interface: id.toUpperCase(), members: (x.members || []).map(label), stp: x.enablestp ? 'RSTP' : '' });
 		if (kind === 'laggs') Object.assign(d, { interface: id.toUpperCase(), members: x.members || [], protocol: String(x.proto || '').toUpperCase() });
 		if (kind === 'gifs' || kind === 'gres') Object.assign(d, { parent: label(x.if), remote: x['remote-addr'], tunnel: [x['tunnel-local-addr'] + ' → ' + x['tunnel-remote-addr'] + '/' + x['tunnel-remote-net']] });
@@ -2362,6 +2543,12 @@
 			if (!(+x.tag >= 1 && +x.tag <= 4094)) e.tag = 'The VLAN tag must be an integer between 1 and 4094.';
 			if (x.pcp !== '' && x.pcp != null && !(+x.pcp >= 0 && +x.pcp <= 7)) e.pcp = 'The VLAN priority must be an integer between 0 and 7.';
 		}
+		if (kind === 'vxlans') {
+			if (!(/^\d+$/.test(x.vni || '') && +x.vni <= 16777215)) e.vni = 'The VNI must be a number between 0 and 16777215.';
+			if (x.mode !== 'multicast' && !V4.test(x['remote-addr'] || '')) e['remote-addr'] = 'The remote address must be an IP address of the selected address family.';
+			if (x.mode === 'multicast' && !/^(22[4-9]|23\d)\./.test(x.mcastgroup || '')) e.mcastgroup = 'The multicast group must be a multicast address of the selected address family.';
+			if (STORE.vxlans.items.some(function (y) { return y !== x && y.vni === x.vni && y.vxlanif !== x.vxlanif; })) e.vni = 'A VXLAN with this VNI already exists on this parent interface.';
+		}
 		if ((kind === 'bridges' || kind === 'laggs') && !(x.members || []).length) e.members = 'At least one member interface must be selected.';
 		if ((kind === 'gifs' || kind === 'gres')) {
 			if (!V4.test(x['remote-addr'] || '')) e['remote-addr'] = 'The tunnel remote address must be a valid IP address.';
@@ -2372,7 +2559,7 @@
 	function newId(kind, x) {
 		if (kind === 'vlans' || kind === 'qinqs') return x.if + '.' + x.tag;
 		if (kind === 'groups') return x.ifname;
-		var pre = { bridges: 'bridge', laggs: 'lagg', gifs: 'gif', gres: 'gre' }[kind], n = 0;
+		var pre = { vxlans: 'vxlan', bridges: 'bridge', laggs: 'lagg', gifs: 'gif', gres: 'gre' }[kind], n = 0;
 		while (STORE[kind].items.some(function (y) { return y[STORE[kind].key] === pre + n; })) n++;
 		return pre + n;
 	}
@@ -2381,7 +2568,8 @@
 		var s = clone(SCHEMAS[name]);
 		s.sections = s.sections.filter(function (sec) { return sec.id !== 'stp_ports'; });
 		s.sections.forEach(function (sec) { sec.fields.forEach(function (f) {
-			if (f.name === 'if') f.options = PORTS.map(function (p) { return { value: p.value, label: portLabel(p.value) }; });
+			if (f.name === 'if' && name === 'vxlans') f.options = M.interfaces.map(function (i) { return { value: i.id, label: i.descr }; });
+			else if (f.name === 'if') f.options = PORTS.map(function (p) { return { value: p.value, label: portLabel(p.value) }; });
 			if (f.name === 'members' && f.type === 'checklist') f.options = name === 'laggs' ? PORTS.filter(function (x) { return used().indexOf(x.value) < 0; }) : memberOptions();
 		}); });
 		return s;
@@ -2425,6 +2613,7 @@
 
 	function allPorts() {
 		return PORTS.concat(STORE.vlans.items.map(function (v) { return { value: v.vlanif, label: 'VLAN ' + v.tag + ' on ' + v.if + ' - ' + (v.descr || '') }; }))
+			.concat(STORE.vxlans.items.map(function (v) { return { value: v.vxlanif, label: 'VXLAN ' + v.vni + ' ' + (v.mode === 'multicast' ? v.mcastgroup : v['remote-addr']) + ' on ' + v.if }; }))
 			.concat(STORE.bridges.items.map(function (b) { return { value: b.bridgeif, label: b.bridgeif.toUpperCase() + ' (' + (b.descr || '') + ')' }; }))
 			.concat(STORE.gifs.items.map(function (g) { return { value: g.gifif, label: g.gifif.toUpperCase() + ' (' + (g.descr || '') + ')' }; }))
 			.concat([{ value: 'tun_wg0', label: 'tun_wg0 (WireGuard)' }, { value: 'ovpns1', label: 'ovpns1 (Road warrior)' }]);
